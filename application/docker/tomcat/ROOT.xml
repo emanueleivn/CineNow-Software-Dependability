@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource
+            name="jdbc/CineNowDataSource"
+            auth="Container"
+            type="javax.sql.DataSource"
+            driverClassName="com.mysql.cj.jdbc.Driver"
+            url="jdbc:mysql://db:3306/cinenow?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC"
+            username="cinenow"
+            password="cinenow"
+            maxTotal="20"
+            maxIdle="10"
+            maxWaitMillis="10000"/>
+</Context>
