@@ -1,0 +1,11 @@
+.git/
+.gitignore
+.idea/
+*.iml
+
+target/
+Deliverables/
+risultati_test/
+testResult/
+*.log
+cp*.txt
