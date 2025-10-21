@@ -1,7 +1,7 @@
 package it.unisa.application.utilities;
 
 public class PasswordValidator implements ValidatorStrategy {
-
+    @Override
     /*@ also
       @ public normal_behavior
       @   requires campo != null;
@@ -12,7 +12,7 @@ public class PasswordValidator implements ValidatorStrategy {
                 && campo.matches(".*[!@#$%^&*()_+\\-={}\\[\\]:;,.<>?/].*")
                 && !containsInvalidCharacters(campo));
       @*/
-    @Override
+
     public boolean validate(String campo) {
         return campo != null
                 && campo.length() >= 8
