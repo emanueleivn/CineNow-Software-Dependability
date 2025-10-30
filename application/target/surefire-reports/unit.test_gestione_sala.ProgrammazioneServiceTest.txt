@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: unit.test_gestione_sala.ProgrammazioneServiceTest
+-------------------------------------------------------------------------------
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 s -- in unit.test_gestione_sala.ProgrammazioneServiceTest

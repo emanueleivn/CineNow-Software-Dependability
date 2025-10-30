@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: integration.gestione_sala.ProgrammazioneServiceIntegrationTest
+-------------------------------------------------------------------------------
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.056 s -- in integration.gestione_sala.ProgrammazioneServiceIntegrationTest

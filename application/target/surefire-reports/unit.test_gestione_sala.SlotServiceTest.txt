@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: unit.test_gestione_sala.SlotServiceTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.098 s -- in unit.test_gestione_sala.SlotServiceTest
