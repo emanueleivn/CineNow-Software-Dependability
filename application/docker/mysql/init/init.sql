@@ -594,7 +594,7 @@ BEGIN
     DECLARE v_end_date DATE;
 
     SET v_start_date = DATE_ADD(CURDATE(), INTERVAL 1 DAY);
-    SET v_end_date   = '2025-01-20';
+    SET v_end_date   = '2026-02-01';
 
     WHILE v_start_date <= v_end_date DO
 
