@@ -1,0 +1,34 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IntelliJ / IDE
+.idea/
+*.iml
+out/
+.shelf/
+.vscode/
+
+# Java/Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+dependency-reduced-pom.xml
+*.class
+*.log
+hs_err_pid*
+replay_pid*
+
+# Archives / build artifacts
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.tar
+
+# Docker / env
+.env
+.env.*
+!.env.example
+docker-compose.override.yml
+
+cp*.txt
