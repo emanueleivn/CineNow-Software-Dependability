@@ -37,7 +37,7 @@ public class PrenotazioneDAO {
         }
         return false;
     }
-
+    
     public Prenotazione retrieveById(int id) {
         String sql = "SELECT * FROM prenotazione WHERE id = ?";
         try (Connection connection = ds.getConnection();
@@ -48,7 +48,7 @@ public class PrenotazioneDAO {
                 int prenotazioneId = rs.getInt("id");
                 Cliente cliente = new Cliente(rs.getString("email_cliente"), "", "", "");
                 Proiezione proiezione = new Proiezione(rs.getInt("id_proiezione"));
-
+                
                 return new Prenotazione(prenotazioneId, cliente, proiezione);
             }
         } catch (SQLException e) {
@@ -56,7 +56,7 @@ public class PrenotazioneDAO {
         }
         return null;
     }
-
+    
     public List<Prenotazione> retrieveAllByCliente(Cliente cliente) {
         List<Prenotazione> prenotazioni = new ArrayList<>();
         String sql = "SELECT " +
@@ -106,9 +106,9 @@ public class PrenotazioneDAO {
                     Sala s = salaDAO.retrieveById(rs.getInt("sala_id"));
                     Sede sede = sedeDAO.retrieveById(s.getSede().getId());
                     Sala sala = new Sala(rs.getInt("sala_id"), rs.getInt("numero_sala"), 0, sede);
-
+                    
                     Slot slot = new Slot(0, rs.getTime("ora_inizio"));
-
+                    
                     Proiezione proiezione = new Proiezione(
                             rs.getInt("proiezione_id"),
                             sala,
@@ -116,7 +116,7 @@ public class PrenotazioneDAO {
                             rs.getDate("data_proiezione").toLocalDate(),
                             slot
                     );
-
+                    
                     prenotazione = new Prenotazione(prenotazioneId, cliente, proiezione);
                     prenotazione.setPostiPrenotazione(new ArrayList<>());
                     prenotazioneMap.put(prenotazioneId, prenotazione);

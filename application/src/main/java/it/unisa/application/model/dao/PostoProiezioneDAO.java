@@ -15,11 +15,11 @@ import java.util.logging.Logger;
 public class PostoProiezioneDAO {
     private final DataSource ds;
     private final static Logger logger = Logger.getLogger(PostoProiezioneDAO.class.getName());
-
+    
     public PostoProiezioneDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
-
+    
     public boolean create(PostoProiezione postoProiezione) {
         String sql = "INSERT INTO posto_proiezione (id_sala, fila, numero, id_proiezione, stato) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = ds.getConnection();
@@ -35,7 +35,7 @@ public class PostoProiezioneDAO {
         }
         return false;
     }
-
+    
     public List<PostoProiezione> retrieveAllByProiezione(Proiezione proiezione) {
         List<PostoProiezione> postiProiezione = new ArrayList<>();
         String sql = "SELECT * FROM posto_proiezione WHERE id_proiezione = ?";
@@ -55,7 +55,7 @@ public class PostoProiezioneDAO {
         }
         return postiProiezione;
     }
-
+    
     public boolean occupaPosto(PostoProiezione postoProiezione, int idPrenotazione) {
         String updateSql = "UPDATE posto_proiezione SET stato = false WHERE id_sala = ? AND fila = ? AND numero = ? AND id_proiezione = ?";
         String insertSql = "INSERT INTO occupa (id_sala, fila, numero, id_proiezione, id_prenotazione) VALUES (?, ?, ?, ?, ?)";

@@ -14,56 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProgrammazioneService {
-    //@ spec_public
-    private FilmDAO filmDAO;
-    //@ spec_public
-    private SalaDAO salaDAO;
-    //@ spec_public
-    private SlotDAO slotDAO;
-    //@ spec_public
-    private ProiezioneDAO proiezioneDAO;
+    private final FilmDAO filmDAO;
+    private final SalaDAO salaDAO;
+    private final SlotDAO slotDAO;
+    private final ProiezioneDAO proiezioneDAO;
 
-    //@ public invariant filmDAO != null && salaDAO != null && slotDAO != null && proiezioneDAO != null;
-
-    /**
-     * Costruttore a iniezione per i test (solo ProiezioneDAO).
-     */
-    /*@ public behavior
-      @   requires proiezioneDAOMock != null;
-      @   assignable \everything;
-      @   ensures this.proiezioneDAO == proiezioneDAOMock;
-      @*/
-    public ProgrammazioneService(ProiezioneDAO proiezioneDAOMock) {
-        this.filmDAO = new FilmDAO();
-        this.salaDAO = new SalaDAO();
-        this.slotDAO = new SlotDAO();
-        this.proiezioneDAO = proiezioneDAOMock;
-    }
-
-    /**
-     * Costruttore a iniezione completo (consigliato per i test).
-     */
-    /*@ public behavior
-      @   requires filmDAO != null && salaDAO != null && slotDAO != null && proiezioneDAO != null;
-      @   assignable \everything;
-      @   ensures this.filmDAO == filmDAO && this.salaDAO == salaDAO
-      @        && this.slotDAO == slotDAO && this.proiezioneDAO == proiezioneDAO;
-      @*/
-    public ProgrammazioneService(FilmDAO filmDAO, SalaDAO salaDAO, SlotDAO slotDAO, ProiezioneDAO proiezioneDAO) {
-        this.filmDAO = filmDAO;
-        this.salaDAO = salaDAO;
-        this.slotDAO = slotDAO;
-        this.proiezioneDAO = proiezioneDAO;
-    }
-
-    /**
-     * Costruttore di default.
-     */
-    /*@ public behavior
-      @   assignable \everything;
-      @   ensures this.filmDAO != null && this.salaDAO != null
-      @        && this.slotDAO != null && this.proiezioneDAO != null;
-      @*/
     public ProgrammazioneService() {
         this.filmDAO = new FilmDAO();
         this.salaDAO = new SalaDAO();
@@ -74,14 +29,7 @@ public class ProgrammazioneService {
     /**
      * Aggiunge una nuova proiezione in sala per la data indicata.
      */
-    /*@ public normal_behavior
-      @   requires filmId >= 0;
-      @   requires salaId >= 0;
-      @   requires slotIds != null && slotIds.size() > 0;
-      @   requires data != null;
-      @   assignable \nothing;
-      @   ensures \result == true || \result == false;
-      @*/
+
     public boolean aggiungiProiezione(int filmId, int salaId, List<Integer> slotIds, LocalDate data) {
         try {
             Film film = filmDAO.retrieveById(filmId);
@@ -117,12 +65,7 @@ public class ProgrammazioneService {
 
             Slot primoSlot = slotsSelezionati.get(0);
 
-            Proiezione proiezione = new Proiezione();
-            proiezione.setFilmProiezione(film);
-            proiezione.setSalaProiezione(sala);
-            proiezione.setDataProiezione(data);
-            proiezione.setOrarioProiezione(primoSlot);
-
+            Proiezione proiezione = new Proiezione(0, sala, film, data, primoSlot);
             return this.proiezioneDAO.create(proiezione);
         } catch (Exception e) {
             e.printStackTrace();
@@ -130,12 +73,7 @@ public class ProgrammazioneService {
         }
     }
 
-    /*@ private normal_behavior
-      @   requires slots != null;
-      @   assignable \everything; // riordina il contenuto della lista
-      @*/
     private static void sortSlotsByOraInizio(List<Slot> slots) {
-        // Insertion sort per evitare Comparator/lambda/anonime
         for (int i = 1; i < slots.size(); i++) {
             Slot key = slots.get(i);
             int j = i - 1;

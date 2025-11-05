@@ -21,15 +21,7 @@ public class SlotService {
     /**
      * Calcola gli slot disponibili per un film all'interno di un intervallo di date.
      */
-    /*@ public normal_behavior
-      @   requires filmId >= 0;
-      @   requires salaId >= 0;
-      @   requires dataInizio != null;
-      @   requires dataFine != null;
-      @   requires !dataFine.isBefore(dataInizio);
-      @   assignable \nothing;
-      @   ensures \result != null;
-      @*/
+
     public Map<String, Object> slotDisponibili(int filmId, int salaId, LocalDate dataInizio, LocalDate dataFine) throws Exception {
         Film film = filmDAO.retrieveById(filmId);
         if (film == null) {
@@ -39,15 +31,10 @@ public class SlotService {
         List<Map<String, Object>> calendar = new ArrayList<>();
         LocalDate current = dataInizio;
 
-        /*@ loop_invariant current != null;
-          @ loop_invariant !current.isBefore(dataInizio);
-          @*/
         while (!current.isAfter(dataFine)) {
             List<Slot> allSlots = slotDAO.retrieveAllSlots();
             List<Map<String, Object>> slotList = new ArrayList<>();
 
-            /*@ loop_invariant 0 <= k && k <= allSlots.size();
-              @*/
             for (int k = 0; k < allSlots.size(); k++) {
                 Slot slot = allSlots.get(k);
                 Proiezione existing = proiezioneDAO.retrieveProiezioneBySalaSlotAndData(salaId, slot.getId(), current);
