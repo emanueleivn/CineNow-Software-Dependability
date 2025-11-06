@@ -22,16 +22,15 @@ public class SedeDAO {
 
     public Sede retrieveById(int id) {
         String sql = "SELECT s.id, s.nome, s.via, s.citta, s.cap FROM sede s WHERE s.id = ?";
-        try (Connection connection = ds.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Connection connection = ds.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 String indirizzo = rs.getString("via") + ", " + rs.getString("citta") + ", " + rs.getString("cap");
                 return new Sede(rs.getInt("id"), rs.getString("nome"), indirizzo);
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Errore durante il recupero della sede ", e);
+            logger.severe(e.getMessage());
         }
         return null;
     }

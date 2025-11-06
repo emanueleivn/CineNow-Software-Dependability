@@ -111,7 +111,8 @@ public class ProiezioneDAO {
 
                 Film film = new Film(rs.getInt("id_film"), "", "", "", 0,new byte[0], "", false);
                 Sala sala = new Sala(rs.getInt("id_sala"), 0, 0, new Sede(0));
-                Slot slotOrario = new Slot(rs.getInt("id_orario"), Time.valueOf(LocalDateTime.now().toString()));
+                Time oraInizio = new Time(0,0,0);
+                Slot slotOrario = new Slot(rs.getInt("id_orario"), oraInizio);
 
                 return new Proiezione(proiezioneId, sala, film, dataProiezione, slotOrario);
             }
