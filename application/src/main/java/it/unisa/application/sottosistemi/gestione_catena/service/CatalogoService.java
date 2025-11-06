@@ -10,27 +10,12 @@ import java.util.List;
 import java.util.Map;
 
 public class CatalogoService {
-    //@ spec_public
     private final FilmDAO filmDAO = new FilmDAO();
-    //@ spec_public
-    private ValidateStrategyManager validationManager= new ValidateStrategyManager();
-
-    //@ public invariant filmDAO != null;
-    //@ public invariant validationManager != null;
+    private final ValidateStrategyManager validationManager= new ValidateStrategyManager();
 
     /**
      * Inserisce un nuovo film nel catalogo di catena.
      */
-    /*@ public normal_behavior
-      @   requires titolo != null && !titolo.isEmpty();
-      @   requires descrizione != null && !descrizione.isEmpty();
-      @   requires locandina != null && locandina.length > 0;
-      @   requires genere != null && !genere.isEmpty();
-      @   requires classificazione != null && !classificazione.isEmpty();
-      @   requires durata > 0;
-      @   assignable validationManager.*;
-      @   ensures true;
-      @*/
     public void addFilmCatalogo(String titolo, int durata, String descrizione, byte[] locandina, String genere, String classificazione) {
         if (titolo == null || titolo.isEmpty() || durata <= 0 || descrizione == null || descrizione.isEmpty()
                 || locandina == null || locandina.length == 0 || genere == null || genere.isEmpty()
@@ -54,11 +39,7 @@ public class CatalogoService {
     /**
      * Restituisce l'elenco dei film presenti nel catalogo.
      */
-    /*@ public normal_behavior
-      @   requires true;
-      @   assignable \nothing;
-      @   ensures \result != null;
-      @*/
+
     public List<Film> getCatalogo() {
         return filmDAO.retrieveAll();
     }

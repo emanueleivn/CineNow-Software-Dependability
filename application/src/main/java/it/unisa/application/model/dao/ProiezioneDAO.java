@@ -5,33 +5,19 @@ import it.unisa.application.model.entity.*;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class ProiezioneDAO {
-    //@ spec_public
     private final DataSource ds;
-
-    /*@ public behavior
-      @   ensures ds != null;
-      @*/
+    private final static Logger logger = Logger.getLogger(ProiezioneDAO.class.getName());
     public ProiezioneDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
-    /*@ public normal_behavior
-      @   requires proiezione != null;
-      @   requires proiezione.getDataProiezione() != null;
-      @   requires proiezione.getFilmProiezione() != null;
-      @   requires proiezione.getSalaProiezione() != null;
-      @   requires proiezione.getOrarioProiezione() != null;
-      @   assignable proiezione.*;
-      @   ensures ds == \old(ds);
-      @   ensures \result ==> (proiezione.getId() >= 0);
-      @*/
     public boolean create(Proiezione proiezione) {
         String insertProiezioneSql = "INSERT INTO proiezione (data, id_film, id_sala, id_orario) VALUES (?, ?, ?, ?)";
         String insertPostiProiezioneSql = """
@@ -44,14 +30,14 @@ public class ProiezioneDAO {
         try (Connection connection = ds.getConnection()) {
             connection.setAutoCommit(false);
 
-
             List<Slot> availableSlots = new ArrayList<>();
             try (PreparedStatement psGetSlots = connection.prepareStatement("SELECT id, ora_inizio FROM slot ORDER BY ora_inizio")) {
                 try (ResultSet rs = psGetSlots.executeQuery()) {
                     while (rs.next()) {
-                        Slot slot = new Slot();
-                        slot.setId(rs.getInt("id"));
-                        slot.setOraInizio(rs.getTime("ora_inizio"));
+
+                        int id = rs.getInt("id");
+                        Time ora = rs.getTime("ora_inizio");
+                        Slot slot = new Slot(id, ora);
                         availableSlots.add(slot);
                     }
                 }
@@ -102,23 +88,17 @@ public class ProiezioneDAO {
             return true;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Errore durante la creazione della proiezione: " + e.getMessage());
             try (Connection connection = ds.getConnection()) {
                 connection.rollback();
             } catch (SQLException rollbackException) {
-                rollbackException.printStackTrace();
+                logger.severe(e.getMessage());
             }
         }
 
         return false;
     }
 
-    /*@ public normal_behavior
-      @   requires id >= 0;
-      @   assignable \nothing;
-      @   ensures ds == \old(ds);
-      @   ensures (\result != null) ==> (\result.getId() == id);
-      @*/
     public Proiezione retrieveById(int id) {
         String sql = "SELECT * FROM proiezione WHERE id = ?";
         try (Connection connection = ds.getConnection();
@@ -126,37 +106,22 @@ public class ProiezioneDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Proiezione proiezione = new Proiezione();
-                proiezione.setId(rs.getInt("id"));
-                Film film = new Film();
-                film.setId(rs.getInt("id_film"));
-                Sala sala = new Sala();
-                sala.setId(rs.getInt("id_sala"));
-                Slot slotOrario = new Slot();
-                slotOrario.setId(rs.getInt("id_orario"));
-                proiezione.setFilmProiezione(film);
-                proiezione.setDataProiezione(rs.getDate("data").toLocalDate());
-                proiezione.setSalaProiezione(sala);
-                proiezione.setOrarioProiezione(slotOrario);
-                return proiezione;
+                int proiezioneId = rs.getInt("id");
+                LocalDate dataProiezione = rs.getDate("data").toLocalDate();
+
+                Film film = new Film(rs.getInt("id_film"), "", "", "", 0,new byte[0], "", false);
+                Sala sala = new Sala(rs.getInt("id_sala"), 0, 0, new Sede(0));
+                Time oraInizio = new Time(0,0,0);
+                Slot slotOrario = new Slot(rs.getInt("id_orario"), oraInizio);
+
+                return new Proiezione(proiezioneId, sala, film, dataProiezione, slotOrario);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Errore durante il recupero della proiezione: " + e.getMessage());
         }
         return null;
     }
 
-    /*@ public normal_behavior
-      @   requires film != null && film.getId() >= 0;
-      @   requires sede != null && sede.getId() >= 0;
-      @   assignable \nothing;
-      @   ensures ds == \old(ds);
-      @   ensures \result != null;
-      @   ensures (\forall int i; 0 <= i && i < \result.size();
-      @               \result.get(i) != null &&
-      @               \result.get(i).getFilmProiezione() != null &&
-      @               \result.get(i).getFilmProiezione().getId() == film.getId());
-      @*/
     public List<Proiezione> retrieveByFilm(Film film, Sede sede) {
         String sql = """
             SELECT p.*, s.numero AS numero_sala, f.titolo AS titolo_film, f.durata AS durata_film, sl.ora_inizio AS orario
@@ -177,26 +142,22 @@ public class ProiezioneDAO {
             Map<String, List<Proiezione>> uniqueProiezioni = new HashMap<>();
 
             while (rs.next()) {
-                Proiezione proiezione = new Proiezione();
-                proiezione.setId(rs.getInt("id"));
-                proiezione.setDataProiezione(rs.getDate("data").toLocalDate());
+                int id = rs.getInt("id");
+                LocalDate dataProiezione = rs.getDate("data").toLocalDate();
+                int idSala= rs.getInt("id_sala");
+                int numeroSala= rs.getInt("numero_sala");
+                Sala sala = new Sala(idSala, numeroSala, 0, sede);
 
-                Sala sala = new Sala();
-                sala.setId(rs.getInt("id_sala"));
-                sala.setNumeroSala(rs.getInt("numero_sala"));
-                proiezione.setSalaProiezione(sala);
+                int idFilm = rs.getInt("id_film");
+                String titolo = rs.getString("titolo_film");
+                int durata = rs.getInt("durata_film"); // Durata in minuti
+                Film filmDetails = new Film(idFilm, titolo, "", "", durata, new byte[0], "", true);
 
-                Film filmDetails = new Film();
-                filmDetails.setId(rs.getInt("id_film"));
-                filmDetails.setTitolo(rs.getString("titolo_film"));
-                filmDetails.setDurata(rs.getInt("durata_film")); // Durata in minuti
-                proiezione.setFilmProiezione(filmDetails);
+                int idSlot = rs.getInt("id_orario");
+                Time ora = rs.getTime("orario");
+                Slot slotOrario = new Slot(idSlot, ora);
 
-                Slot slot = new Slot();
-                slot.setId(rs.getInt("id_orario"));
-                slot.setOraInizio(rs.getTime("orario"));
-                proiezione.setOrarioProiezione(slot);
-
+                Proiezione proiezione = new Proiezione(id, sala, filmDetails, dataProiezione, slotOrario);
 
                 String uniqueKey = proiezione.getFilmProiezione().getTitolo() + "|" +
                         proiezione.getSalaProiezione().getId() + "|" +
@@ -205,7 +166,7 @@ public class ProiezioneDAO {
 
                 List<Proiezione> proiezioniPerChiave = uniqueProiezioni.get(uniqueKey);
                 if (proiezioniPerChiave == null) {
-                    proiezioniPerChiave = new ArrayList<Proiezione>();
+                    proiezioniPerChiave = new ArrayList<>();
                     uniqueProiezioni.put(uniqueKey, proiezioniPerChiave);
                 }
                 boolean aggiungiProiezione = true;
@@ -228,17 +189,11 @@ public class ProiezioneDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         }
         return proiezioni;
     }
 
-    /*@ public normal_behavior
-      @   requires sedeId >= 0;
-      @   assignable \nothing;
-      @   ensures ds == \old(ds);
-      @   ensures \result != null;
-      @*/
     public List<Proiezione> retrieveAllBySede(int sedeId) {
         List<Proiezione> proiezioni = new ArrayList<>();
         String sql = """
@@ -260,29 +215,28 @@ public class ProiezioneDAO {
             Map<String, List<Proiezione>> uniqueProiezioni = new HashMap<>();
 
             while (rs.next()) {
-                Proiezione proiezione = new Proiezione();
-                proiezione.setId(rs.getInt("id"));
-                Sala sala = new Sala();
-                sala.setId(rs.getInt("id_sala"));
-                sala.setNumeroSala(rs.getInt("numero_sala"));
-                proiezione.setSalaProiezione(sala);
-                Film film = new Film();
-                film.setId(rs.getInt("id_film"));
-                film.setTitolo(rs.getString("titolo_film"));
-                film.setDurata(rs.getInt("durata_film"));
-                proiezione.setFilmProiezione(film);
-                Slot slot = new Slot();
-                slot.setId(rs.getInt("id_orario"));
-                slot.setOraInizio(rs.getTime("orario"));
-                proiezione.setOrarioProiezione(slot);
-                proiezione.setDataProiezione(rs.getDate("data").toLocalDate());
+                int idProiezione = rs.getInt("id");
+
+                int idSala = rs.getInt("id_sala");
+                int numeroSala = rs.getInt("numero_sala");
+                Sala sala = new Sala(idSala, numeroSala, 0, new Sede(sedeId));
+                int idFilm = rs.getInt("id_film");
+                String titolo = rs.getString("titolo_film");
+                int durata = rs.getInt("durata_film");
+                Film filmDetails = new Film(idFilm, titolo, "", "", durata, new byte[0], "", true);
+                int idOrario = rs.getInt("id_orario");
+                Time orario = rs.getTime("orario");
+                Slot slotOrario = new Slot(idOrario, orario);
+                LocalDate dataProiezione = rs.getDate("data").toLocalDate();
+                Proiezione proiezione = new Proiezione(idProiezione, sala, filmDetails, dataProiezione, slotOrario);
+
                 String uniqueKey = proiezione.getFilmProiezione().getTitolo() + "|" +
                         proiezione.getSalaProiezione().getId() + "|" +
                         proiezione.getDataProiezione().toString();
 
-                List</*@ non_null @*/ Proiezione> proiezioniPerChiave =
+                List<Proiezione> proiezioniPerChiave =
                         uniqueProiezioni.getOrDefault(uniqueKey,
-                                new ArrayList</*@ non_null @*/ Proiezione>());
+                                new ArrayList<>());
 
 
                 boolean aggiungiProiezione = true;
@@ -304,25 +258,13 @@ public class ProiezioneDAO {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         }
 
         return proiezioni;
     }
 
 
-    /*@ public normal_behavior
-      @   requires salaId >= 0;
-      @   requires slotId >= 0;
-      @   requires data != null;
-      @   assignable \nothing;
-      @   ensures ds == \old(ds);
-      @   ensures (\result != null) ==> (
-      @       \result.getSalaProiezione().getId() == salaId &&
-      @       \result.getOrarioProiezione().getId() == slotId &&
-      @       \result.getDataProiezione().equals(data)
-      @   );
-      @*/
     public Proiezione retrieveProiezioneBySalaSlotAndData(int salaId, int slotId, LocalDate data) {
         String sql = "SELECT * FROM proiezione WHERE id_sala = ? AND id_orario = ? AND data = ?";
         try (Connection connection = ds.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -331,22 +273,16 @@ public class ProiezioneDAO {
             ps.setDate(3, Date.valueOf(data));
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Proiezione p = new Proiezione();
-                p.setId(rs.getInt("id"));
-                Film f = new Film();
-                f.setId(rs.getInt("id_film"));
-                p.setFilmProiezione(f);
-                Sala s = new Sala();
-                s.setId(rs.getInt("id_sala"));
-                Slot sl = new Slot();
-                sl.setId(rs.getInt("id_orario"));
-                p.setSalaProiezione(s);
-                p.setOrarioProiezione(sl);
-                p.setDataProiezione(rs.getDate("data").toLocalDate());
-                return p;
+                int proiezioneId = rs.getInt("id");
+                LocalDate dataProiezione = rs.getDate("data").toLocalDate();
+                Film film = new Film(rs.getInt("id_film"), "", "", "", 0, new byte[0], "", true);
+                Sala sala = new Sala(rs.getInt("id_sala"), 0, 0, new Sede(0));
+                Slot slot = new Slot(rs.getInt("id_orario"), Time.valueOf(LocalDateTime.now().toString()));
+
+                return new Proiezione(proiezioneId, sala, film, dataProiezione, slot);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe("Errore durante il recupero della proiezione: " + e.getMessage());
         }
         return null;
     }

@@ -7,17 +7,12 @@ import it.unisa.application.model.entity.Prenotazione;
 import java.util.List;
 
 public class StoricoOrdiniService {
-    //@ spec_public
-    private PrenotazioneDAO prenotazioneDAO;
-
-    //@ public invariant prenotazioneDAO != null;
+    private final PrenotazioneDAO prenotazioneDAO;
 
     /**
      * Costruttore di default del servizio storico ordini.
      */
-    /*@ public behavior
-      @   ensures prenotazioneDAO != null;
-      @*/
+
     public StoricoOrdiniService() {
         this.prenotazioneDAO = new PrenotazioneDAO();
     }
@@ -25,10 +20,7 @@ public class StoricoOrdiniService {
     /**
      * Costruttore a iniezione per test.
      */
-    /*@ public behavior
-      @   requires prenotazioneDAOMock != null;
-      @   ensures prenotazioneDAO == prenotazioneDAOMock;
-      @*/
+
     public StoricoOrdiniService(PrenotazioneDAO prenotazioneDAOMock) {
         prenotazioneDAO = prenotazioneDAOMock;
     }
@@ -36,12 +28,7 @@ public class StoricoOrdiniService {
     /**
      * Restituisce lo storico degli ordini di un cliente.
      */
-    /*@ public normal_behavior
-      @   requires cliente != null;
-      @   assignable \nothing;
-      @   ensures \result != null;
-      @   ensures (\forall int i; 0 <= i && i < \result.size(); \result.get(i) != null);
-      @*/
+
     public List<Prenotazione> storicoOrdini(Cliente cliente) {
         if (cliente == null) {
             throw new IllegalArgumentException("Il cliente non può essere null.");

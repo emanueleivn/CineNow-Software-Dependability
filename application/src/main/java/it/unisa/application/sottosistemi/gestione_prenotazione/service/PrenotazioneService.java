@@ -10,51 +10,19 @@ import it.unisa.application.model.entity.Proiezione;
 import java.util.List;
 
 public class PrenotazioneService {
-    //@ spec_public
-    private PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
-    //@ spec_public
-    private PostoProiezioneDAO postoProiezioneDAO = new PostoProiezioneDAO();
-
-    //@ public invariant prenotazioneDAO != null && postoProiezioneDAO != null;
+    private final PrenotazioneDAO prenotazioneDAO = new PrenotazioneDAO();
+    private final PostoProiezioneDAO postoProiezioneDAO = new PostoProiezioneDAO();
 
     /**
      * Costruttore di default.
      */
-    /*@ public behavior
-      @   assignable \nothing;
-      @   ensures this.prenotazioneDAO != null;
-      @   ensures this.postoProiezioneDAO != null;
-      @*/
-    public PrenotazioneService() {
-    }
 
-    /**
-     * Costruttore a iniezione per test.
-     */
-    /*@ public behavior
-      @   requires prenotazioneDAOMock != null;
-      @   requires postoProiezioneDAOMock != null;
-      @*/
-    public PrenotazioneService(PrenotazioneDAO prenotazioneDAOMock, PostoProiezioneDAO postoProiezioneDAOMock) {
-        prenotazioneDAO = prenotazioneDAOMock;
-        postoProiezioneDAO = postoProiezioneDAOMock;
-    }
+    public PrenotazioneService() {}
 
     /**
      * Crea una nuova prenotazione occupando i posti selezionati.
      */
-    /*@ public behavior
-      @   requires cliente != null;
-      @   requires posti != null && posti.size() > 0;
-      @   requires proiezione != null;
-      @   assignable \nothing;
-      @   ensures \result != null ==> (
-      @              \result.getCliente() == cliente &&
-      @              \result.getProiezione() == proiezione &&
-      @              \result.getPostiPrenotazione() != null &&
-      @              \result.getPostiPrenotazione().size() == posti.size()
-      @          );
-      @*/
+
     public Prenotazione aggiungiOrdine(Cliente cliente, List<PostoProiezione> posti, Proiezione proiezione) {
         if (cliente == null || posti == null || posti.isEmpty() || proiezione == null) {
             throw new IllegalArgumentException("Cliente, posti e proiezione non possono essere null.");
@@ -64,10 +32,8 @@ public class PrenotazioneService {
                 throw new IllegalArgumentException("Posti occupati");
             }
         }
-        Prenotazione prenotazione = new Prenotazione();
-        prenotazione.setCliente(cliente);
-        prenotazione.setProiezione(proiezione);
-        prenotazione.setPostiPrenotazione(posti);
+
+        Prenotazione prenotazione = new Prenotazione(0, cliente, proiezione);
 
         if (!prenotazioneDAO.create(prenotazione)) {
             throw new RuntimeException("Errore durante la creazione della prenotazione.");
@@ -85,14 +51,7 @@ public class PrenotazioneService {
     /**
      * Restituisce i posti associati alla proiezione.
      */
-    /*@ public normal_behavior
-      @   requires proiezione != null;
-      @   assignable \nothing;
-      @   ensures \result != null;
-      @   ensures (\forall int i; 0 <= i && i < \result.size();
-      @               \result.get(i) != null &&
-      @               \result.get(i).getProiezione() == proiezione);
-      @*/
+
     public List<PostoProiezione> ottieniPostiProiezione(Proiezione proiezione){
         return postoProiezioneDAO.retrieveAllByProiezione(proiezione);
     }

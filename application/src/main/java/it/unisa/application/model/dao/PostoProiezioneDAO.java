@@ -10,28 +10,16 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class PostoProiezioneDAO {
-    //@ spec_public
     private final DataSource ds;
-
-    //@ public invariant ds != null;
-
-    /*@ public behavior
-      @   ensures ds != null;
-      @*/
+    private final static Logger logger = Logger.getLogger(PostoProiezioneDAO.class.getName());
+    
     public PostoProiezioneDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
-
-    /*@ public normal_behavior
-      @   requires postoProiezione != null;
-      @   requires postoProiezione.getPosto() != null;
-      @   requires postoProiezione.getPosto().getSala() != null;
-      @   requires postoProiezione.getProiezione() != null;
-      @   assignable \nothing;
-      @   ensures ds == \old(ds);
-      @*/
+    
     public boolean create(PostoProiezione postoProiezione) {
         String sql = "INSERT INTO posto_proiezione (id_sala, fila, numero, id_proiezione, stato) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = ds.getConnection();
@@ -43,21 +31,11 @@ public class PostoProiezioneDAO {
             ps.setBoolean(5, postoProiezione.isStato());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         }
         return false;
     }
-
-
-    /*@ public normal_behavior
-      @   requires proiezione != null;
-      @   assignable \nothing;
-      @   ensures ds == \old(ds);
-      @   ensures \result != null;
-      @   ensures (\forall int i; 0 <= i && i < \result.size();
-      @               \result.get(i) != null &&
-      @               \result.get(i).getProiezione() == proiezione);
-      @*/
+    
     public List<PostoProiezione> retrieveAllByProiezione(Proiezione proiezione) {
         List<PostoProiezione> postiProiezione = new ArrayList<>();
         String sql = "SELECT * FROM posto_proiezione WHERE id_proiezione = ?";
@@ -66,32 +44,18 @@ public class PostoProiezioneDAO {
             ps.setInt(1, proiezione.getId());
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                PostoProiezione postoProiezione = new PostoProiezione();
-                Posto posto = new Posto();
-                posto.setSala(new Sala());
-                posto.getSala().setId(rs.getInt("id_sala"));
-                posto.setFila(rs.getString("fila").charAt(0));
-                posto.setNumero(rs.getInt("numero"));
-                postoProiezione.setPosto(posto);
-                postoProiezione.setProiezione(proiezione);
+                Sala sala = new Sala(rs.getInt("id_sala"), 0, 0, null);
+                Posto posto = new Posto(sala, rs.getString("fila").charAt(0), rs.getInt("numero"));
+                PostoProiezione postoProiezione = new PostoProiezione(posto, proiezione);
                 postoProiezione.setStato(rs.getBoolean("stato"));
                 postiProiezione.add(postoProiezione);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+           logger.severe(e.getMessage());
         }
         return postiProiezione;
     }
-
-    /*@ public normal_behavior
-      @   requires postoProiezione != null;
-      @   requires postoProiezione.getPosto() != null;
-      @   requires postoProiezione.getPosto().getSala() != null;
-      @   requires postoProiezione.getProiezione() != null;
-      @   requires idPrenotazione >= 0;
-      @   assignable \nothing;
-      @   ensures ds == \old(ds);
-      @*/
+    
     public boolean occupaPosto(PostoProiezione postoProiezione, int idPrenotazione) {
         String updateSql = "UPDATE posto_proiezione SET stato = false WHERE id_sala = ? AND fila = ? AND numero = ? AND id_proiezione = ?";
         String insertSql = "INSERT INTO occupa (id_sala, fila, numero, id_proiezione, id_prenotazione) VALUES (?, ?, ?, ?, ?)";
@@ -115,7 +79,7 @@ public class PostoProiezioneDAO {
             return insertPs.executeUpdate() > 0;
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         }
         return false;
     }

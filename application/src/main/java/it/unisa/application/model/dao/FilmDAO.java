@@ -7,30 +7,16 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class FilmDAO {
-    //@ spec_public
     private final DataSource ds;
+    private final static Logger logger = Logger.getLogger(FilmDAO.class.getName());
 
-    //@ public invariant ds != null;
-
-    /*@ public behavior
-      @   ensures ds != null;
-      @*/
     public FilmDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
-    /*@ public normal_behavior
-      @   requires film != null;
-      @   requires film.getTitolo() != null;
-      @   requires film.getGenere() != null;
-      @   requires film.getClassificazione() != null;
-      @   requires film.getDescrizione() != null;
-      @   assignable film.*;
-      @   ensures ds == \old(ds);
-      @   ensures \result ==> (film.getId() >= 0);
-      @*/
     public boolean create(Film film) {
         String sql = "INSERT INTO film (titolo, genere, classificazione, durata, locandina, descrizione, is_proiettato) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = ds.getConnection();
@@ -51,18 +37,12 @@ public class FilmDAO {
                 return true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         }
         return false;
     }
 
 
-    /*@ public normal_behavior
-      @   requires id >= 0;
-      @   assignable \nothing;
-      @   ensures ds == \old(ds);
-      @   ensures (\result != null) ==> (\result.getId() == id);
-      @*/
     public Film retrieveById(int id) {
         String sql = "SELECT * FROM film WHERE id = ?";
         try (Connection connection = ds.getConnection();
@@ -82,18 +62,12 @@ public class FilmDAO {
                 );
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         }
         return null;
     }
 
 
-    /*@ public normal_behavior
-      @   assignable \nothing;
-      @   ensures ds == \old(ds);
-      @   ensures \result != null;
-      @   ensures (\forall int i; 0 <= i && i < \result.size(); \result.get(i) != null);
-      @*/
     public List<Film> retrieveAll() {
         List<Film> films = new ArrayList<>();
         String sql = "SELECT * FROM film";
@@ -113,7 +87,7 @@ public class FilmDAO {
                 ));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.severe(e.getMessage());
         }
         return films;
     }

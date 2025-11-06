@@ -9,24 +9,16 @@ import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SalaDAO {
-    //@ spec_public
-    private DataSource ds;
-
-    //@ public invariant ds != null;
-
-    /*@ public normal_behavior
-      @   ensures this.ds != null;
-      @*/
+    private final DataSource ds;
+    private final static Logger logger = Logger.getLogger(SalaDAO.class.getName());
     public SalaDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
-    /*@ public normal_behavior
-      @   requires id >= 0;
-      @   assignable \nothing;
-      @   ensures (\result != null) ==> \result.getId() == id;
-      @*/
+
     public Sala retrieveById(int id) {
         String sql = "SELECT * FROM sala WHERE id = ?";
         try (Connection connection = ds.getConnection();
@@ -34,27 +26,17 @@ public class SalaDAO {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Sala sala = new Sala();
-                sala.setId(rs.getInt("id"));
-                sala.setNumeroSala(rs.getInt("numero"));
-                sala.setCapienza(rs.getInt("capienza"));
-                Sede sede = new Sede();
-                sede.setId(rs.getInt("id_sede"));
-                sala.setSede(sede);
-                return sala;
+                int numeroSala= rs.getInt("numero");
+                int capienza = rs.getInt("capienza");
+                int idSede= rs.getInt("id_sede");
+                return new Sala(id, numeroSala, capienza, new Sede(idSede));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, e.getMessage(), e);
         }
         return null;
     }
-    /*@ public normal_behavior
-      @   assignable \nothing;
-      @   ensures \result != null && !\result.contains(null);
-      @ also
-      @ public exceptional_behavior
-      @   signals (SQLException e) true;
-      @*/
+
     public List<Sala> retrieveAll() throws SQLException {
         List<Sala> sale = new ArrayList<>();
         String query = "SELECT * FROM sala";
@@ -64,11 +46,11 @@ public class SalaDAO {
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                Sala sala = new Sala();
-                sala.setId(rs.getInt("id"));
-                sala.setId(rs.getInt("id_sede"));
-                sala.setNumeroSala(rs.getInt("numero"));
-                sala.setCapienza(rs.getInt("capienza"));
+                int id = rs.getInt("id");
+                int numeroSala= rs.getInt("numero");
+                int capienza = rs.getInt("capienza");
+                int idSede= rs.getInt("id_sede");
+                Sala sala = new Sala(id, numeroSala, capienza, new Sede(idSede));
                 sale.add(sala);
             }
         }

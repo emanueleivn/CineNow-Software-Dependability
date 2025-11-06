@@ -7,28 +7,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UtenteDAO {
-    //@ spec_public
-    private DataSource ds;
+    private final DataSource ds;
+    private static final Logger logger = Logger.getLogger(UtenteDAO.class.getName());
 
-    //@ public invariant ds != null;
-
-    /*@ public normal_behavior
-      @   ensures ds != null;
-      @*/
     public UtenteDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
-    /*@ public normal_behavior
-      @   requires utente != null;
-      @   requires utente.getEmail() != null && !utente.getEmail().isEmpty();
-      @   requires utente.getPassword() != null && !utente.getPassword().isEmpty();
-      @   requires utente.getRuolo() != null && !utente.getRuolo().isEmpty();
-      @   assignable \nothing;
-      @   ensures (\result==true) ==> utente.getEmail() != null && utente.getPassword() != null;
-      @*/
+
     public boolean create(Utente utente) {
         String sql = "INSERT INTO utente (email, password, ruolo) VALUES (?, ?, ?)";
         try (Connection conn = ds.getConnection();
@@ -38,16 +28,11 @@ public class UtenteDAO {
             stmt.setString(3, utente.getRuolo());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Errore durante creazione utente", e);
             return false;
         }
     }
 
-    /*@ public normal_behavior
-      @   requires email != null && !email.isEmpty();
-      @   assignable \nothing;
-      @   ensures \result == null || \result.getEmail().equals(email);
-      @*/
     public Utente retrieveByEmail(String email) {
         String sql = "SELECT email, password, ruolo " +
                 "FROM utente " +
@@ -57,15 +42,13 @@ public class UtenteDAO {
             stmt.setString(1, email);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    Utente utente = new Utente();
-                    utente.setEmail(rs.getString("email"));
-                    utente.setPassword(rs.getString("password"));
-                    utente.setRuolo(rs.getString("ruolo"));
-                    return utente;
+                    String password =  rs.getString("password");
+                    String ruolo = rs.getString("ruolo");
+                    return new Utente(email,password,ruolo);
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.SEVERE, "Errore durante il recupero dell'utente", e);
         }
         return null;
     }

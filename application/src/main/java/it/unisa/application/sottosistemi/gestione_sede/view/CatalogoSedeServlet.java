@@ -22,19 +22,18 @@ public class CatalogoSedeServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
             return;
         }
-        Sede sedeObject = new Sede();
+        Sede sedeObject;
         List<Film> catalogo;
-        sedeObject.setNome(sede);
         ProgrammazioneSedeService service = new ProgrammazioneSedeService();
         switch (sede) {
             case "Mercogliano":
-                sedeObject.setId(1);
+                sedeObject = new Sede(1);
                 catalogo = service.getCatalogoSede(sedeObject);
                 req.setAttribute("sede", "Mercogliano");
                 req.setAttribute("sedeId", sedeObject.getId());
                 break;
             case "Laquila":
-                sedeObject.setId(2);
+                sedeObject = new Sede(2);
                 catalogo = service.getCatalogoSede(sedeObject);
                 req.setAttribute("sede", "L'Aquila");
                 req.setAttribute("sedeId", sedeObject.getId());

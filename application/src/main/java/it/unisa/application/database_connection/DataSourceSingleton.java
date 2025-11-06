@@ -6,16 +6,9 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 public class DataSourceSingleton {
-    //@ spec_public
-
     private static volatile DataSource instance;
-
     private DataSourceSingleton() {}
 
-    /*@ public normal_behavior
-      @   ensures instance != null && \result == instance;
-      @   assignable instance;
-      @*/
     public static DataSource getInstance() {
         if (instance == null) {
             synchronized (DataSourceSingleton.class) {
