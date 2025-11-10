@@ -39,7 +39,7 @@ class PrenotazioneDAOTest {
     void setUp() throws Exception {
         mockedDataSourceSingleton = mockStatic(DataSourceSingleton.class);
         mockedDataSourceSingleton.when(DataSourceSingleton::getInstance).thenReturn(mockDataSource);
-        when(mockDataSource.getConnection()).thenReturn(mockConnection);
+        lenient().when(mockDataSource.getConnection()).thenReturn(mockConnection);
     }
 
     @AfterEach
@@ -88,6 +88,29 @@ class PrenotazioneDAOTest {
 
         assertFalse(result);
         verify(mockDataSource).getConnection();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenPrenotazioneIsNull() {
+        PrenotazioneDAO dao = new PrenotazioneDAO();
+        boolean result = dao.create(null);
+        assertFalse(result);
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenClienteOrProiezioneIsNull() {
+        PrenotazioneDAO dao = new PrenotazioneDAO();
+
+        // Caso 1: cliente null
+        Prenotazione p1 = new Prenotazione(0, null, new Proiezione(1));
+        boolean result1 = dao.create(p1);
+        assertFalse(result1);
+
+        // Caso 2: proiezione null
+        Cliente cliente = new Cliente("a@b.com", "pwd", "Mario", "Rossi");
+        Prenotazione p2 = new Prenotazione(0, cliente, null);
+        boolean result2 = dao.create(p2);
+        assertFalse(result2);
     }
 
     // -----------------------------------------------------------
@@ -207,5 +230,11 @@ class PrenotazioneDAOTest {
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
+    }
+    @RepeatedTest(5)
+    void shouldReturnNullWhenClienteIsNull() {
+        PrenotazioneDAO dao = new PrenotazioneDAO();
+        List<Prenotazione> result = dao.retrieveAllByCliente(null);
+        assertNull(result);
     }
 }

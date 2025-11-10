@@ -39,7 +39,7 @@ class ProiezioneDAOTest {
     void setUp() throws Exception {
         mockedDataSourceSingleton = mockStatic(DataSourceSingleton.class);
         mockedDataSourceSingleton.when(DataSourceSingleton::getInstance).thenReturn(mockDataSource);
-        when(mockDataSource.getConnection()).thenReturn(mockConnection);
+        lenient().when(mockDataSource.getConnection()).thenReturn(mockConnection);
     }
 
     @AfterEach
@@ -107,6 +107,12 @@ class ProiezioneDAOTest {
         assertFalse(result);
     }
 
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenProiezioneIsNull() {
+        ProiezioneDAO dao = new ProiezioneDAO();
+        boolean success = dao.create(null);
+        assertFalse(success, "Il metodo create() deve restituire false se la proiezione è null");
+    }
     // -----------------------------------------------------------
     // Test del metodo retrieveById()
     // -----------------------------------------------------------
@@ -141,6 +147,18 @@ class ProiezioneDAOTest {
         assertNull(result);
     }
 
+    @RepeatedTest(5)
+    void shouldReturnNullWhenParametersAreNull() {
+        ProiezioneDAO dao = new ProiezioneDAO();
+        List<Proiezione> p = dao.retrieveByFilm(null,null);
+        assertNull(p, "Il metodo retriveByFilm() deve restituire false se film e sede sono null");
+        Film film = new Film(1, "Film", "", "", 120, new byte[]{}, "", true);
+        Sede sede = new Sede(1, "Sede", "Indirizzo");
+        p = dao.retrieveByFilm(film, null);
+        assertNull(p, "Il metodo retriveByFilm() deve restituire false se sede è null");
+        p = dao.retrieveByFilm(null, sede);
+        assertNull(p, "Il metodo retriveByFilm() deve restituire false se film è null");
+    }
     // -----------------------------------------------------------
     // Test del metodo retrieveByFilm()
     // -----------------------------------------------------------

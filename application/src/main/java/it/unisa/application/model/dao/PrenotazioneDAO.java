@@ -19,6 +19,10 @@ public class PrenotazioneDAO {
     }
 
     public boolean create(Prenotazione prenotazione) {
+        if(prenotazione == null || prenotazione.getCliente() == null || prenotazione.getProiezione() == null) {
+            logger.severe("Prenotazione, Cliente or Proiezione is null");
+            return false;
+        }
         String sql = "INSERT INTO prenotazione (email_cliente, id_proiezione) VALUES (?, ?)";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -58,6 +62,10 @@ public class PrenotazioneDAO {
     }
     
     public List<Prenotazione> retrieveAllByCliente(Cliente cliente) {
+        if (cliente == null) {
+            logger.severe("Cliente is null");
+            return null;
+        }
         List<Prenotazione> prenotazioni = new ArrayList<>();
         String sql = "SELECT " +
                 "p.id AS prenotazione_id, " +

@@ -1,12 +1,11 @@
 package unit.test_DAO;
 
 import it.unisa.application.database_connection.DataSourceSingleton;
+import it.unisa.application.model.dao.SlotDAO;
 import it.unisa.application.model.dao.UtenteDAO;
+import it.unisa.application.model.entity.Slot;
 import it.unisa.application.model.entity.Utente;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -43,7 +42,7 @@ class UtenteDAOTest {
         mockedDataSourceSingleton = mockStatic(DataSourceSingleton.class);
         mockedDataSourceSingleton.when(DataSourceSingleton::getInstance).thenReturn(dataSource);
 
-        when(dataSource.getConnection()).thenReturn(connection);
+        lenient().when(dataSource.getConnection()).thenReturn(connection);
 
         // Istanzia il DAO normalmente — userà il singleton mockato
         utenteDAO = new UtenteDAO();
@@ -95,6 +94,11 @@ class UtenteDAOTest {
         verify(preparedStatement).executeUpdate();
     }
 
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenUserIsNull() {
+        boolean success = utenteDAO.create(null);
+        assertFalse(success, "Il metodo create() deve restituire false se l'utente è null");
+    }
     // ------------------- TEST RETRIEVE -------------------
 
     @RepeatedTest(5)

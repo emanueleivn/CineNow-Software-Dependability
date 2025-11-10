@@ -39,7 +39,7 @@ class FilmDAOTest {
     void setUp() throws Exception {
         mockedDataSourceSingleton = mockStatic(DataSourceSingleton.class);
         mockedDataSourceSingleton.when(DataSourceSingleton::getInstance).thenReturn(mockDataSource);
-        when(mockDataSource.getConnection()).thenReturn(mockConnection);
+        lenient().when(mockDataSource.getConnection()).thenReturn(mockConnection);
     }
 
     @AfterEach
@@ -102,6 +102,12 @@ class FilmDAOTest {
         verify(mockPreparedStatement).executeUpdate();
     }
 
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenUserIsNull() {
+        FilmDAO dao = new FilmDAO();
+        boolean success = dao.create(null);
+        assertFalse(success, "Il metodo create() deve restituire false se il film è null");
+    }
     // -----------------------------------------------------------
     // Test del metodo retrieveById()
     // -----------------------------------------------------------

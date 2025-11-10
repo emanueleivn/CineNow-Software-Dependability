@@ -2,6 +2,7 @@ package unit.test_DAO;
 
 import it.unisa.application.database_connection.DataSourceSingleton;
 import it.unisa.application.model.dao.PostoProiezioneDAO;
+import it.unisa.application.model.dao.PrenotazioneDAO;
 import it.unisa.application.model.entity.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +35,7 @@ class PostoProiezioneDAOTest {
     void setUp() throws Exception {
         mockedDataSourceSingleton = mockStatic(DataSourceSingleton.class);
         mockedDataSourceSingleton.when(DataSourceSingleton::getInstance).thenReturn(mockDataSource);
-        when(mockDataSource.getConnection()).thenReturn(mockConnection);
+        lenient().when(mockDataSource.getConnection()).thenReturn(mockConnection);
     }
 
     @AfterEach
@@ -82,6 +83,12 @@ class PostoProiezioneDAOTest {
 
         assertFalse(result);
         verify(mockDataSource).getConnection();
+    }
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenPostoProiezioneIsNull() {
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+        boolean success = dao.create(null);
+        assertFalse(success, "Il metodo create() deve restituire false se il postoProiezione è null");
     }
 
     // -----------------------------------------------------------
@@ -196,5 +203,12 @@ class PostoProiezioneDAOTest {
 
         assertFalse(result);
         verify(mockDataSource).getConnection();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnNullWhenProiezioneIsNull() {
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+        List<PostoProiezione> result = dao.retrieveAllByProiezione(null);
+        assertNull(result);
     }
 }

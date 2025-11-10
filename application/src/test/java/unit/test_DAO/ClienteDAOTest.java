@@ -48,7 +48,7 @@ class ClienteDAOTest {
         mockedDataSourceSingleton = mockStatic(DataSourceSingleton.class);
         mockedDataSourceSingleton.when(DataSourceSingleton::getInstance).thenReturn(mockDataSource);
 
-        when(mockDataSource.getConnection()).thenReturn(mockConnection);
+        lenient().when(mockDataSource.getConnection()).thenReturn(mockConnection);
     }
 
     @AfterEach
@@ -115,6 +115,12 @@ class ClienteDAOTest {
         assertFalse(result, "create() deve restituire false se la connessione fallisce (repetition " + repetitionInfo.getCurrentRepetition() + ")");
     }
 
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenUserIsNull() {
+        ClienteDAO dao = new ClienteDAO();
+        boolean success = dao.create(null);
+        assertFalse(success, "Il metodo create() deve restituire false se il cliente è null");
+    }
     // -----------------------------------------------------------
     // Test del metodo retrieveByEmail()
     // -----------------------------------------------------------

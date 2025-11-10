@@ -18,6 +18,10 @@ public class ClienteDAO {
     }
 
     public boolean create(Cliente cliente) {
+        if(cliente == null) {
+            logger.severe("cliente null");
+            return false;
+        }
         String sqlCliente = "INSERT INTO cliente (email, nome, cognome) VALUES (?, ?, ?)";
         try (Connection conn = ds.getConnection()) {
             conn.setAutoCommit(false);

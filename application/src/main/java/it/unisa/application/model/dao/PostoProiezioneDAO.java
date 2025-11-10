@@ -21,6 +21,10 @@ public class PostoProiezioneDAO {
     }
     
     public boolean create(PostoProiezione postoProiezione) {
+        if (postoProiezione == null) {
+            logger.severe("postoProiezione is null");
+            return false;
+        }
         String sql = "INSERT INTO posto_proiezione (id_sala, fila, numero, id_proiezione, stato) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -37,6 +41,10 @@ public class PostoProiezioneDAO {
     }
     
     public List<PostoProiezione> retrieveAllByProiezione(Proiezione proiezione) {
+        if (proiezione == null) {
+            logger.severe("Proiezione is null");
+            return null;
+        }
         List<PostoProiezione> postiProiezione = new ArrayList<>();
         String sql = "SELECT * FROM posto_proiezione WHERE id_proiezione = ?";
         try (Connection connection = ds.getConnection();

@@ -18,6 +18,10 @@ public class FilmDAO {
     }
 
     public boolean create(Film film) {
+        if(film == null) {
+            logger.severe("Film null");
+            return false;
+        }
         String sql = "INSERT INTO film (titolo, genere, classificazione, durata, locandina, descrizione, is_proiettato) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {

@@ -20,6 +20,10 @@ public class UtenteDAO {
 
 
     public boolean create(Utente utente) {
+        if (utente == null) {
+            logger.warning("Utente nullo o dati mancanti");
+            return false;
+        }
         String sql = "INSERT INTO utente (email, password, ruolo) VALUES (?, ?, ?)";
         try (Connection conn = ds.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {

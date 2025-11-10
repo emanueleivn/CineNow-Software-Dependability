@@ -19,6 +19,11 @@ public class ProiezioneDAO {
     }
 
     public boolean create(Proiezione proiezione) {
+        if(proiezione==null){
+            logger.severe("Proiezione null");
+            return false;
+        }
+
         String insertProiezioneSql = "INSERT INTO proiezione (data, id_film, id_sala, id_orario) VALUES (?, ?, ?, ?)";
         String insertPostiProiezioneSql = """
         INSERT INTO posto_proiezione (id_sala, fila, numero, id_proiezione, stato)
@@ -123,6 +128,10 @@ public class ProiezioneDAO {
     }
 
     public List<Proiezione> retrieveByFilm(Film film, Sede sede) {
+        if (film == null || sede == null) {
+            logger.severe("Film o Sede null");
+            return null;
+        }
         String sql = """
             SELECT p.*, s.numero AS numero_sala, f.titolo AS titolo_film, f.durata AS durata_film, sl.ora_inizio AS orario
             FROM proiezione p
