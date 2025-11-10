@@ -64,9 +64,14 @@ public class Sede {
     public List<Proiezione> getProiezioniFilm(Film film) {
         return sale.stream()
                 .flatMap(sala -> sala.getProiezioni().stream())
-                .filter(proiezione -> proiezione.getFilmProiezione().equals(film))
+                .filter(proiezione -> {
+                    Film f = proiezione.getFilmProiezione();
+                    return f != null && f.equals(film);
+                })
                 .collect(Collectors.toList());
     }
+
+
 
     @Override
     public String toString() {
