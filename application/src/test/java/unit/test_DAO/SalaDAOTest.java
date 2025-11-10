@@ -3,89 +3,137 @@ package unit.test_DAO;
 import it.unisa.application.database_connection.DataSourceSingleton;
 import it.unisa.application.model.dao.SalaDAO;
 import it.unisa.application.model.entity.Sala;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import it.unisa.application.model.entity.Sede;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import javax.sql.DataSource;
+import java.sql.*;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-public class SalaDAOTest {
-    private static SalaDAO salaDAO;
+/**
+ * Test di unità per SalaDAO.
+ */
+@ExtendWith(MockitoExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+class SalaDAOTest {
 
-    @BeforeAll
-    static void globalSetup() {
-        DatabaseSetupForTest.configureH2DataSource();
-        salaDAO = new SalaDAO();
-        initializeTestData();
+    @Mock private DataSource mockDataSource;
+    @Mock private Connection mockConnection;
+    @Mock private PreparedStatement mockPreparedStatement;
+    @Mock private ResultSet mockResultSet;
+
+    private MockedStatic<DataSourceSingleton> mockedDataSourceSingleton;
+
+    @BeforeEach
+    void setUp() throws Exception {
+        mockedDataSourceSingleton = mockStatic(DataSourceSingleton.class);
+        mockedDataSourceSingleton.when(DataSourceSingleton::getInstance).thenReturn(mockDataSource);
+        when(mockDataSource.getConnection()).thenReturn(mockConnection);
     }
 
-    private static void initializeTestData() {
-        try (Connection conn = DataSourceSingleton.getInstance().getConnection()) {
-            conn.createStatement().execute("SET REFERENTIAL_INTEGRITY FALSE");
-            conn.createStatement().execute("DELETE FROM prenotazione");
-            conn.createStatement().execute("DELETE FROM proiezione");
-            conn.createStatement().execute("DELETE FROM slot");
-            conn.createStatement().execute("DELETE FROM sala");
-            conn.createStatement().execute("DELETE FROM film");
-            conn.createStatement().execute("DELETE FROM sede");
-            conn.createStatement().execute("SET REFERENTIAL_INTEGRITY TRUE");
-
-            String insertData = """
-                        INSERT INTO sede (id, nome, via, citta, cap) VALUES 
-                            (1, 'Sede 1', 'Via Roma', 'Napoli', '80100');
-                    
-                        INSERT INTO sala (id, id_sede, numero, capienza) VALUES 
-                            (1, 1, 1, 100),
-                            (2, 1, 2, 150);
-                    
-                        INSERT INTO film (id, titolo, genere, classificazione, durata, locandina, descrizione, is_proiettato) VALUES 
-                            (1, 'Film 1', 'Azione', 'PG-13', 120, 'locandina1.jpg', 'Descrizione Film 1', true),
-                            (2, 'Film 2', 'Commedia', 'G', 90, 'locandina2.jpg', 'Descrizione Film 2', true);
-                    
-                        INSERT INTO slot (id, ora_inizio) VALUES 
-                            (1, '18:00:00');
-                    
-                        INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) VALUES 
-                            (1, '2025-01-01', 1, 1, 1),
-                            (2, '2025-01-02', 2, 2, 1);
-                    """;
-            try (PreparedStatement ps = conn.prepareStatement(insertData)) {
-                ps.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Errore nell'inizializzazione dei dati di test", e);
-        }
-    }
-    @Test
-    void testRetrieveById() {
-        Sala sala = salaDAO.retrieveById(1);
-        assertNotNull(sala, "La sala recuperata non dovrebbe essere null");
-        assertEquals(1, sala.getId(), "L'ID della sala dovrebbe essere 1");
-        assertEquals(1, sala.getNumeroSala(), "Il numero della sala dovrebbe essere 1");
-        assertEquals(100, sala.getCapienza(), "La capienza della sala dovrebbe essere 100");
-        assertNotNull(sala.getSede(), "La sede associata alla sala non dovrebbe essere null");
-        assertEquals(1, sala.getSede().getId(), "L'ID della sede associata dovrebbe essere 1");
-        System.out.println("Sala recuperata: ID=" + sala.getId() +
-                ", Numero=" + sala.getNumeroSala() +
-                ", Capienza=" + sala.getCapienza() +
-                ", ID Sede=" + sala.getSede().getId());
+    @AfterEach
+    void tearDown() {
+        mockedDataSourceSingleton.close();
     }
 
-    @Test
-    void testRetrieveAll() {
-        try {
-            List<Sala> sale = salaDAO.retrieveAll();
-            assertNotNull(sale, "La lista di sale non dovrebbe essere null");
-            assertEquals(2, sale.size(), "Il numero di sale dovrebbe essere 2");
-            for (Sala sala : sale) {
-                System.out.println("Sala recuperata: ID=" + sala.getId() + ", Numero=" + sala.getNumeroSala() + ", Capienza=" + sala.getCapienza());
-            }
+    // -----------------------------------------------------------
+    // Test del metodo retrieveById()
+    // -----------------------------------------------------------
 
-        } catch (SQLException e) {
-            fail("Errore durante il test di retrieveAll: " + e.getMessage());
-        }
+    @RepeatedTest(5)
+    void shouldReturnSalaWhenIdExists(RepetitionInfo info) throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt("numero")).thenReturn(2);
+        when(mockResultSet.getInt("capienza")).thenReturn(150);
+        when(mockResultSet.getInt("id_sede")).thenReturn(5);
+
+        SalaDAO dao = new SalaDAO();
+        Sala result = dao.retrieveById(1);
+
+        assertNotNull(result);
+        assertEquals(2, result.getNumeroSala());
+        assertEquals(150, result.getCapienza());
+        assertEquals(5, result.getSede().getId());
+        verify(mockPreparedStatement).setInt(1, 1);
+        verify(mockPreparedStatement).executeQuery();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnNullWhenIdNotFound(RepetitionInfo info) throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(false);
+
+        SalaDAO dao = new SalaDAO();
+        Sala result = dao.retrieveById(99);
+
+        assertNull(result);
+        verify(mockPreparedStatement).setInt(1, 99);
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById(RepetitionInfo info) throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("DB error"));
+
+        SalaDAO dao = new SalaDAO();
+        Sala result = dao.retrieveById(1);
+
+        assertNull(result);
+        verify(mockDataSource).getConnection();
+    }
+
+    // -----------------------------------------------------------
+    // Test del metodo retrieveAll()
+    // -----------------------------------------------------------
+
+    @RepeatedTest(5)
+    void shouldReturnListOfSalaWhenQuerySucceeds(RepetitionInfo info) throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true, true, false);
+
+        when(mockResultSet.getInt("id")).thenReturn(1, 2);
+        when(mockResultSet.getInt("numero")).thenReturn(3, 4);
+        when(mockResultSet.getInt("capienza")).thenReturn(100, 200);
+        when(mockResultSet.getInt("id_sede")).thenReturn(10, 20);
+
+        SalaDAO dao = new SalaDAO();
+        List<Sala> result = dao.retrieveAll();
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals(3, result.get(0).getNumeroSala());
+        assertEquals(4, result.get(1).getNumeroSala());
+        verify(mockPreparedStatement).executeQuery();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnEmptyListWhenNoResultsFound(RepetitionInfo info) throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(false);
+
+        SalaDAO dao = new SalaDAO();
+        List<Sala> result = dao.retrieveAll();
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @RepeatedTest(5)
+    void shouldThrowSQLExceptionWhenQueryFails(RepetitionInfo info) throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Query failed"));
+
+        SalaDAO dao = new SalaDAO();
+        assertThrows(SQLException.class, dao::retrieveAll);
+        verify(mockDataSource).getConnection();
     }
 }
