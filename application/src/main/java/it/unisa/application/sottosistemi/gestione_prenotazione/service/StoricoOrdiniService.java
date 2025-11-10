@@ -9,20 +9,8 @@ import java.util.List;
 public class StoricoOrdiniService {
     private final PrenotazioneDAO prenotazioneDAO;
 
-    /**
-     * Costruttore di default del servizio storico ordini.
-     */
-
     public StoricoOrdiniService() {
         this.prenotazioneDAO = new PrenotazioneDAO();
-    }
-
-    /**
-     * Costruttore a iniezione per test.
-     */
-
-    public StoricoOrdiniService(PrenotazioneDAO prenotazioneDAOMock) {
-        prenotazioneDAO = prenotazioneDAOMock;
     }
 
     /**

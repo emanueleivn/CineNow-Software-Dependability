@@ -23,7 +23,7 @@ public class PrenotazioneService {
      * Crea una nuova prenotazione occupando i posti selezionati.
      */
 
-    public Prenotazione aggiungiOrdine(Cliente cliente, List<PostoProiezione> posti, Proiezione proiezione) {
+    public void aggiungiOrdine(Cliente cliente, List<PostoProiezione> posti, Proiezione proiezione) {
         if (cliente == null || posti == null || posti.isEmpty() || proiezione == null) {
             throw new IllegalArgumentException("Cliente, posti e proiezione non possono essere null.");
         }
@@ -45,7 +45,6 @@ public class PrenotazioneService {
             }
         }
 
-        return prenotazione;
     }
 
     /**
