@@ -1,0 +1,27 @@
+package java.lang;
+
+/* Minimal stub for java.lang.String - avoids heavy JDK specs that conflict with internal representation changes (Java 9+) */
+public final class String implements CharSequence {
+    //@ public model int length;
+
+    //@ pure
+    public int length() { return 0; }
+
+    //@ pure
+    public char charAt(int index) { return '\0'; }
+
+    //@ pure
+    public String substring(int beginIndex, int endIndex) { return this; }
+
+    //@ pure
+    public boolean equals(Object o) { return this == o; }
+
+    //@ pure
+    public int hashCode() { return 0; }
+
+    //@ pure
+    public String toString() { return this; }
+
+    //@ pure
+    public CharSequence subSequence(int start, int end) { return this; }
+}

@@ -3,30 +3,59 @@ package it.unisa.application.model.entity;
 import java.sql.Time;
 
 public class Slot {
+    //@ public invariant id >= 0;
+    //@ public invariant oraInizio != null;
+
+    //@ spec_public
     private int id;
+    //@ spec_public
     private Time oraInizio;
 
+    //@ public normal_behavior
+    //@ requires id >= 0 && oraInizio != null;
+    //@ ensures this.id >= 0 && this.oraInizio != null;
+    //@ assignable \everything;
     public Slot(int id, Time oraInizio) {
         this.id = id;
         this.oraInizio = oraInizio;
     }
 
+    //@ public normal_behavior
+    //@ ensures \result != null;
+    //@ assignable \nothing;
+    /*@ pure @*/
     public Time getOraInizio() {
         return oraInizio;
     }
 
+    //@ public normal_behavior
+    //@ requires oraInizio != null;
+    //@ ensures this.oraInizio != null;
+    //@ assignable \everything;
     public void setOraInizio(Time oraInizio) {
         this.oraInizio = oraInizio;
     }
 
+    //@ public normal_behavior
+    //@ ensures \result >= 0;
+    //@ assignable \nothing;
+    /*@ pure @*/
     public int getId() {
         return id;
     }
 
+    //@ public normal_behavior
+    //@ requires id >= 0;
+    //@ ensures this.id >= 0;
+    //@ assignable \everything;
     public void setId(int id) {
         this.id = id;
     }
 
+    //@ also public normal_behavior
+    //@ ensures \result != null;
+    //@ assignable \nothing;
+    /*@ pure @*/
     @Override
     public String toString() {
         return "Slot{" +

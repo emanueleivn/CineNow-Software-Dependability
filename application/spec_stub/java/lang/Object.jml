@@ -1,0 +1,13 @@
+package java.lang;
+
+/* Minimal stub for Object - avoids heavy JDK specs */
+public class Object {
+    //@ pure
+    public String toString() { return ""; }
+
+    //@ pure
+    public boolean equals(Object o) { return this == o; }
+
+    //@ pure
+    public int hashCode() { return 0; }
+}

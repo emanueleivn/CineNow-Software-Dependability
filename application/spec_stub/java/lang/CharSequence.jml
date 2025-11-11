@@ -1,0 +1,18 @@
+package java.lang;
+
+/* Minimal stub for CharSequence - specs removed to avoid invariant conflicts with JDK internals */
+public interface CharSequence {
+    //@ public model int length;
+
+    //@ pure
+    int length();
+
+    //@ pure
+    char charAt(int index);
+
+    //@ pure
+    CharSequence subSequence(int start, int end);
+
+    //@ pure
+    String toString();
+}
