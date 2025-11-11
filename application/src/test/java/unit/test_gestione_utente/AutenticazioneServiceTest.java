@@ -108,7 +108,6 @@ class AutenticazioneServiceTest {
         when(utenteDAO.retrieveByEmail(email)).thenReturn(base);
         mockedPasswordHash.when(() -> PasswordHash.hash(plainPwd)).thenReturn(hashed);
 
-        // ✅ Usa un oggetto Cliente (non Utente)
         Cliente cliente = new Cliente(email, hashed, "Mario", "Rossi");
 
         when(clienteDAO.retrieveByEmail(email, hashed)).thenReturn(cliente);
@@ -116,7 +115,7 @@ class AutenticazioneServiceTest {
         Utente result = service.login(email, plainPwd);
 
         assertNotNull(result);
-        assertInstanceOf(Cliente.class, result); // ✅ verifica tipo specifico
+        assertInstanceOf(Cliente.class, result); // verifica tipo specifico
         assertEquals(email, result.getEmail());
         assertEquals("cliente", result.getRuolo());
         verify(clienteDAO).retrieveByEmail(email, hashed);

@@ -15,7 +15,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+/**
+ * Test di unità per la classe Sala.
+ */
 @ExtendWith(MockitoExtension.class)
 class SalaTest {
     private Sala sala;

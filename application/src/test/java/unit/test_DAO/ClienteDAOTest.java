@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Test di unità per ClienteDAO con mock delle istanze interne di UtenteDAO e PrenotazioneDAO.
+ * Test di unità per ClienteDAO.
  */
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -101,18 +101,18 @@ class ClienteDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnFalseWhenConnectionFails(RepetitionInfo repetitionInfo) throws Exception {
+    void shouldReturnFalseWhenConnectionFails() throws Exception {
         mockedDataSourceSingleton.close();
         mockedDataSourceSingleton = mockStatic(DataSourceSingleton.class);
         mockedDataSourceSingleton.when(DataSourceSingleton::getInstance).thenReturn(mockDataSource);
-        when(mockDataSource.getConnection()).thenThrow(new SQLException("Connessione fallita"));
+        when(mockDataSource.getConnection()).thenThrow(new SQLException());
 
         Cliente cliente = new Cliente("cliente@mail.com", "pwd", "Mario", "Rossi");
         ClienteDAO dao = new ClienteDAO();
 
         boolean result = dao.create(cliente);
 
-        assertFalse(result, "create() deve restituire false se la connessione fallisce (repetition " + repetitionInfo.getCurrentRepetition() + ")");
+        assertFalse(result);
     }
 
     @RepeatedTest(5)
@@ -126,7 +126,7 @@ class ClienteDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnClienteWhenFound(RepetitionInfo repetitionInfo) throws Exception {
+    void shouldReturnClienteWhenFound() throws Exception {
         String email = "cliente@mail.com";
         String password = "pwd";
 
@@ -146,7 +146,7 @@ class ClienteDAOTest {
             ClienteDAO dao = new ClienteDAO();
             Cliente result = dao.retrieveByEmail(email, password);
 
-            assertNotNull(result, "retrieveByEmail deve restituire un cliente valido (repetition " + repetitionInfo.getCurrentRepetition() + ")");
+            assertNotNull(result);
             assertEquals(email, result.getEmail());
             assertEquals("Mario", result.getNome());
             assertEquals("Rossi", result.getCognome());
@@ -158,7 +158,7 @@ class ClienteDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenNoResultFound(RepetitionInfo repetitionInfo) throws Exception {
+    void shouldReturnNullWhenNoResultFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
@@ -166,16 +166,16 @@ class ClienteDAOTest {
         ClienteDAO dao = new ClienteDAO();
         Cliente result = dao.retrieveByEmail("notfound@mail.com", "pwd");
 
-        assertNull(result, "retrieveByEmail deve restituire null se non viene trovato alcun cliente (repetition " + repetitionInfo.getCurrentRepetition() + ")");
+        assertNull(result);
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenSQLExceptionOccurs(RepetitionInfo repetitionInfo) throws Exception {
-        when(mockDataSource.getConnection()).thenThrow(new SQLException("Errore DB"));
+    void shouldReturnNullWhenSQLExceptionOccurs() throws Exception {
+        when(mockDataSource.getConnection()).thenThrow(new SQLException());
 
         ClienteDAO dao = new ClienteDAO();
         Cliente result = dao.retrieveByEmail("error@mail.com", "pwd");
 
-        assertNull(result, "retrieveByEmail deve restituire null in caso di SQLException (repetition " + repetitionInfo.getCurrentRepetition() + ")");
+        assertNull(result);
     }
 }

@@ -52,7 +52,7 @@ class SedeDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnSedeWhenIdExists(RepetitionInfo info) throws Exception {
+    void shouldReturnSedeWhenIdExists() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
@@ -73,7 +73,7 @@ class SedeDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenIdNotFound(RepetitionInfo info) throws Exception {
+    void shouldReturnNullWhenIdNotFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
@@ -86,8 +86,8 @@ class SedeDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById(RepetitionInfo info) throws Exception {
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Errore DB"));
+    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById() throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         SedeDAO dao = new SedeDAO();
         Sede result = dao.retrieveById(1);
@@ -101,7 +101,7 @@ class SedeDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnListOfSediWhenQuerySucceeds(RepetitionInfo info) throws Exception {
+    void shouldReturnListOfSediWhenQuerySucceeds() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true, true, false);
@@ -123,7 +123,7 @@ class SedeDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenNoResultsFound(RepetitionInfo info) throws Exception {
+    void shouldReturnEmptyListWhenNoResultsFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
@@ -136,8 +136,8 @@ class SedeDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenSQLExceptionOccursInRetrieveAll(RepetitionInfo info) throws Exception {
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Query failed"));
+    void shouldReturnEmptyListWhenSQLExceptionOccursInRetrieveAll() throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         SedeDAO dao = new SedeDAO();
         List<Sede> result = dao.retrieveAll();
@@ -152,7 +152,7 @@ class SedeDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnListOfSaleForGivenSede(RepetitionInfo info) throws Exception {
+    void shouldReturnListOfSaleForGivenSede() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true, false);
@@ -165,14 +165,14 @@ class SedeDAOTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(5, result.get(0).getNumeroSala());
-        assertEquals(150, result.get(0).getCapienza());
+        assertEquals(5, result.getFirst().getNumeroSala());
+        assertEquals(150, result.getFirst().getCapienza());
         verify(mockPreparedStatement).setInt(1, 10);
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenSQLExceptionOccursInRetrieveSaleBySede(RepetitionInfo info) throws Exception {
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Errore SQL"));
+    void shouldReturnEmptyListWhenSQLExceptionOccursInRetrieveSaleBySede() throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         SedeDAO dao = new SedeDAO();
         List<Sala> result = dao.retrieveSaleBySede(10);
@@ -186,7 +186,7 @@ class SedeDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnSedeWhenGestoreEmailExists(RepetitionInfo info) throws Exception {
+    void shouldReturnSedeWhenGestoreEmailExists() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
@@ -207,7 +207,7 @@ class SedeDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenNoGestoreFound(RepetitionInfo info) throws Exception {
+    void shouldReturnNullWhenNoGestoreFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
@@ -220,8 +220,8 @@ class SedeDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenSQLExceptionOccursInRetrieveByGestoreEmail(RepetitionInfo info) throws Exception {
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Errore DB"));
+    void shouldReturnNullWhenSQLExceptionOccursInRetrieveByGestoreEmail() throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         SedeDAO dao = new SedeDAO();
         Sede result = dao.retrieveByGestoreEmail("gestore@cinema.it");
@@ -235,7 +235,7 @@ class SedeDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnListOfFilmForSede(RepetitionInfo info) throws Exception {
+    void shouldReturnListOfFilmForSede() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true, true, false);
@@ -260,8 +260,8 @@ class SedeDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenSQLExceptionOccursInRetrieveFilm(RepetitionInfo info) throws Exception {
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Errore DB"));
+    void shouldReturnEmptyListWhenSQLExceptionOccursInRetrieveFilm() throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         SedeDAO dao = new SedeDAO();
         List<Film> result = dao.retrieveFilm(10);

@@ -47,7 +47,7 @@ class SlotDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnSlotWhenIdExists(RepetitionInfo repetitionInfo) throws Exception {
+    void shouldReturnSlotWhenIdExists() throws Exception {
         Time oraInizio = Time.valueOf("14:30:00");
 
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
@@ -66,7 +66,7 @@ class SlotDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenSlotIdNotFound(RepetitionInfo repetitionInfo) throws Exception {
+    void shouldReturnNullWhenSlotIdNotFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
@@ -79,8 +79,8 @@ class SlotDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById(RepetitionInfo repetitionInfo) throws Exception {
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Errore DB"));
+    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById() throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         SlotDAO dao = new SlotDAO();
         Slot result = dao.retrieveById(1);
@@ -94,7 +94,7 @@ class SlotDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnSlotWhenProiezioneHasValidSlot(RepetitionInfo repetitionInfo) throws Exception {
+    void shouldReturnSlotWhenProiezioneHasValidSlot() throws Exception {
         Proiezione mockProiezione = mock(Proiezione.class);
         Slot mockSlot = new Slot(2, Time.valueOf("16:00:00"));
         when(mockProiezione.getOrarioProiezione()).thenReturn(mockSlot);
@@ -117,14 +117,14 @@ class SlotDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenProiezioneIsNull(RepetitionInfo repetitionInfo) {
+    void shouldReturnNullWhenProiezioneIsNull() {
         SlotDAO dao = new SlotDAO();
         Slot result = dao.retrieveByProiezione(null);
         assertNull(result);
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenProiezioneSlotIsNull(RepetitionInfo repetitionInfo) {
+    void shouldReturnNullWhenProiezioneSlotIsNull() {
         Proiezione mockProiezione = mock(Proiezione.class);
         when(mockProiezione.getOrarioProiezione()).thenReturn(null);
 
@@ -135,13 +135,13 @@ class SlotDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenSQLExceptionOccursInRetrieveByProiezione(RepetitionInfo repetitionInfo) throws Exception {
+    void shouldReturnNullWhenSQLExceptionOccursInRetrieveByProiezione() throws Exception {
         Proiezione mockProiezione = mock(Proiezione.class);
         Slot mockSlot = new Slot(4, Time.valueOf("20:00:00"));
 
         when(mockProiezione.getOrarioProiezione()).thenReturn(mockSlot);
 
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("DB Error"));
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         SlotDAO dao = new SlotDAO();
         Slot result = dao.retrieveByProiezione(mockProiezione);
@@ -155,7 +155,7 @@ class SlotDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnListOfSlotsWhenQuerySucceeds(RepetitionInfo repetitionInfo) throws Exception {
+    void shouldReturnListOfSlotsWhenQuerySucceeds() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
 
@@ -175,7 +175,7 @@ class SlotDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenNoResultsFound(RepetitionInfo repetitionInfo) throws Exception {
+    void shouldReturnEmptyListWhenNoResultsFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
@@ -188,8 +188,8 @@ class SlotDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenSQLExceptionOccursInRetrieveAllSlots(RepetitionInfo repetitionInfo) throws Exception {
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Errore SQL"));
+    void shouldReturnEmptyListWhenSQLExceptionOccursInRetrieveAllSlots() throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         SlotDAO dao = new SlotDAO();
         List<Slot> result = dao.retrieveAllSlots();

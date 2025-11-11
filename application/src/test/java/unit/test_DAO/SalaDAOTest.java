@@ -3,7 +3,6 @@ package unit.test_DAO;
 import it.unisa.application.database_connection.DataSourceSingleton;
 import it.unisa.application.model.dao.SalaDAO;
 import it.unisa.application.model.entity.Sala;
-import it.unisa.application.model.entity.Sede;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -47,7 +46,7 @@ class SalaDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnSalaWhenIdExists(RepetitionInfo info) throws Exception {
+    void shouldReturnSalaWhenIdExists() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
@@ -67,7 +66,7 @@ class SalaDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenIdNotFound(RepetitionInfo info) throws Exception {
+    void shouldReturnNullWhenIdNotFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
@@ -80,8 +79,8 @@ class SalaDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById(RepetitionInfo info) throws Exception {
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("DB error"));
+    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById() throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         SalaDAO dao = new SalaDAO();
         Sala result = dao.retrieveById(1);
@@ -95,7 +94,7 @@ class SalaDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnListOfSalaWhenQuerySucceeds(RepetitionInfo info) throws Exception {
+    void shouldReturnListOfSalaWhenQuerySucceeds() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true, true, false);
@@ -116,7 +115,7 @@ class SalaDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenNoResultsFound(RepetitionInfo info) throws Exception {
+    void shouldReturnEmptyListWhenNoResultsFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
@@ -129,8 +128,8 @@ class SalaDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldThrowSQLExceptionWhenQueryFails(RepetitionInfo info) throws Exception {
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Query failed"));
+    void shouldThrowSQLExceptionWhenQueryFails() throws Exception {
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         SalaDAO dao = new SalaDAO();
         assertThrows(SQLException.class, dao::retrieveAll);

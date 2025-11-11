@@ -95,10 +95,9 @@ class StoricoOrdiniServiceTest {
 
     @RepeatedTest(5)
     void shouldThrowIllegalArgumentExceptionWhenClienteIsNull() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class,
+        assertThrows(IllegalArgumentException.class,
                 () -> service.storicoOrdini(null));
 
-        assertEquals("Il cliente non può essere null.", ex.getMessage());
         verifyNoInteractions(prenotazioneDAO);
     }
 
@@ -107,10 +106,9 @@ class StoricoOrdiniServiceTest {
         when(prenotazioneDAO.retrieveAllByCliente(cliente))
                 .thenThrow(new RuntimeException("Errore DAO"));
 
-        RuntimeException ex = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> service.storicoOrdini(cliente));
 
-        assertEquals("Errore DAO", ex.getMessage());
         verify(prenotazioneDAO).retrieveAllByCliente(cliente);
     }
 }

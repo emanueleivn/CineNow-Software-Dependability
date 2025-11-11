@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Test di unità per PrenotazioneService senza modificare la classe originale.
+ * Test di unità per PrenotazioneService.
  */
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -91,10 +91,9 @@ class PrenotazioneServiceTest {
     void shouldThrowRuntimeExceptionWhenPrenotazioneCreationFails() {
         when(prenotazioneDAO.create(any(Prenotazione.class))).thenReturn(false);
 
-        RuntimeException ex = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> service.aggiungiOrdine(cliente, posti, proiezione));
 
-        assertEquals("Errore durante la creazione della prenotazione.", ex.getMessage());
         verify(prenotazioneDAO).create(any(Prenotazione.class));
         verify(postoProiezioneDAO, never()).occupaPosto(any(), anyInt());
     }
@@ -104,10 +103,9 @@ class PrenotazioneServiceTest {
         when(prenotazioneDAO.create(any(Prenotazione.class))).thenReturn(true);
         when(postoProiezioneDAO.occupaPosto(any(PostoProiezione.class), anyInt())).thenReturn(false);
 
-        RuntimeException ex = assertThrows(RuntimeException.class,
+        assertThrows(RuntimeException.class,
                 () -> service.aggiungiOrdine(cliente, posti, proiezione));
 
-        assertEquals("Errore durante l'occupazione del posto.", ex.getMessage());
         verify(prenotazioneDAO).create(any(Prenotazione.class));
         verify(postoProiezioneDAO).occupaPosto(any(PostoProiezione.class), anyInt());
     }

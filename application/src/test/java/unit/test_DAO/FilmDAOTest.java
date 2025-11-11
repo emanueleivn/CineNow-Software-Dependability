@@ -52,7 +52,7 @@ class FilmDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldCreateFilmSuccessfully(RepetitionInfo info) throws Exception {
+    void shouldCreateFilmSuccessfully() throws Exception {
         Film film = new Film(0, "Titolo", "Genere", "PG", 120, new byte[]{1, 2, 3}, "Descrizione", true);
 
         when(mockConnection.prepareStatement(anyString(), (int) eq(Statement.RETURN_GENERATED_KEYS)))
@@ -75,10 +75,10 @@ class FilmDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnFalseWhenSQLExceptionOccursInCreate(RepetitionInfo info) throws Exception {
+    void shouldReturnFalseWhenSQLExceptionOccursInCreate() throws Exception {
         Film film = new Film(0, "Titolo", "Genere", "PG", 120, null, "Descrizione", true);
         when(mockConnection.prepareStatement(anyString(), (int) eq(Statement.RETURN_GENERATED_KEYS)))
-                .thenThrow(new SQLException("Errore SQL"));
+                .thenThrow(new SQLException());
 
         FilmDAO dao = new FilmDAO();
         boolean result = dao.create(film);
@@ -88,7 +88,7 @@ class FilmDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnFalseWhenExecuteUpdateReturnsZero(RepetitionInfo info) throws Exception {
+    void shouldReturnFalseWhenExecuteUpdateReturnsZero() throws Exception {
         Film film = new Film(0, "Titolo", "Genere", "PG", 120, null, "Descrizione", true);
 
         when(mockConnection.prepareStatement(anyString(), (int) eq(Statement.RETURN_GENERATED_KEYS)))
@@ -113,7 +113,7 @@ class FilmDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnFilmWhenFound(RepetitionInfo info) throws Exception {
+    void shouldReturnFilmWhenFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
@@ -137,7 +137,7 @@ class FilmDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenFilmNotFound(RepetitionInfo info) throws Exception {
+    void shouldReturnNullWhenFilmNotFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
@@ -149,8 +149,8 @@ class FilmDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById(RepetitionInfo info) throws Exception {
-        when(mockDataSource.getConnection()).thenThrow(new SQLException("Errore DB"));
+    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById() throws Exception {
+        when(mockDataSource.getConnection()).thenThrow(new SQLException());
 
         FilmDAO dao = new FilmDAO();
         Film result = dao.retrieveById(1);
@@ -163,7 +163,7 @@ class FilmDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnAllFilmsSuccessfully(RepetitionInfo info) throws Exception {
+    void shouldReturnAllFilmsSuccessfully() throws Exception {
         when(mockConnection.createStatement()).thenReturn(mockStatement);
         when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true, true, false);
@@ -188,8 +188,8 @@ class FilmDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenSQLExceptionOccursInRetrieveAll(RepetitionInfo info) throws Exception {
-        when(mockDataSource.getConnection()).thenThrow(new SQLException("Errore DB"));
+    void shouldReturnEmptyListWhenSQLExceptionOccursInRetrieveAll() throws Exception {
+        when(mockDataSource.getConnection()).thenThrow(new SQLException());
 
         FilmDAO dao = new FilmDAO();
         List<Film> result = dao.retrieveAll();
@@ -199,7 +199,7 @@ class FilmDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenNoResults(RepetitionInfo info) throws Exception {
+    void shouldReturnEmptyListWhenNoResults() throws Exception {
         when(mockConnection.createStatement()).thenReturn(mockStatement);
         when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);

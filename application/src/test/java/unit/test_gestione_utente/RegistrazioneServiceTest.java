@@ -166,7 +166,6 @@ class RegistrazioneServiceTest {
         when(validationManager.validate(inputs)).thenReturn(true);
         when(utenteDAO.retrieveByEmail(email)).thenReturn(null);
 
-        // ✅ Riutilizza il mock statico già aperto
         mockedPasswordHash.when(() -> PasswordHash.hash(password))
                 .thenThrow(new RuntimeException("Errore hash"));
 

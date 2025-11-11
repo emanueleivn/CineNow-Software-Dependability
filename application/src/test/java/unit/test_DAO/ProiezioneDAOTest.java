@@ -52,7 +52,7 @@ class ProiezioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldCreateProiezioneSuccessfully(RepetitionInfo info) throws Exception {
+    void shouldCreateProiezioneSuccessfully() throws Exception {
         Film film = new Film(1, "Film Test", "Genere", "PG", 120, new byte[]{}, "desc", true);
         Sala sala = new Sala(2, 1, 100, new Sede(1));
         Slot slot = new Slot(10, Time.valueOf("20:00:00"));
@@ -94,7 +94,7 @@ class ProiezioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnFalseWhenSQLExceptionOccursInCreate(RepetitionInfo info) throws Exception {
+    void shouldReturnFalseWhenSQLExceptionOccursInCreate() throws Exception {
         when(mockDataSource.getConnection()).thenThrow(new SQLException("Connessione fallita"));
         Film film = new Film(1, "Film", "", "", 120, new byte[]{}, "", true);
         Sala sala = new Sala(2, 1, 100, new Sede(1));
@@ -118,7 +118,7 @@ class ProiezioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnProiezioneWhenFound(RepetitionInfo info) throws Exception {
+    void shouldReturnProiezioneWhenFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
@@ -138,7 +138,7 @@ class ProiezioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById(RepetitionInfo info) throws Exception {
+    void shouldReturnNullWhenSQLExceptionOccursInRetrieveById() throws Exception {
         when(mockDataSource.getConnection()).thenThrow(new SQLException("Errore DB"));
 
         ProiezioneDAO dao = new ProiezioneDAO();
@@ -164,7 +164,7 @@ class ProiezioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnProiezioniForGivenFilmAndSede(RepetitionInfo info) throws Exception {
+    void shouldReturnProiezioniForGivenFilmAndSede() throws Exception {
         Film film = new Film(1, "Film A", "", "", 120, new byte[]{}, "", true);
         Sede sede = new Sede(1, "Sede Test", "Via Roma");
 
@@ -186,7 +186,7 @@ class ProiezioneDAOTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Film A", result.get(0).getFilmProiezione().getTitolo());
+        assertEquals("Film A", result.getFirst().getFilmProiezione().getTitolo());
         verify(mockPreparedStatement).setInt(1, film.getId());
         verify(mockPreparedStatement).setInt(2, sede.getId());
     }
@@ -210,7 +210,7 @@ class ProiezioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnProiezioniForGivenSede(RepetitionInfo info) throws Exception {
+    void shouldReturnProiezioniForGivenSede() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true, false);
@@ -229,12 +229,12 @@ class ProiezioneDAOTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("Film B", result.get(0).getFilmProiezione().getTitolo());
+        assertEquals("Film B", result.getFirst().getFilmProiezione().getTitolo());
         verify(mockPreparedStatement).setInt(1, 1);
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenSQLExceptionInRetrieveAllBySede(RepetitionInfo info) throws Exception {
+    void shouldReturnEmptyListWhenSQLExceptionInRetrieveAllBySede() throws Exception {
         when(mockDataSource.getConnection()).thenThrow(new SQLException("Errore DB"));
 
         ProiezioneDAO dao = new ProiezioneDAO();
@@ -249,7 +249,7 @@ class ProiezioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnProiezioneBySalaSlotAndData(RepetitionInfo info) throws Exception {
+    void shouldReturnProiezioneBySalaSlotAndData() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
@@ -270,7 +270,7 @@ class ProiezioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenSQLExceptionInRetrieveProiezioneBySalaSlotAndData(RepetitionInfo info) throws Exception {
+    void shouldReturnNullWhenSQLExceptionInRetrieveProiezioneBySalaSlotAndData() throws Exception {
         when(mockDataSource.getConnection()).thenThrow(new SQLException("Connessione fallita"));
 
         ProiezioneDAO dao = new ProiezioneDAO();

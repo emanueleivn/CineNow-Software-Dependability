@@ -15,7 +15,9 @@ import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+/**
+ * Test di unità per la classe Sede.
+ */
 @ExtendWith(MockitoExtension.class)
 class SedeTest {
 

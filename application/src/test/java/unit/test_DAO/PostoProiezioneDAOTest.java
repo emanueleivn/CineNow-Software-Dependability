@@ -48,7 +48,7 @@ class PostoProiezioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldCreatePostoProiezioneSuccessfully(RepetitionInfo info) throws Exception {
+    void shouldCreatePostoProiezioneSuccessfully() throws Exception {
         Sala sala = new Sala(1, 1, 100, null);
         Posto posto = new Posto(sala, 'A', 5);
         Proiezione proiezione = new Proiezione(10);
@@ -70,7 +70,7 @@ class PostoProiezioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnFalseWhenSQLExceptionOccursInCreate(RepetitionInfo info) throws Exception {
+    void shouldReturnFalseWhenSQLExceptionOccursInCreate() throws Exception {
         Sala sala = new Sala(1, 1, 100, null);
         Posto posto = new Posto(sala, 'A', 5);
         Proiezione proiezione = new Proiezione(10);
@@ -96,7 +96,7 @@ class PostoProiezioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnListOfPostiProiezioneWhenFound(RepetitionInfo info) throws Exception {
+    void shouldReturnListOfPostiProiezioneWhenFound() throws Exception {
         Proiezione proiezione = new Proiezione(7);
 
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
@@ -120,7 +120,7 @@ class PostoProiezioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenNoResults(RepetitionInfo info) throws Exception {
+    void shouldReturnEmptyListWhenNoResults() throws Exception {
         Proiezione proiezione = new Proiezione(7);
 
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
@@ -135,9 +135,9 @@ class PostoProiezioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenSQLExceptionOccurs(RepetitionInfo info) throws Exception {
+    void shouldReturnEmptyListWhenSQLExceptionOccurs() throws Exception {
         Proiezione proiezione = new Proiezione(7);
-        when(mockDataSource.getConnection()).thenThrow(new SQLException("Connessione fallita"));
+        when(mockDataSource.getConnection()).thenThrow(new SQLException());
 
         PostoProiezioneDAO dao = new PostoProiezioneDAO();
         List<PostoProiezione> result = dao.retrieveAllByProiezione(proiezione);
@@ -151,7 +151,7 @@ class PostoProiezioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldOccupySeatSuccessfully(RepetitionInfo info) throws Exception {
+    void shouldOccupySeatSuccessfully() throws Exception {
         Sala sala = new Sala(1, 1, 100, null);
         Posto posto = new Posto(sala, 'A', 5);
         Proiezione proiezione = new Proiezione(3);
@@ -171,7 +171,7 @@ class PostoProiezioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnFalseWhenUpdateFailsInOccupaPosto(RepetitionInfo info) throws Exception {
+    void shouldReturnFalseWhenUpdateFailsInOccupaPosto() throws Exception {
         Sala sala = new Sala(1, 1, 100, null);
         Posto posto = new Posto(sala, 'A', 5);
         Proiezione proiezione = new Proiezione(3);
@@ -190,13 +190,13 @@ class PostoProiezioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnFalseWhenSQLExceptionOccursInOccupaPosto(RepetitionInfo info) throws Exception {
+    void shouldReturnFalseWhenSQLExceptionOccursInOccupaPosto() throws Exception {
         Sala sala = new Sala(1, 1, 100, null);
         Posto posto = new Posto(sala, 'A', 5);
         Proiezione proiezione = new Proiezione(3);
         PostoProiezione postoProiezione = new PostoProiezione(posto, proiezione);
 
-        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException("Errore SQL"));
+        when(mockConnection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         PostoProiezioneDAO dao = new PostoProiezioneDAO();
         boolean result = dao.occupaPosto(postoProiezione, 99);

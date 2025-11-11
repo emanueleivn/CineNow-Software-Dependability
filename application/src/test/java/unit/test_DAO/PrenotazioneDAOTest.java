@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Test di unità per PrenotazioneDAO con mock statici e costruttivi.
+ * Test di unità per PrenotazioneDAO.
  */
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
@@ -52,7 +52,7 @@ class PrenotazioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldCreatePrenotazioneSuccessfully(RepetitionInfo info) throws Exception {
+    void shouldCreatePrenotazioneSuccessfully() throws Exception {
         Cliente cliente = new Cliente("mail@test.com", "pwd", "Mario", "Rossi");
         Proiezione proiezione = new Proiezione(1);
         Prenotazione prenotazione = new Prenotazione(0, cliente, proiezione);
@@ -76,12 +76,12 @@ class PrenotazioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnFalseWhenSQLExceptionInCreate(RepetitionInfo info) throws Exception {
+    void shouldReturnFalseWhenSQLExceptionInCreate() throws Exception {
         Cliente cliente = new Cliente("mail@test.com", "pwd", "Mario", "Rossi");
         Proiezione proiezione = new Proiezione(1);
         Prenotazione prenotazione = new Prenotazione(0, cliente, proiezione);
 
-        when(mockConnection.prepareStatement(anyString(), anyInt())).thenThrow(new SQLException("DB error"));
+        when(mockConnection.prepareStatement(anyString(), anyInt())).thenThrow(new SQLException());
 
         PrenotazioneDAO dao = new PrenotazioneDAO();
         boolean result = dao.create(prenotazione);
@@ -118,7 +118,7 @@ class PrenotazioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnPrenotazioneWhenFound(RepetitionInfo info) throws Exception {
+    void shouldReturnPrenotazioneWhenFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
@@ -137,7 +137,7 @@ class PrenotazioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnNullWhenPrenotazioneNotFound(RepetitionInfo info) throws Exception {
+    void shouldReturnNullWhenPrenotazioneNotFound() throws Exception {
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(false);
@@ -147,10 +147,9 @@ class PrenotazioneDAOTest {
 
         assertNull(result);
     }
-
     @RepeatedTest(5)
-    void shouldReturnNullWhenSQLExceptionInRetrieveById(RepetitionInfo info) throws Exception {
-        when(mockDataSource.getConnection()).thenThrow(new SQLException("Errore DB"));
+    void shouldReturnNullWhenSQLExceptionInRetrieveById() throws Exception {
+        when(mockDataSource.getConnection()).thenThrow(new SQLException());
 
         PrenotazioneDAO dao = new PrenotazioneDAO();
         Prenotazione result = dao.retrieveById(1);
@@ -163,7 +162,7 @@ class PrenotazioneDAOTest {
     // -----------------------------------------------------------
 
     @RepeatedTest(5)
-    void shouldReturnPrenotazioniWhenFound(RepetitionInfo info) throws Exception {
+    void shouldReturnPrenotazioniWhenFound() throws Exception {
         Cliente cliente = new Cliente("cliente@mail.com", "pwd", "Mario", "Rossi");
 
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
@@ -207,9 +206,9 @@ class PrenotazioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenSQLExceptionOccurs(RepetitionInfo info) throws Exception {
+    void shouldReturnEmptyListWhenSQLExceptionOccurs() throws Exception {
         Cliente cliente = new Cliente("cliente@mail.com", "pwd", "Mario", "Rossi");
-        when(mockDataSource.getConnection()).thenThrow(new SQLException("Errore DB"));
+        when(mockDataSource.getConnection()).thenThrow(new SQLException());
 
         PrenotazioneDAO dao = new PrenotazioneDAO();
         List<Prenotazione> result = dao.retrieveAllByCliente(cliente);
@@ -219,7 +218,7 @@ class PrenotazioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnEmptyListWhenNoResults(RepetitionInfo info) throws Exception {
+    void shouldReturnEmptyListWhenNoResults() throws Exception {
         Cliente cliente = new Cliente("cliente@mail.com", "pwd", "Mario", "Rossi");
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);

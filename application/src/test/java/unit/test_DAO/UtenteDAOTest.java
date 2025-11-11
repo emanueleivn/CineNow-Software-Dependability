@@ -1,9 +1,7 @@
 package unit.test_DAO;
 
 import it.unisa.application.database_connection.DataSourceSingleton;
-import it.unisa.application.model.dao.SlotDAO;
 import it.unisa.application.model.dao.UtenteDAO;
-import it.unisa.application.model.entity.Slot;
 import it.unisa.application.model.entity.Utente;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,7 +13,9 @@ import java.sql.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+/**
+ * Test di unità per UtenteDAO.
+ */
 @ExtendWith(MockitoExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class UtenteDAOTest {
@@ -74,7 +74,7 @@ class UtenteDAOTest {
     @RepeatedTest(5)
     void shouldReturnFalseWhenSQLExceptionThrownDuringCreate() throws Exception {
         Utente utente = new Utente("test@example.com", "password123", "ADMIN");
-        when(connection.prepareStatement(anyString())).thenThrow(new SQLException("DB error"));
+        when(connection.prepareStatement(anyString())).thenThrow(new SQLException());
 
         boolean result = utenteDAO.create(utente);
 

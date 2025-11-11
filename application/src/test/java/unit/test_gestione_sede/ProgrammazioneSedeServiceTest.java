@@ -125,7 +125,7 @@ class ProgrammazioneSedeServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals(withinWeek.getId(), result.get(0).getId());
+        assertEquals(withinWeek.getId(), result.getFirst().getId());
         verify(proiezioneDAO).retrieveByFilm(any(Film.class), any(Sede.class));
     }
 
@@ -158,8 +158,8 @@ class ProgrammazioneSedeServiceTest {
 
             assertNotNull(result);
             assertEquals(2, result.size());
-            assertEquals("Film1", result.get(0).getTitolo());
-            verify(mockedSedeDAO.constructed().get(0)).retrieveFilm(1);
+            assertEquals("Film1", result.getFirst().getTitolo());
+            verify(mockedSedeDAO.constructed().getFirst()).retrieveFilm(1);
         }
     }
 
