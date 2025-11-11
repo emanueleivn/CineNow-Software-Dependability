@@ -19,7 +19,19 @@ import static org.mockito.Mockito.*;
 
 public class LoginServletIT extends BaseIntegrationTest {
 
-    private LoginServlet servlet;
+    public static class TestableLoginServlet extends LoginServlet {
+        @Override
+        public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            super.doGet(req, resp);
+        }
+
+        @Override
+        public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+            super.doPost(req, resp);
+        }
+    }
+
+    private TestableLoginServlet servlet;
     private HttpServletRequest request;
     private HttpServletResponse response;
     private HttpSession session;
@@ -27,7 +39,7 @@ public class LoginServletIT extends BaseIntegrationTest {
 
     @BeforeEach
     void setup() throws SQLException {
-        servlet = new LoginServlet();
+        servlet = new TestableLoginServlet();
         servlet.init();
 
         request = mock(HttpServletRequest.class);

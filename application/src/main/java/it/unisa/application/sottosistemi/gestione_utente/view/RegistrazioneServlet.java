@@ -15,7 +15,7 @@ public class RegistrazioneServlet extends HttpServlet {
     RegistrazioneService regServ;
 
     @Override
-    public void init() throws ServletException {
+    public void init() {
         regServ = new RegistrazioneService();
     }
 
