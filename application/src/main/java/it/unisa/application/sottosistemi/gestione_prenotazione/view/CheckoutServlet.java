@@ -17,6 +17,12 @@ public class CheckoutServlet extends HttpServlet {
         String proiezioneId = request.getParameter("proiezioneId");
         String posti = request.getParameter("posti");
         String totale = request.getParameter("totale");
+        if (proiezioneId == null || posti == null || totale == null
+                || proiezioneId.isBlank() || posti.isBlank() || totale.isBlank()) {
+            request.setAttribute("errorMessage", "Dati checkout mancanti o non validi.");
+            request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            return;
+        }
         request.setAttribute("proiezioneId", proiezioneId);
         request.setAttribute("posti", posti);
         request.setAttribute("totale", totale);
