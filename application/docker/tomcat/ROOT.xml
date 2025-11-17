@@ -5,9 +5,9 @@
             auth="Container"
             type="javax.sql.DataSource"
             driverClassName="com.mysql.cj.jdbc.Driver"
-            url="jdbc:mysql://db:3306/cinenow?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC"
-            username="cinenow"
-            password="cinenow"
+            url="jdbc:mysql://${CATALINA_OPTS_DB_HOST}:${CATALINA_OPTS_DB_PORT}/${CATALINA_OPTS_DB_DATABASE}?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC"
+            username="${CATALINA_OPTS_DB_USER}"
+            password="${CATALINA_OPTS_DB_PASSWORD}"
             maxTotal="20"
             maxIdle="10"
             maxWaitMillis="10000"/>
