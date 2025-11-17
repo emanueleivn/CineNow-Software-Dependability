@@ -389,5 +389,4 @@ class PostoProiezioneDAOTest {
         verify(mockPreparedStatement2, never()).executeUpdate();
     }
 
-
 }
