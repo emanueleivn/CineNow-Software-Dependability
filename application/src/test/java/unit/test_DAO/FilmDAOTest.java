@@ -210,4 +210,27 @@ class FilmDAOTest {
         assertNotNull(result);
         assertTrue(result.isEmpty());
     }
+
+    @RepeatedTest(5)
+    void shouldNotCreateFilmWithoutGeneratedKey() throws Exception {
+        Film film = new Film(0, "Titolo", "Genere", "PG", 120, new byte[]{1, 2}, "Descrizione", true);
+
+        when(mockConnection.prepareStatement(anyString(), (int) eq(Statement.RETURN_GENERATED_KEYS)))
+                .thenReturn(mockPreparedStatement);
+
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(false);
+
+        FilmDAO dao = new FilmDAO();
+        boolean result = dao.create(film);
+
+        assertTrue(result, "Il metodo deve restituire true anche senza chiave generata");
+        assertEquals(0, film.getId(), "L'ID NON deve essere impostato quando rs.next() è false");
+
+        verify(mockPreparedStatement).executeUpdate();
+        verify(mockPreparedStatement).getGeneratedKeys();
+    }
+
 }

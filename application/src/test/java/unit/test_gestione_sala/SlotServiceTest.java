@@ -162,6 +162,35 @@ class SlotServiceTest {
         assertTrue(slots.stream().noneMatch(s -> (boolean) s.get("occupato")));
     }
 
+    //Ramo FALSE dell'if su durata film > ultimo slot + 120 min
+    @RepeatedTest(5)
+    void shouldNotAddExtraSlotWhenFilmDurationIsShort() throws Exception {
+        LocalDate day = LocalDate.now();
+
+        Film film = new Film(1, "Film Corto", "Azione", "PG", 20, new byte[1], "desc", false);
+        when(filmDAO.retrieveById(1)).thenReturn(film);
+
+        // Ultimo slot della giornata
+        Slot lastSlot = new Slot(1, Time.valueOf("10:00:00"));
+        when(slotDAO.retrieveAllSlots()).thenReturn(List.of(lastSlot));
+
+        // Nessuna proiezione esistente
+        when(proiezioneDAO.retrieveProiezioneBySalaSlotAndData(anyInt(), eq(1), any(LocalDate.class)))
+                .thenReturn(null);
+
+        Map<String, Object> result = service.slotDisponibili(1, 10, day, day);
+
+        assertNotNull(result);
+
+        List<Map<String, Object>> calendar = (List<Map<String, Object>>) result.get("calendar");
+        assertEquals(1, calendar.size());
+
+        List<Map<String, Object>> slots = (List<Map<String, Object>>) calendar.get(0).get("slots");
+
+        assertEquals(1, slots.size(), "Non deve essere aggiunto uno slot extra se la durata è <= 30 minuti");
+    }
+
+
     @RepeatedTest(5)
     void shouldReturnFalseWhenExceptionOccurs() throws Exception {
         when(filmDAO.retrieveById(anyInt())).thenThrow(new RuntimeException("DB error"));

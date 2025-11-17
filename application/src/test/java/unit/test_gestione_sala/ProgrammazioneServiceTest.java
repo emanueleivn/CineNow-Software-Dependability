@@ -172,4 +172,36 @@ class ProgrammazioneServiceTest {
 
         assertFalse(result);
     }
+
+    @RepeatedTest(5)
+    void shouldSortSlotsWhenUnsorted() {
+        Film film = new Film(1, "Film Test", "Azione", "PG", 120, new byte[1], "desc", false);
+        Sala sala = new Sala(2, 1, 100, null);
+
+        // Slot NON ordinati -> farà scattare il while
+        Slot slotLate = new Slot(1, Time.valueOf("18:00:00"));
+        Slot slotEarly = new Slot(2, Time.valueOf("10:00:00"));
+
+        List<Slot> allSlots = Arrays.asList(slotLate, slotEarly);
+        List<Integer> slotIds = List.of(1, 2); // seleziono entrambi
+
+        when(filmDAO.retrieveById(1)).thenReturn(film);
+        when(salaDAO.retrieveById(2)).thenReturn(sala);
+        when(slotDAO.retrieveAllSlots()).thenReturn(allSlots);
+        when(proiezioneDAO.create(any(Proiezione.class))).thenReturn(true);
+
+        boolean result = service.aggiungiProiezione(1, 2, slotIds, LocalDate.now().plusDays(1));
+
+        assertTrue(result);
+
+        // Catturiamo la proiezione creata per verificare quale slot è stato usato
+        ArgumentCaptor<Proiezione> captor = ArgumentCaptor.forClass(Proiezione.class);
+        verify(proiezioneDAO).create(captor.capture());
+
+        Proiezione created = captor.getValue();
+        assertEquals(Time.valueOf("10:00:00"),
+                created.getOrarioProiezione().getOraInizio(),
+                "Lo slot più presto (10:00) deve essere scelto dopo l'ordinamento");
+    }
+
 }

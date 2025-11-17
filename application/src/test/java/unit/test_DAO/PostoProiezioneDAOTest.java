@@ -70,7 +70,7 @@ class PostoProiezioneDAOTest {
     }
 
     @RepeatedTest(5)
-    void shouldReturnFalseWhenSQLExceptionOccursInCreate() throws Exception {
+    void shouldReturnFalseWhenSQLExceptionOccursDuringPrepareStatementInCreate() throws Exception {
         Sala sala = new Sala(1, 1, 100, null);
         Posto posto = new Posto(sala, 'A', 5);
         Proiezione proiezione = new Proiezione(10);
@@ -211,4 +211,183 @@ class PostoProiezioneDAOTest {
         List<PostoProiezione> result = dao.retrieveAllByProiezione(null);
         assertNull(result);
     }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenExecuteUpdateReturnsZeroInCreate() throws Exception {
+        Sala sala = new Sala(1, 1, 100, null);
+        Posto posto = new Posto(sala, 'A', 5);
+        Proiezione proiezione = new Proiezione(10);
+        PostoProiezione pp = new PostoProiezione(posto, proiezione);
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0);
+
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+        boolean result = dao.create(pp);
+
+        assertFalse(result);
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenInsertReturnsZeroInOccupaPosto() throws Exception {
+        Sala sala = new Sala(1, 1, 100, null);
+        Posto posto = new Posto(sala, 'A', 5);
+        Proiezione proiezione = new Proiezione(3);
+        PostoProiezione pp = new PostoProiezione(posto, proiezione);
+
+        when(mockConnection.prepareStatement(contains("UPDATE"))).thenReturn(mockPreparedStatement);
+        when(mockConnection.prepareStatement(contains("INSERT"))).thenReturn(mockPreparedStatement2);
+
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1); // UPDATE OK
+        when(mockPreparedStatement2.executeUpdate()).thenReturn(0); // INSERT fallisce
+
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+        boolean result = dao.occupaPosto(pp, 99);
+
+        assertFalse(result);
+        verify(mockPreparedStatement).executeUpdate();
+        verify(mockPreparedStatement2).executeUpdate();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenSQLExceptionOccursDuringExecuteUpdateInCreate() throws Exception {
+        Sala sala = new Sala(1, 1, 100, null);
+        Posto posto = new Posto(sala, 'A', 5);
+        Proiezione proiezione = new Proiezione(10);
+        PostoProiezione pp = new PostoProiezione(posto, proiezione);
+
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenThrow(new SQLException("update error"));
+
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+
+        boolean result = dao.create(pp);
+
+        assertFalse(result);
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenSQLExceptionOccursDuringInsertInOccupaPosto() throws Exception {
+        Sala sala = new Sala(1, 1, 100, null);
+        Posto posto = new Posto(sala, 'A', 5);
+        Proiezione proiezione = new Proiezione(3);
+        PostoProiezione pp = new PostoProiezione(posto, proiezione);
+
+        when(mockConnection.prepareStatement(contains("UPDATE"))).thenReturn(mockPreparedStatement);
+        when(mockConnection.prepareStatement(contains("INSERT"))).thenReturn(mockPreparedStatement2);
+
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1); // UPDATE OK
+
+        // INSERT LANCIA ECCEZIONE DOPO L’APERTURA DEL TRY
+        when(mockPreparedStatement2.executeUpdate()).thenThrow(new SQLException("insert error"));
+
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+        boolean result = dao.occupaPosto(pp, 99);
+
+        assertFalse(result);
+        verify(mockPreparedStatement).executeUpdate();
+        verify(mockPreparedStatement2).executeUpdate();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenGetConnectionFailsInCreate() throws Exception {
+        Sala sala = new Sala(1, 1, 100, null);
+        Posto posto = new Posto(sala, 'A', 5);
+        Proiezione proiezione = new Proiezione(10);
+        PostoProiezione postoProiezione = new PostoProiezione(posto, proiezione);
+
+        // Sovrascrive il comportamento lenient della setUp per questo test
+        when(mockDataSource.getConnection()).thenThrow(new SQLException("Connection error"));
+
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+        boolean result = dao.create(postoProiezione);
+
+        assertFalse(result);
+        verify(mockDataSource).getConnection();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenGetConnectionFailsInOccupaPosto() throws Exception {
+        Sala sala = new Sala(1, 1, 100, null);
+        Posto posto = new Posto(sala, 'A', 5);
+        Proiezione proiezione = new Proiezione(3);
+        PostoProiezione postoProiezione = new PostoProiezione(posto, proiezione);
+
+        when(mockDataSource.getConnection()).thenThrow(new SQLException("Connection error"));
+
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+        boolean result = dao.occupaPosto(postoProiezione, 99);
+
+        assertFalse(result);
+        verify(mockDataSource).getConnection();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenPrepareInsertStatementFailsInOccupaPosto() throws Exception {
+        Sala sala = new Sala(1, 1, 100, null);
+        Posto posto = new Posto(sala, 'A', 5);
+        Proiezione proiezione = new Proiezione(3);
+        PostoProiezione postoProiezione = new PostoProiezione(posto, proiezione);
+
+        // UPDATE viene preparato correttamente
+        when(mockConnection.prepareStatement(contains("UPDATE"))).thenReturn(mockPreparedStatement);
+        // INSERT fallisce già in prepareStatement
+        when(mockConnection.prepareStatement(contains("INSERT"))).thenThrow(new SQLException("prepare insert error"));
+
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+        boolean result = dao.occupaPosto(postoProiezione, 99);
+
+        assertFalse(result);
+        verify(mockDataSource).getConnection();
+        verify(mockConnection).prepareStatement(contains("UPDATE"));
+        verify(mockConnection).prepareStatement(contains("INSERT"));
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenUpdateExecuteThrowsSQLExceptionInOccupaPosto() throws Exception {
+        Sala sala = new Sala(1, 1, 100, null);
+        Posto posto = new Posto(sala, 'A', 5);
+        Proiezione proiezione = new Proiezione(3);
+        PostoProiezione postoProiezione = new PostoProiezione(posto, proiezione);
+
+        when(mockConnection.prepareStatement(contains("UPDATE"))).thenReturn(mockPreparedStatement);
+        when(mockConnection.prepareStatement(contains("INSERT"))).thenReturn(mockPreparedStatement2);
+
+        // L'eccezione avviene durante l'esecuzione dell'UPDATE
+        when(mockPreparedStatement.executeUpdate()).thenThrow(new SQLException("update error"));
+
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+        boolean result = dao.occupaPosto(postoProiezione, 99);
+
+        assertFalse(result);
+        verify(mockPreparedStatement).executeUpdate();
+        verify(mockPreparedStatement2, never()).executeUpdate();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenSettingUpdateParametersThrowsSQLExceptionInOccupaPosto() throws Exception {
+        Sala sala = new Sala(1, 1, 100, null);
+        Posto posto = new Posto(sala, 'A', 5);
+        Proiezione proiezione = new Proiezione(3);
+        PostoProiezione postoProiezione = new PostoProiezione(posto, proiezione);
+
+        when(mockConnection.prepareStatement(contains("UPDATE"))).thenReturn(mockPreparedStatement);
+        when(mockConnection.prepareStatement(contains("INSERT"))).thenReturn(mockPreparedStatement2);
+
+        // L'eccezione avviene durante il set dei parametri dell'UPDATE
+        doThrow(new SQLException("param error"))
+                .when(mockPreparedStatement).setInt(eq(1), anyInt());
+
+        PostoProiezioneDAO dao = new PostoProiezioneDAO();
+        boolean result = dao.occupaPosto(postoProiezione, 99);
+
+        assertFalse(result);
+        verify(mockPreparedStatement).setInt(eq(1), anyInt());
+        verify(mockPreparedStatement, never()).executeUpdate();
+        verify(mockPreparedStatement2, never()).executeUpdate();
+    }
+
+
 }

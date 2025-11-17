@@ -108,6 +108,21 @@ class CatalogoServiceTest {
         assertThrows(IllegalArgumentException.class, () ->
                 service.addFilmCatalogo("Titolo", 100, "desc", locandinaValida, "Azione", null));
 
+        // Classificazione vuota
+        assertThrows(IllegalArgumentException.class, () ->
+                service.addFilmCatalogo("Titolo", 100, "desc", locandinaValida, "Azione", "")
+        );
+
+        // Genere nullo
+        assertThrows(IllegalArgumentException.class, () ->
+                service.addFilmCatalogo("Titolo", 100, "desc", locandinaValida, null, "PG-13")
+        );
+
+        // Descrizione vuota
+        assertThrows(IllegalArgumentException.class, () ->
+                service.addFilmCatalogo("Titolo", 100, "", locandinaValida, "Azione", "PG-13")
+        );
+
         verifyNoInteractions(filmDAO);
     }
 
