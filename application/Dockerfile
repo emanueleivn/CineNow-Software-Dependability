@@ -17,6 +17,16 @@ COPY --from=build /root/.m2/repository/com/mysql/mysql-connector-j/9.1.0/mysql-c
 
 COPY docker/tomcat/ROOT.xml $CATALINA_HOME/conf/Catalina/localhost/ROOT.xml
 
+# Script di entrypoint per passare le variabili a Tomcat
+RUN echo '#!/bin/bash\n\
+export CATALINA_OPTS="\
+  -DCATALINA_OPTS_DB_HOST=${CATALINA_OPTS_DB_HOST:-db} \
+  -DCATALINA_OPTS_DB_PORT=${CATALINA_OPTS_DB_PORT:-3306} \
+  -DCATALINA_OPTS_DB_DATABASE=${CATALINA_OPTS_DB_DATABASE:-cinenow} \
+  -DCATALINA_OPTS_DB_USER=${CATALINA_OPTS_DB_USER:-cinenow} \
+  -DCATALINA_OPTS_DB_PASSWORD=${CATALINA_OPTS_DB_PASSWORD:-cinenow}"\n\
+exec catalina.sh run' > /usr/local/bin/entrypoint.sh && chmod +x /usr/local/bin/entrypoint.sh
+
 EXPOSE 8080
-CMD ["catalina.sh", "run"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 

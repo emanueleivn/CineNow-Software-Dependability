@@ -1,18 +1,22 @@
 services:
   db:
-    image: mysql:8.4
+    image: mysql:${MYSQL_VERSION:-8.4}
     container_name: cinenow-db
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: cinenow
-      MYSQL_USER: cinenow
-      MYSQL_PASSWORD: cinenow
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./docker/mysql/init:/docker-entrypoint-initdb.d:ro
       - ./docker/mysql/files:/var/lib/mysql-files
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
   web:
     build:
@@ -20,9 +24,17 @@ services:
       dockerfile: Dockerfile
     container_name: cinenow-web
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    environment:
+      CATALINA_OPTS_DB_HOST: ${DB_HOST:-db}
+      CATALINA_OPTS_DB_PORT: ${DB_PORT:-3306}
+      CATALINA_OPTS_DB_DATABASE: ${DB_DATABASE}
+      CATALINA_OPTS_DB_USER: ${DB_USER}
+      CATALINA_OPTS_DB_PASSWORD: ${DB_PASSWORD}
     ports:
-      - "8080:8080"
+      - "${TOMCAT_PORT:-8080}:8080"
+    restart: unless-stopped
 
 volumes:
   db_data:
