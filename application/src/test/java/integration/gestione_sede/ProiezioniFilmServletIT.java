@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -103,6 +104,34 @@ public class ProiezioniFilmServletIT extends BaseIT {
     }
 
     @RepeatedTest(5)
+    void programmazioneFilm_null() throws Exception {
+        when(request.getParameter("sedeId")).thenReturn("1");
+        when(request.getParameter("filmId")).thenReturn("1");
+        //NPE
+        execute("DELETE FROM sala WHERE id_sede = 1;");
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+        verify(successDispatcher, never()).forward(any(), any());
+    }
+
+    @RepeatedTest(5)
+    void film_null_ma_programmazione_esiste_per_coprire_condizioni_false() throws Exception {
+        // film inesistente → film == null
+        when(request.getParameter("filmId")).thenReturn("999");
+
+        // sede esistente con proiezioni → sede != null, programmazioneFilm != null, !empty
+        when(request.getParameter("sedeId")).thenReturn("1");
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @RepeatedTest(5)
     void sede_inesistente() throws Exception {
         when(request.getParameter("sedeId")).thenReturn("999");
         when(request.getParameter("filmId")).thenReturn("1");
@@ -140,4 +169,35 @@ public class ProiezioniFilmServletIT extends BaseIT {
         verify(errorDispatcher).forward(request, response);
         verify(successDispatcher, never()).forward(any(), any());
     }
+
+    @Test
+    void errore_generico_service() throws Exception {
+        when(request.getParameter("sedeId")).thenReturn("1");
+        when(request.getParameter("filmId")).thenReturn("1");
+
+        // Causerà un NPE interno nel service (sala mancante ma film e sede esistenti)
+        execute("DELETE FROM sala WHERE id = 1;");
+        execute("DELETE FROM proiezione WHERE id_film = 1;");
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+        verify(successDispatcher, never()).forward(any(), any());
+    }
+
+    @Test
+    void eccezione_generica_dao() throws Exception {
+        // Rende la tabella film non più compatibile con il DAO
+        execute("ALTER TABLE film DROP COLUMN titolo;");
+
+        when(request.getParameter("sedeId")).thenReturn("1");
+        when(request.getParameter("filmId")).thenReturn("1");
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
 }

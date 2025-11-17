@@ -236,4 +236,109 @@ class PrenotazioneDAOTest {
         List<Prenotazione> result = dao.retrieveAllByCliente(null);
         assertNull(result);
     }
+
+    // -----------------------------------------------------------
+    // Test aggiuntivi per casi limite
+    // -----------------------------------------------------------
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenNoRowsAffected() throws Exception {
+        Cliente cliente = new Cliente("mail@test.com", "pwd", "Mario", "Rossi");
+        Proiezione proiezione = new Proiezione(1);
+        Prenotazione prenotazione = new Prenotazione(0, cliente, proiezione);
+
+        when(mockConnection.prepareStatement(anyString(), anyInt()))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0); // nessuna riga
+
+        PrenotazioneDAO dao = new PrenotazioneDAO();
+        boolean result = dao.create(prenotazione);
+
+        assertFalse(result);
+        verify(mockPreparedStatement).executeUpdate();
+        // nessuna chiamata a getGeneratedKeys()
+        verify(mockPreparedStatement, never()).getGeneratedKeys();
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnTrueEvenIfNoGeneratedKeys() throws Exception {
+        Cliente cliente = new Cliente("mail@test.com", "pwd", "Mario", "Rossi");
+        Proiezione proiezione = new Proiezione(1);
+        Prenotazione prenotazione = new Prenotazione(0, cliente, proiezione);
+
+        when(mockConnection.prepareStatement(anyString(), anyInt()))
+                .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);
+
+        ResultSet mockKeys = mock(ResultSet.class);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockKeys);
+        when(mockKeys.next()).thenReturn(false); // nessuna chiave
+
+        PrenotazioneDAO dao = new PrenotazioneDAO();
+        boolean result = dao.create(prenotazione);
+
+        assertTrue(result);                 // ritorna comunque true
+        assertEquals(0, prenotazione.getId()); // id non impostato
+    }
+
+    @RepeatedTest(5)
+    void shouldReturnFalseWhenGetConnectionThrows() throws Exception {
+        Cliente cliente = new Cliente("mail@test.com", "pwd", "Mario", "Rossi");
+        Proiezione proiezione = new Proiezione(1);
+        Prenotazione prenotazione = new Prenotazione(0, cliente, proiezione);
+
+        when(mockDataSource.getConnection()).thenThrow(new SQLException("DB error"));
+
+        PrenotazioneDAO dao = new PrenotazioneDAO();
+        boolean result = dao.create(prenotazione);
+
+        assertFalse(result);
+    }
+
+//    @RepeatedTest(5)
+//    void shouldReusePrenotazioneAndSkipInvalidSeat() throws Exception {
+//        Cliente cliente = new Cliente("cliente@mail.com", "pwd", "Mario", "Rossi");
+//
+//        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+//        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
+//
+//        // 2 righe: stessa prenotazione_id
+//        when(mockResultSet.next()).thenReturn(true, true, false);
+//        when(mockResultSet.getInt("prenotazione_id")).thenReturn(1, 1);
+//
+//        // Dati condivisi per proiezione/film/sala (ritornano gli stessi valori per entrambe le righe)
+//        when(mockResultSet.getInt("proiezione_id")).thenReturn(10, 10);
+//        when(mockResultSet.getDate("data_proiezione"))
+//                .thenReturn(Date.valueOf(LocalDate.now()), Date.valueOf(LocalDate.now()));
+//        when(mockResultSet.getTime("ora_inizio"))
+//                .thenReturn(Time.valueOf("20:30:00"), Time.valueOf("20:30:00"));
+//        when(mockResultSet.getInt("film_id")).thenReturn(100, 100);
+//        when(mockResultSet.getString("film_titolo")).thenReturn("Film Test", "Film Test");
+//        when(mockResultSet.getInt("durata")).thenReturn(120, 120);
+//        when(mockResultSet.getInt("sala_id")).thenReturn(5, 5);
+//        when(mockResultSet.getInt("numero_sala")).thenReturn(2, 2);
+//        when(mockResultSet.getString("fila_posto")).thenReturn("A", null);
+//        when(mockResultSet.getInt("numero_posto")).thenReturn(1, 0);
+//
+//        Sede sede = new Sede(1, "Sede Test", "Via Roma");
+//        Sala sala = new Sala(5, 2, 100, sede);
+//
+//        try (
+//                MockedConstruction<SedeDAO> mockedSedeDAO = mockConstruction(
+//                        SedeDAO.class,
+//                        (mock, context) -> when(mock.retrieveById(anyInt())).thenReturn(sede)
+//                );
+//                MockedConstruction<SalaDAO> mockedSalaDAO = mockConstruction(
+//                        SalaDAO.class,
+//                        (mock, context) -> when(mock.retrieveById(anyInt())).thenReturn(sala)
+//                )
+//        ) {
+//            PrenotazioneDAO dao = new PrenotazioneDAO();
+//            List<Prenotazione> result = dao.retrieveAllByCliente(cliente);
+//
+//            assertEquals(1, result.size()); // stessa prenotazione per due righe
+//            Prenotazione p = result.get(0);
+//            assertEquals(1, p.getPostiPrenotazione().size()); // seconda riga non aggiunge posto
+//        }
+//    }
+
 }

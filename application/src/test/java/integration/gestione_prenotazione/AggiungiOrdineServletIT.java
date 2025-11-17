@@ -120,4 +120,103 @@ class AggiungiOrdineServletIT extends BaseIT {
         verify(request).setAttribute(eq("errorMessage"), any());
         verify(errorDispatcher).forward(request, response);
     }
+
+    @Test
+    void aggiungiOrdine_postiMancanti() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("1");
+        when(request.getParameter("posti")).thenReturn(null); // <– questo deve essere null
+        when(request.getParameter("nomeCarta")).thenReturn("Mario Rossi");
+        when(request.getParameter("numeroCarta")).thenReturn("1234567890123456");
+        when(request.getParameter("scadenzaCarta")).thenReturn("12/27");
+        when(request.getParameter("cvv")).thenReturn("123");
+        when(session.getAttribute("cliente")).thenReturn(cliente);
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @Test
+    void aggiungiOrdine_nomeCartaMancante() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("1");
+        when(request.getParameter("posti")).thenReturn("A-1");
+        when(request.getParameter("nomeCarta")).thenReturn(null); // <–
+        when(request.getParameter("numeroCarta")).thenReturn("1234567890123456");
+        when(request.getParameter("scadenzaCarta")).thenReturn("12/27");
+        when(request.getParameter("cvv")).thenReturn("123");
+        when(session.getAttribute("cliente")).thenReturn(cliente);
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @Test
+    void aggiungiOrdine_numeroCartaMancante() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("1");
+        when(request.getParameter("posti")).thenReturn("A-1");
+        when(request.getParameter("nomeCarta")).thenReturn("Mario Rossi");
+        when(request.getParameter("numeroCarta")).thenReturn(null); // <–
+        when(request.getParameter("scadenzaCarta")).thenReturn("12/27");
+        when(request.getParameter("cvv")).thenReturn("123");
+        when(session.getAttribute("cliente")).thenReturn(cliente);
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @Test
+    void aggiungiOrdine_scadenzaMancante() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("1");
+        when(request.getParameter("posti")).thenReturn("A-1");
+        when(request.getParameter("nomeCarta")).thenReturn("Mario Rossi");
+        when(request.getParameter("numeroCarta")).thenReturn("1234567890123456");
+        when(request.getParameter("scadenzaCarta")).thenReturn(null); // <–
+        when(request.getParameter("cvv")).thenReturn("123");
+        when(session.getAttribute("cliente")).thenReturn(cliente);
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @Test
+    void aggiungiOrdine_cvvMancante() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("1");
+        when(request.getParameter("posti")).thenReturn("A-1");
+        when(request.getParameter("nomeCarta")).thenReturn("Mario Rossi");
+        when(request.getParameter("numeroCarta")).thenReturn("1234567890123456");
+        when(request.getParameter("scadenzaCarta")).thenReturn("12/27");
+        when(request.getParameter("cvv")).thenReturn(null); // <–
+        when(session.getAttribute("cliente")).thenReturn(cliente);
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @Test
+    void aggiungiOrdine_postoFormattatoMale_vieneIgnorato() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("1");
+        // "A-1" è valido, "INVALID" genera parts.length == 1 (ramo false)
+        when(request.getParameter("posti")).thenReturn("A-1,INVALID");
+        when(request.getParameter("nomeCarta")).thenReturn("Mario Rossi");
+        when(request.getParameter("numeroCarta")).thenReturn("1234567890123456");
+        when(request.getParameter("scadenzaCarta")).thenReturn("12/27");
+        when(request.getParameter("cvv")).thenReturn("123");
+        when(session.getAttribute("cliente")).thenReturn(cliente);
+
+        servlet.doPost(request, response);
+
+        // L’ordine dovrebbe comunque andare a buon fine (almeno un posto valido)
+        verify(response).sendRedirect(contains("/storicoOrdini"));
+        verify(errorDispatcher, never()).forward(any(), any());
+    }
+
 }

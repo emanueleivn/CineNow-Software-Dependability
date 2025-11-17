@@ -64,4 +64,79 @@ class CheckoutServletIT extends BaseIT {
         verify(errorDispatcher).forward(request, response);
     }
 
+    @RepeatedTest(5)
+    void checkout_postiNull() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("1");
+        when(request.getParameter("posti")).thenReturn(null);  // (2) true
+        when(request.getParameter("totale")).thenReturn("15.00");
+
+        RequestDispatcher errorDispatcher = mock(RequestDispatcher.class);
+        when(request.getRequestDispatcher("/WEB-INF/jsp/error.jsp")).thenReturn(errorDispatcher);
+
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @RepeatedTest(5)
+    void checkout_totaleNull() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("1");
+        when(request.getParameter("posti")).thenReturn("A1,A2");
+        when(request.getParameter("totale")).thenReturn(null); // (3) true
+
+        RequestDispatcher errorDispatcher = mock(RequestDispatcher.class);
+        when(request.getRequestDispatcher("/WEB-INF/jsp/error.jsp")).thenReturn(errorDispatcher);
+
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @RepeatedTest(5)
+    void checkout_proiezioneIdBlank() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("");  // (4) true
+        when(request.getParameter("posti")).thenReturn("A1,A2");
+        when(request.getParameter("totale")).thenReturn("15.00");
+
+        RequestDispatcher errorDispatcher = mock(RequestDispatcher.class);
+        when(request.getRequestDispatcher("/WEB-INF/jsp/error.jsp")).thenReturn(errorDispatcher);
+
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @RepeatedTest(5)
+    void checkout_postiBlank() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("1");
+        when(request.getParameter("posti")).thenReturn("");        // (5) true
+        when(request.getParameter("totale")).thenReturn("15.00");
+
+        RequestDispatcher errorDispatcher = mock(RequestDispatcher.class);
+        when(request.getRequestDispatcher("/WEB-INF/jsp/error.jsp")).thenReturn(errorDispatcher);
+
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @RepeatedTest(5)
+    void checkout_totaleBlank() throws Exception {
+        when(request.getParameter("proiezioneId")).thenReturn("1");
+        when(request.getParameter("posti")).thenReturn("A1,A2");
+        when(request.getParameter("totale")).thenReturn("");       // (6) true
+
+        RequestDispatcher errorDispatcher = mock(RequestDispatcher.class);
+        when(request.getRequestDispatcher("/WEB-INF/jsp/error.jsp")).thenReturn(errorDispatcher);
+
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
 }
