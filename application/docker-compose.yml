@@ -19,9 +19,7 @@ services:
       retries: 10
 
   web:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: caiazzoantonio/cinenow:latest
     container_name: cinenow-web
     depends_on:
       db:
