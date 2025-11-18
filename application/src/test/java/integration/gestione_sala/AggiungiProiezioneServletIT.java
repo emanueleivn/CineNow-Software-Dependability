@@ -1,6 +1,7 @@
 package integration.gestione_sala;
 
 import integration.BaseIT;
+import it.unisa.application.model.dao.FilmDAO;
 import it.unisa.application.sottosistemi.gestione_sala.view.AggiungiProiezioneServlet;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -8,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
+import org.mockito.MockedConstruction;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -199,6 +201,98 @@ class AggiungiProiezioneServletIT extends BaseIT {
         when(request.getParameter("sala")).thenReturn("1");
 
         when(request.getParameterValues("slot")).thenReturn(new String[]{"abc:def"});
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+        verify(response, never()).sendRedirect(any());
+    }
+    // ======================================
+    // TEST DOGET - RAMI FALSE
+    // ======================================
+
+    @RepeatedTest(5)
+    void doGet_parametroVuoto() throws Exception {
+        when(request.getParameter("sedeId")).thenReturn("");  // stringa vuota
+
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @RepeatedTest(5)
+    void doGet_parametroVuotoConSpazi() throws Exception {
+        when(request.getParameter("sedeId")).thenReturn("   ");  // solo spazi
+
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @RepeatedTest(5)
+    void doGet_filmEmpty() throws Exception {
+        execute("DELETE FROM film;");
+        when(request.getParameter("sedeId")).thenReturn("1");
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    @RepeatedTest(5)
+    void doGet_saleNull() throws Exception {
+        execute("DELETE FROM sala WHERE id_sede = 1;");
+        when(request.getParameter("sedeId")).thenReturn("1");
+
+        servlet.doGet(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+    }
+
+    // ======================================
+    // TEST DOPOST - RAMI FALSE
+    // ======================================
+
+    @RepeatedTest(5)
+    void doPost_parametroSedeVuoto() throws Exception {
+        when(request.getParameter("sedeId")).thenReturn("");  // stringa vuota
+        when(request.getParameter("film")).thenReturn("1");
+        when(request.getParameter("sala")).thenReturn("1");
+        when(request.getParameterValues("slot"))
+                .thenReturn(new String[]{"1:" + LocalDate.now().plusDays(1)});
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+        verify(response, never()).sendRedirect(any());
+    }
+
+    @RepeatedTest(5)
+    void doPost_parametroSedeVuotoConSpazi() throws Exception {
+        when(request.getParameter("sedeId")).thenReturn("   ");  // solo spazi
+        when(request.getParameter("film")).thenReturn("1");
+        when(request.getParameter("sala")).thenReturn("1");
+        when(request.getParameterValues("slot"))
+                .thenReturn(new String[]{"1:" + LocalDate.now().plusDays(1)});
+
+        servlet.doPost(request, response);
+
+        verify(request).setAttribute(eq("errorMessage"), any());
+        verify(errorDispatcher).forward(request, response);
+        verify(response, never()).sendRedirect(any());
+    }
+
+    @RepeatedTest(5)
+    void doPost_slotArrayVuoto() throws Exception {
+        when(request.getParameter("sedeId")).thenReturn("1");
+        when(request.getParameter("film")).thenReturn("1");
+        when(request.getParameter("sala")).thenReturn("1");
+        when(request.getParameterValues("slot")).thenReturn(new String[]{});  // array vuoto
 
         servlet.doPost(request, response);
 
