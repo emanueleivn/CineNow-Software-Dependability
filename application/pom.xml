@@ -188,46 +188,34 @@
                         <param>unit.*</param>
                         <param>integration.*</param>
                     </targetTests>
+
                     <!-- CLASSI DA MUTARE -->
                     <targetClasses>
+                        <!-- DAO -->
+                        <param>it.unisa.application.model.dao.**</param>
+
                         <!-- Gestione Catena -->
-                        <param>it.unisa.application.sottosistemi.gestione_catena.service.CatalogoService</param>
-
-                        <!-- Gestione Sala -->
-                        <param>it.unisa.application.sottosistemi.gestione_sala.service.SlotService</param>
-                        <param>it.unisa.application.sottosistemi.gestione_sala.service.ProgrammazioneService</param>
-
-                        <!-- Gestione Utente -->
-                        <param>it.unisa.application.sottosistemi.gestione_utente.service.AutenticazioneService</param>
-                        <param>it.unisa.application.sottosistemi.gestione_utente.service.RegistrazioneService</param>
+                        <param>it.unisa.application.sottosistemi.gestione_catena.service.**</param>
 
                         <!-- Gestione Prenotazione -->
-                        <param>it.unisa.application.sottosistemi.gestione_prenotazione.service.PrenotazioneService</param>
-                        <param>it.unisa.application.sottosistemi.gestione_prenotazione.service.StoricoOrdiniService</param>
+                        <param>it.unisa.application.sottosistemi.gestione_prenotazione.service.**</param>
+
+                        <!-- Gestione Sala -->
+                        <param>it.unisa.application.sottosistemi.gestione_sala.service.**</param>
 
                         <!-- Gestione Sede -->
-                        <param>it.unisa.application.sottosistemi.gestione_sede.service.ProgrammazioneSedeService</param>
+                        <param>it.unisa.application.sottosistemi.gestione_sede.service.**</param>
+
+                        <!-- Gestione Utente -->
+                        <param>it.unisa.application.sottosistemi.gestione_utente.service.**</param>
+
+                        <param>it.unisa.application.utilities.CampoValidator</param>
+                        <param>it.unisa.application.utilities.EmailValidator</param>
+                        <param>it.unisa.application.utilities.PasswordHash</param>
+                        <param>it.unisa.application.utilities.PasswordValidator</param>
+                        <param>it.unisa.application.utilities.ValidateStrategyManager</param>
+                        <param>it.unisa.application.utilities.ValidatorStrategy</param>
                     </targetClasses>
-                    <!-- TEST DA ESEGUIRE -->
-<!--                    <targetTests>-->
-<!--                        &lt;!&ndash; Test Gestione Catena &ndash;&gt;-->
-<!--                        <param>integration.gestione_catena.CatalogoServiceIT</param>-->
-
-<!--                        &lt;!&ndash; Test Gestione Sala &ndash;&gt;-->
-<!--                        <param>integration.gestione_sala.SlotServiceIT</param>-->
-<!--                        <param>integration.gestione_sala.ProgrammazioneServiceIT</param>-->
-
-<!--                        &lt;!&ndash; Test Gestione Utente &ndash;&gt;-->
-<!--                        <param>integration.gestione_utente.AutenticazioneServiceIT</param>-->
-<!--                        <param>integration.gestione_utente.RegistrazioneServiceIT</param>-->
-
-<!--                        &lt;!&ndash; Test Gestione Prenotazione &ndash;&gt;-->
-<!--                        <param>integration.gestione_prenotazione.PrenotazioneServiceIT</param>-->
-<!--                        <param>integration.gestione_prenotazione.StoricoOrdiniServiceIT</param>-->
-
-<!--                        &lt;!&ndash; Test Gestione Sede &ndash;&gt;-->
-<!--                        <param>integration.gestione_sede.ProgrammazioneSedeServiceIT</param>-->
-<!--                    </targetTests>-->
 
                     <!-- CONFIGURAZIONE OUTPUT -->
                     <outputFormats>
