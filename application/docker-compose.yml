@@ -15,7 +15,7 @@ services:
       - ./docker/mysql/files:/var/lib/mysql-files
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
+      timeout: 21s
       retries: 10
 
   web:
