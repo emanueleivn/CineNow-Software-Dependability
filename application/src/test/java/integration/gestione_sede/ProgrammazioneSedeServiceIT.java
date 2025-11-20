@@ -92,4 +92,92 @@ public class ProgrammazioneSedeServiceIT extends BaseIT {
         assertNotNull(programmazione);
         assertTrue(programmazione.isEmpty());
     }
+    // ========================================
+    // NUOVI TEST POST MUTATION TESTING
+    // ========================================
+
+    /**
+     * Verifica che le proiezioni PASSATE vengano effettivamente escluse
+     */
+    @RepeatedTest(5)
+    void testGetProgrammazione_escludeProiezioniPassate() throws SQLException {
+        // Setup: Aggiungi proiezioni nel passato
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        LocalDate lastWeek = LocalDate.now().minusDays(7);
+
+        execute(String.format("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) VALUES (10, DATE '%s', 1, 1, 1);", yesterday));
+        execute(String.format("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) VALUES (11, DATE '%s', 1, 1, 1);", lastWeek));
+
+        // Execute
+        List<Proiezione> programmazione = service.getProgrammazione(1);
+
+        // Assert: NESSUNA proiezione passata deve essere inclusa
+        assertTrue(programmazione.stream().noneMatch(p ->
+                p.getDataProiezione().isBefore(LocalDate.now())
+        ), "Non devono esserci proiezioni con data precedente a oggi");
+
+        // Verifica esplicita: le proiezioni passate NON ci sono
+        assertFalse(programmazione.stream().anyMatch(p ->
+                p.getId() == 10 || p.getId() == 11
+        ), "Le proiezioni passate devono essere escluse");
+    }
+
+    /**
+     * Verifica il boundary della settimana: esattamente 7 giorni e oltre
+     */
+    @RepeatedTest(5)
+    void testGetProiezioniFilm_limiteSette_Giorni() throws SQLException {
+        LocalDate oggi = LocalDate.now();
+        LocalDate giorno7 = oggi.plusDays(7);  // Ultimo giorno incluso
+        LocalDate giorno8 = oggi.plusDays(8);  // Primo giorno ESCLUSO
+        LocalDate giorno9 = oggi.plusDays(9);
+
+        // Setup: Proiezioni al confine dei 7 giorni
+        execute(String.format("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) VALUES (30, DATE '%s', 1, 1, 1);", giorno7));
+        execute(String.format("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) VALUES (31, DATE '%s', 1, 1, 1);", giorno8));
+        execute(String.format("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) VALUES (32, DATE '%s', 1, 1, 1);", giorno9));
+
+        // Execute
+        List<Proiezione> proiezioni = service.getProiezioniFilm(1, 1);
+
+        // Assert: Giorno 7 DEVE essere incluso
+        assertTrue(proiezioni.stream().anyMatch(p ->
+                p.getDataProiezione().equals(giorno7)
+        ), "La proiezione del 7° giorno DEVE essere inclusa");
+
+        // Assert: Giorno 8+ NON devono essere inclusi
+        assertFalse(proiezioni.stream().anyMatch(p ->
+                p.getDataProiezione().equals(giorno8)
+        ), "La proiezione dell'8° giorno NON deve essere inclusa");
+
+        assertFalse(proiezioni.stream().anyMatch(p ->
+                p.getDataProiezione().equals(giorno9)
+        ), "Le proiezioni oltre il 7° giorno NON devono essere incluse");
+
+        // Assert: Tutte le proiezioni sono entro la settimana
+        assertTrue(proiezioni.stream().allMatch(p ->
+                !p.getDataProiezione().isAfter(oggi.plusDays(7))
+        ), "Tutte le proiezioni devono essere entro 7 giorni da oggi");
+    }
+
+    /**
+     * RINFORZA la copertura: verifica il limite inferiore
+     */
+    @RepeatedTest(5)
+    void testGetProiezioniFilm_escludeProiezioniPassate() throws SQLException {
+        LocalDate ieri = LocalDate.now().minusDays(1);
+        LocalDate settimanaScorsa = LocalDate.now().minusDays(7);
+
+        // Setup: Proiezioni nel passato
+        execute(String.format("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) VALUES (40, DATE '%s', 1, 1, 1);", ieri));
+        execute(String.format("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) VALUES (41, DATE '%s', 1, 1, 1);", settimanaScorsa));
+
+        // Execute
+        List<Proiezione> proiezioni = service.getProiezioniFilm(1, 1);
+
+        // Assert: NESSUNA proiezione passata
+        assertTrue(proiezioni.stream().noneMatch(p ->
+                p.getDataProiezione().isBefore(LocalDate.now())
+        ), "Non devono esserci proiezioni passate");
+    }
 }

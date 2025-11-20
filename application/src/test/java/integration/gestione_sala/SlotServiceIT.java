@@ -107,4 +107,106 @@ class SlotServiceIT extends BaseIT {
         assertThrows(Exception.class, () ->
                 service.slotDisponibili(1, 1, data, data));
     }
+
+    // ============================================
+    // TEST POST MUTATION TESTING
+    // ============================================
+
+    @RepeatedTest(5)
+    void slotDisponibili_filmOccupatoRecuperaTitolo() throws Exception {
+        // UCCIDE: mutazione "existing != null → existing == null" sulla linea 43
+        LocalDate oggi = LocalDate.now().plusDays(1);
+
+        // Inserisci proiezione per occupare uno slot
+        execute("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) " +
+                "VALUES (1, '" + oggi + "', 2, 1, 1);");
+
+        Map<String, Object> result = service.slotDisponibili(1, 1, oggi, oggi);
+
+        List<Map<String, Object>> calendario = (List<Map<String, Object>>) result.get("calendar");
+        List<Map<String, Object>> slots = (List<Map<String, Object>>) calendario.get(0).get("slots");
+
+        // Trova lo slot occupato
+        Map<String, Object> slotOccupato = slots.stream()
+                .filter(s -> (boolean) s.get("occupato"))
+                .findFirst()
+                .orElseThrow();
+
+        assertTrue(slotOccupato.containsKey("film"), "Lo slot occupato deve contenere il titolo del film");
+        assertEquals("Matrix", slotOccupato.get("film"), "Deve mostrare il film che occupa lo slot");
+    }
+
+    @RepeatedTest(5)
+    void slotDisponibili_ultimoSlotBoundary() throws Exception {
+        LocalDate data = LocalDate.now().plusDays(1);
+
+        // Film con durata molto lunga per testare il boundary dell'ultimo slot
+        execute("UPDATE film SET durata = 200 WHERE id = 1;");
+
+        Map<String, Object> result = service.slotDisponibili(1, 1, data, data);
+
+        List<Map<String, Object>> calendario = (List<Map<String, Object>>) result.get("calendar");
+        List<Map<String, Object>> slots = (List<Map<String, Object>>) calendario.get(0).get("slots");
+
+        // Con film di 200 minuti, dovrebbe aggiungere uno slot extra
+        assertTrue(slots.size() >= 3,
+                "Con film lungo deve aggiungere slot extra per coprire la durata");
+    }
+
+    // Test data inizio uguale a data fine
+    @RepeatedTest(5)
+    void slotDisponibili_dataInizioUgualeDataFine() throws Exception {
+        LocalDate oggi = LocalDate.now().plusDays(1);
+
+        Map<String, Object> result = service.slotDisponibili(1, 1, oggi, oggi);
+
+        List<Map<String, Object>> calendario = (List<Map<String, Object>>) result.get("calendar");
+
+        assertEquals(1, calendario.size(),
+                "Con dataInizio == dataFine deve restituire esattamente 1 giorno");
+        assertEquals(oggi.toString(), calendario.get(0).get("data"),
+                "La data nel calendario deve corrispondere a oggi");
+    }
+
+    // branch "existing == null"
+    @RepeatedTest(5)
+    void slotDisponibili_tuttiSlotOccupati() throws Exception {
+        LocalDate oggi = LocalDate.now().plusDays(1);
+
+        // Occupa tutti gli slot
+        execute("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) " +
+                "VALUES (1, '" + oggi + "', 1, 1, 1);");
+        execute("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) " +
+                "VALUES (2, '" + oggi + "', 2, 1, 2);");
+        execute("INSERT INTO proiezione (id, data, id_film, id_sala, id_orario) " +
+                "VALUES (3, '" + oggi + "', 1, 1, 3);");
+
+        Map<String, Object> result = service.slotDisponibili(1, 1, oggi, oggi);
+
+        List<Map<String, Object>> calendario = (List<Map<String, Object>>) result.get("calendar");
+        List<Map<String, Object>> slots = (List<Map<String, Object>>) calendario.get(0).get("slots");
+
+        // Tutti gli slot devono essere occupati
+        long occupati = slots.stream().filter(s -> (boolean) s.get("occupato")).count();
+        assertEquals(3, occupati, "Tutti e 3 gli slot devono risultare occupati");
+    }
+
+    @RepeatedTest(5)
+    void slotDisponibili_stringSubstringOraInizio() throws Exception {
+        LocalDate data = LocalDate.now().plusDays(1);
+
+        Map<String, Object> result = service.slotDisponibili(1, 1, data, data);
+
+        List<Map<String, Object>> calendario = (List<Map<String, Object>>) result.get("calendar");
+        List<Map<String, Object>> slots = (List<Map<String, Object>>) calendario.get(0).get("slots");
+
+        // Verifica formato orario (deve essere HH:mm)
+        for (Map<String, Object> slot : slots) {
+            String oraInizio = (String) slot.get("oraInizio");
+            assertEquals(5, oraInizio.length(),
+                    "L'orario deve essere in formato HH:mm (5 caratteri)");
+            assertTrue(oraInizio.matches("\\d{2}:\\d{2}"),
+                    "L'orario deve avere formato HH:mm");
+        }
+    }
 }
