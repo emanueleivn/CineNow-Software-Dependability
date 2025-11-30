@@ -5,8 +5,8 @@ import pandas as pd
 # Cartella corrente
 FOLDER = "."
 
-# Prende tutti i file guest-navigation_runXX.csv
-pattern = os.path.join(FOLDER, "guest-navigation_run*.csv")
+# Prende tutti i file reservation_runXX.csv
+pattern = os.path.join(FOLDER, "reservation_run*.csv")
 files = sorted(glob.glob(pattern))
 
 if not files:
@@ -107,6 +107,6 @@ summary_with_stats = pd.concat(
     ignore_index=True
 )
 
-out_path = os.path.join(FOLDER, "guest-navigation_before_summary.csv")
+out_path = os.path.join(FOLDER, "reservation_before_summary.csv")
 summary_with_stats.to_csv(out_path, index=False)
 print(f"\nFile salvato in: {out_path}")
