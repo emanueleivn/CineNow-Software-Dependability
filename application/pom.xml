@@ -24,6 +24,7 @@
             <version>6.1.0</version>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
@@ -55,22 +56,35 @@
             <version>2.2.220</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>5.13.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-junit-jupiter</artifactId>
             <version>5.13.0</version>
-            <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
             <version>1.2</version>
+        </dependency>
+
+        <!-- JMH Dependencies -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.37</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.37</version>
         </dependency>
     </dependencies>
 
@@ -81,21 +95,79 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>3.4.0</version>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.openjdk.jmh</groupId>
+                            <artifactId>jmh-generator-annprocess</artifactId>
+                            <version>1.37</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
                     <useModulePath>false</useModulePath>
+                    <!-- Escludi i benchmark dai test normali -->
+                    <excludes>
+                        <exclude>**/benchmark/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
+
+            <!-- Plugin per costruire il classpath delle dipendenze -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>build-classpath</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>build-classpath</goal>
+                        </goals>
+                        <configuration>
+                            <outputProperty>depClasspath</outputProperty>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Plugin per eseguire i benchmark JMH -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <configuration>
+                    <mainClass>benchmark.BenchmarkRunner</mainClass>
+                    <classpathScope>test</classpathScope>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>java.class.path</key>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <value>${project.build.testOutputDirectory}${path.separator}${project.build.outputDirectory}${path.separator}${depClasspath}</value>
+                        </systemProperty>
+                    </systemProperties>
+                </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.12</version>
                 <executions>
-
-                    <!-- Agente per Surefire (test unitari) -->
                     <execution>
                         <id>prepare-agent</id>
                         <goals>
@@ -103,7 +175,6 @@
                         </goals>
                     </execution>
 
-                    <!-- Agente per Failsafe (test di integrazione) -->
                     <execution>
                         <id>prepare-agent-integration</id>
                         <phase>pre-integration-test</phase>
@@ -115,7 +186,6 @@
                         </configuration>
                     </execution>
 
-                    <!-- Merge tra jacoco.exec e jacoco-it.exec -->
                     <execution>
                         <id>merge-results</id>
                         <phase>post-integration-test</phase>
@@ -136,7 +206,6 @@
                         </configuration>
                     </execution>
 
-                    <!-- Report unico finale -->
                     <execution>
                         <id>report</id>
                         <phase>verify</phase>
@@ -147,10 +216,8 @@
                             <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
-
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -171,7 +238,6 @@
                 </configuration>
             </plugin>
 
-            <!--PIT-->
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -189,26 +255,13 @@
                         <param>integration.*</param>
                     </targetTests>
 
-                    <!-- CLASSI DA MUTARE -->
                     <targetClasses>
-                        <!-- DAO -->
                         <param>it.unisa.application.model.dao.**</param>
-
-                        <!-- Gestione Catena -->
                         <param>it.unisa.application.sottosistemi.gestione_catena.service.**</param>
-
-                        <!-- Gestione Prenotazione -->
                         <param>it.unisa.application.sottosistemi.gestione_prenotazione.service.**</param>
-
-                        <!-- Gestione Sala -->
                         <param>it.unisa.application.sottosistemi.gestione_sala.service.**</param>
-
-                        <!-- Gestione Sede -->
                         <param>it.unisa.application.sottosistemi.gestione_sede.service.**</param>
-
-                        <!-- Gestione Utente -->
                         <param>it.unisa.application.sottosistemi.gestione_utente.service.**</param>
-
                         <param>it.unisa.application.utilities.CampoValidator</param>
                         <param>it.unisa.application.utilities.EmailValidator</param>
                         <param>it.unisa.application.utilities.PasswordHash</param>
@@ -217,7 +270,6 @@
                         <param>it.unisa.application.utilities.ValidatorStrategy</param>
                     </targetClasses>
 
-                    <!-- CONFIGURAZIONE OUTPUT -->
                     <outputFormats>
                         <outputFormat>HTML</outputFormat>
                         <outputFormat>XML</outputFormat>
@@ -227,7 +279,6 @@
                     <threads>4</threads>
                     <timeoutConstant>10000</timeoutConstant>
 
-                    <!-- Mutatori -->
                     <mutators>
                         <mutator>DEFAULTS</mutator>
                     </mutators>
@@ -235,4 +286,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>
