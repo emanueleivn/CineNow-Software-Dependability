@@ -15,21 +15,30 @@ public class Sede {
     //@ spec_public
     private Set<Sala> sale;
 
+    //@ public invariant id >= 0;
+    //@ public invariant nome != null;
+    //@ public invariant indirizzo != null;
+    //@ public invariant sale != null;
+
     /*@ public normal_behavior
       @   requires id >= 0;
-      @   assignable \everything;
+      @   assignable \nothing;
       @   ensures this.id == id;
+      @   ensures this.nome != null;
+      @   ensures this.indirizzo != null;
       @   ensures this.sale != null;
       @*/
     public Sede(int id){
         this.id = id;
-        this.sale = new HashSet<>();
+        this.nome = "";
+        this.indirizzo = "";
+        this.sale = new HashSet<Sala>();
     }
 
     /*@ public normal_behavior
       @   requires id >= 0;
       @   requires nome != null && indirizzo != null;
-      @   assignable \everything;
+      @   assignable \nothing;
       @   ensures this.id == id;
       @   ensures this.nome == nome;
       @   ensures this.indirizzo == indirizzo;
@@ -39,7 +48,7 @@ public class Sede {
         this.id = id;
         this.nome = nome;
         this.indirizzo = indirizzo;
-        this.sale = new HashSet<>();
+        this.sale = new HashSet<Sala>();
     }
 
     /*@ public normal_behavior

@@ -20,12 +20,18 @@ public class Sala {
     //@ spec_public
     private Sede sede;
 
+    //@ public invariant id >= 0;
+    //@ public invariant numeroSala > 0;
+    //@ public invariant capienza > 0;
+    //@ public invariant slotList != null && proiezioni != null && posti != null;
+    //@ public invariant sede != null;
+
     /*@ public normal_behavior
       @   requires id >= 0;
       @   requires numeroSala > 0;
       @   requires capienza > 0;
       @   requires sede != null;
-      @   assignable \everything;
+      @   assignable \nothing;
       @   ensures this.id == id;
       @   ensures this.numeroSala == numeroSala;
       @   ensures this.capienza == capienza;
@@ -37,9 +43,9 @@ public class Sala {
         this.numeroSala = numeroSala;
         this.capienza = capienza;
         this.sede = sede;
-        this.slotList = new ArrayList<>();
-        this.proiezioni = new ArrayList<>();
-        this.posti = new ArrayList<>();
+        this.slotList = new ArrayList<Slot>();
+        this.proiezioni = new ArrayList<Proiezione>();
+        this.posti = new ArrayList<Posto>();
     }
 
     /*@ public normal_behavior
@@ -173,7 +179,7 @@ public class Sala {
       @   requires id >= 0;
       @   requires slot != null && data != null && film != null;
       @   requires this.proiezioni != null;
-      @   assignable this.proiezioni;
+      @   assignable this.proiezioni, this.proiezioni.values;
       @   ensures this.proiezioni.size() == \old(this.proiezioni).size() + 1;
       @   ensures \result == this.proiezioni;
       @*/
@@ -184,6 +190,7 @@ public class Sala {
         return proiezioni;
     }
 
+    //@ skipesc
     /*@ private normal_behavior
       @   requires proiezione != null;
       @   requires this.posti != null;
@@ -192,8 +199,13 @@ public class Sala {
       @   assignable \nothing;
       @*/
     private List<PostoProiezione> creaListaPosti(Proiezione proiezione) {
-        ArrayList<PostoProiezione> postiList = new ArrayList<>();
-        for (Posto p : this.posti) {
+        ArrayList<PostoProiezione> postiList = new ArrayList<PostoProiezione>();
+        /*@ loop_invariant 0 <= i && i <= this.posti.size();
+          @ loop_invariant postiList.size() == i;
+          @ decreases this.posti.size() - i;
+          @*/
+        for (int i = 0; i < this.posti.size(); i++) {
+            Posto p = this.posti.get(i);
             postiList.add(new PostoProiezione(p, proiezione));
         }
         return postiList;

@@ -11,9 +11,11 @@ public class Cliente extends Utente {
     //@ spec_public
     private List<Prenotazione> prenotazioni;
 
+    //@ public invariant nome != null && cognome != null && prenotazioni != null;
+
     /*@ public normal_behavior
       @   requires email != null && password != null && nome != null && cognome != null;
-      @   assignable \everything;
+      @   assignable \nothing;
       @   ensures this.nome == nome && this.cognome == cognome;
       @   ensures this.prenotazioni != null;
       @*/

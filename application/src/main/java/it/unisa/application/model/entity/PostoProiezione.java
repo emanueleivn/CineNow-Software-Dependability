@@ -8,9 +8,11 @@ public class PostoProiezione {
     //@ spec_public
     private boolean stato;
 
+    //@ public invariant posto != null && proiezione != null;
+
     /*@ public normal_behavior
       @   requires posto != null && proiezione != null;
-      @   assignable \everything;
+      @   assignable \nothing;
       @   ensures this.posto == posto;
       @   ensures this.proiezione == proiezione;
       @   ensures this.stato == true;
@@ -23,7 +25,7 @@ public class PostoProiezione {
 
     /*@ public normal_behavior
       @   requires sala != null && proiezione != null;
-      @   assignable \everything;
+      @   assignable \nothing;
       @   ensures this.posto != null;
       @   ensures this.proiezione == proiezione;
       @   ensures this.stato == true;

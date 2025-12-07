@@ -8,6 +8,17 @@ public class Posto {
     //@ spec_public
     private int numero;
 
+    //@ public invariant sala != null;
+    //@ public invariant numero > 0;
+
+    /*@ public normal_behavior
+      @   requires sala != null;
+      @   requires numero > 0;
+      @   assignable \nothing;
+      @   ensures this.sala == sala;
+      @   ensures this.fila == fila;
+      @   ensures this.numero == numero;
+      @*/
     public Posto(Sala sala, char fila, int numero) {
         this.sala = sala;
         this.fila = fila;
@@ -48,7 +59,7 @@ public class Posto {
     /*@ public normal_behavior
       @   requires numero > 0;
       @   assignable this.numero;
-      @   ensures this.numero== numero;
+      @   ensures this.numero == numero;
       @*/
     public void setNumero(int numero) { this.numero = numero; }
 

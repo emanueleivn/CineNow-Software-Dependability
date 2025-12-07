@@ -1,7 +1,5 @@
 package it.unisa.application.model.entity;
 
-import java.util.Objects;
-
 public class Utente {
     //@ spec_public
     private String email;
@@ -10,9 +8,11 @@ public class Utente {
     //@ spec_public
     private String ruolo;
 
+    //@ public invariant email != null && password != null && ruolo != null;
+
     /*@ public normal_behavior
       @   requires email != null && password != null && ruolo != null;
-      @   assignable \everything;
+      @   assignable \nothing;
       @   ensures this.email == email && this.password == password && this.ruolo == ruolo;
       @*/
     public Utente(String email, String password, String ruolo) {
@@ -25,7 +25,7 @@ public class Utente {
       @   ensures \result == email;
       @   assignable \nothing;
       @*/
-    public  /*@ pure @*/ String getEmail() { return email; }
+    public /*@ pure @*/ String getEmail() { return email; }
 
     /*@ public normal_behavior
       @   requires email != null;

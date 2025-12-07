@@ -10,7 +10,7 @@ public class Slot {
 
     /*@ public normal_behavior
       @   requires id >= 0 && oraInizio != null;
-      @   assignable \everything;
+      @   assignable \nothing;
       @   ensures this.id == id;
       @   ensures this.oraInizio == oraInizio;
       @*/

@@ -20,10 +20,21 @@ public class Film {
     //@ spec_public
     private boolean isProiettato;
 
+    //@ public invariant id >= 0;
+    //@ public invariant titolo != null;
+    //@ public invariant genere != null;
+    //@ public invariant classificazione != null;
+    //@ public invariant durata > 0;
+    //@ public invariant locandina != null;
+    //@ public invariant descrizione != null;
+
     /*@ public normal_behavior
-      @   requires titolo != null && genere != null && classificazione != null && durata > 0
-      @            && descrizione != null;
-      @   assignable \everything;
+      @   requires id >= 0;
+      @   requires titolo != null && genere != null && classificazione != null;
+      @   requires durata > 0;
+      @   requires descrizione != null;
+      @   requires locandina != null;   // se vuoi permettere "nessuna locandina", passa new byte[0]
+      @   assignable \nothing;
       @   ensures this.id == id && this.titolo == titolo && this.genere == genere
       @           && this.classificazione == classificazione && this.durata == durata
       @           && this.locandina == locandina && this.descrizione == descrizione
@@ -74,6 +85,7 @@ public class Film {
     public /*@ pure @*/ String getGenere() { return genere; }
 
     /*@ public normal_behavior
+      @   requires genere != null;
       @   assignable this.genere;
       @   ensures this.genere == genere;
       @*/
@@ -86,6 +98,7 @@ public class Film {
     public /*@ pure @*/ String getClassificazione() { return classificazione; }
 
     /*@ public normal_behavior
+      @   requires classificazione != null;
       @   assignable this.classificazione;
       @   ensures this.classificazione == classificazione;
       @*/
@@ -105,11 +118,13 @@ public class Film {
     public void setDurata(int durata) { this.durata = durata; }
 
     /*@ public normal_behavior
+      @   ensures \result == locandina;
       @   assignable \nothing;
       @*/
     public /*@ pure @*/ byte[] getLocandina() { return locandina; }
 
     /*@ public normal_behavior
+      @   requires locandina != null;
       @   assignable this.locandina;
       @   ensures this.locandina == locandina;
       @*/
@@ -122,6 +137,7 @@ public class Film {
     public /*@ pure @*/ String getDescrizione() { return descrizione; }
 
     /*@ public normal_behavior
+      @   requires descrizione != null;
       @   assignable this.descrizione;
       @   ensures this.descrizione == descrizione;
       @*/

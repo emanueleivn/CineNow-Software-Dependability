@@ -1,5 +1,6 @@
 package it.unisa.application.model.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Prenotazione {
@@ -8,24 +9,28 @@ public class Prenotazione {
     //@ spec_public
     private Proiezione proiezione;
     //@ spec_public
-    /*@ nullable @*/
     private List<PostoProiezione> postiPrenotazione;
     //@ spec_public
     private Cliente cliente;
 
+    //@ public invariant id >= 0;
+    //@ public invariant cliente != null && proiezione != null;
+    //@ public invariant postiPrenotazione != null;
+
     /*@ public normal_behavior
       @   requires id >= 0 && cliente != null && proiezione != null;
-      @   assignable \everything;
+      @   assignable \nothing;
       @   ensures this.id == id;
       @   ensures this.cliente == cliente;
       @   ensures this.proiezione == proiezione;
-      @   ensures this.postiPrenotazione == null;
+      @   ensures this.postiPrenotazione != null;
+      @   ensures this.postiPrenotazione.isEmpty();
       @*/
     public Prenotazione(int id, Cliente cliente, Proiezione proiezione) {
         this.id = id;
         this.cliente = cliente;
         this.proiezione = proiezione;
-        this.postiPrenotazione = null;
+        this.postiPrenotazione = new ArrayList<PostoProiezione>();
     }
 
     /*@ public normal_behavior
@@ -35,9 +40,10 @@ public class Prenotazione {
     public /*@ pure @*/ int getId() { return id; }
 
     /*@ public normal_behavior
-     @   assignable this.id;
-     @   ensures this.id == id;
-     @*/
+      @   requires id >= 0;
+      @   assignable this.id;
+      @   ensures this.id == id;
+      @*/
     public void setId(int id) { this.id = id; }
 
     /*@ public normal_behavior
@@ -54,16 +60,22 @@ public class Prenotazione {
     public void setProiezione(Proiezione proiezione) { this.proiezione = proiezione; }
 
     /*@ public normal_behavior
+      @   ensures \result == postiPrenotazione;
+      @   ensures \result != null;
       @   assignable \nothing;
       @*/
-    public /*@ pure @*/ /*@ nullable @*/ List<PostoProiezione> getPostiPrenotazione() { return postiPrenotazione; }
+    public /*@ pure @*/ List<PostoProiezione> getPostiPrenotazione() {
+        return postiPrenotazione;
+    }
 
     /*@ public normal_behavior
       @   requires postiProiezione != null;
       @   assignable this.postiPrenotazione;
       @   ensures this.postiPrenotazione == postiProiezione;
       @*/
-    public void setPostiPrenotazione(List<PostoProiezione> postiProiezione) { this.postiPrenotazione = postiProiezione; }
+    public void setPostiPrenotazione(List<PostoProiezione> postiProiezione) {
+        this.postiPrenotazione = postiProiezione;
+    }
 
     /*@ public normal_behavior
       @   ensures \result == cliente;
