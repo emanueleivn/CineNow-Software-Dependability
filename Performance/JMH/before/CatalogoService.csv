@@ -1,0 +1,5 @@
+Benchmark,Mode,Cnt,Score,Error,Units
+CatalogoServiceBenchmark.addFilmCatalogoInvalidDurata,avgt,80,27513.298,1871.772,ns/op
+CatalogoServiceBenchmark.addFilmCatalogoInvalidTitolo,avgt,80,26759.770,1956.220,ns/op
+CatalogoServiceBenchmark.addFilmCatalogoValid,avgt,80,35639.063,2050.989,ns/op
+CatalogoServiceBenchmark.getCatalogoWithManyFilms,avgt,80,19410.854,2964.726,ns/op
