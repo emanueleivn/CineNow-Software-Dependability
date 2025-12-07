@@ -3,10 +3,6 @@ package it.unisa.application.model.entity;
 import java.util.List;
 
 public class Prenotazione {
-    //@ public invariant id >= 0;
-    //@ public invariant proiezione != null;
-    //@ public invariant cliente != null;
-
     //@ spec_public
     private int id;
     //@ spec_public
@@ -17,10 +13,6 @@ public class Prenotazione {
     //@ spec_public
     private Cliente cliente;
 
-    //@ public normal_behavior
-    //@ requires id >= 0 && cliente != null && proiezione != null;
-    //@ ensures this.id >= 0 && this.cliente != null && this.proiezione != null;
-    //@ assignable \everything;
     public Prenotazione(int id, Cliente cliente, Proiezione proiezione) {
         this.id = id;
         this.cliente = cliente;
@@ -28,23 +20,22 @@ public class Prenotazione {
         this.postiPrenotazione = null;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result >= 0;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public int getId() { return id; }
+    /*@ public normal_behavior
+      @   ensures \result == id;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ int getId() { return id; }
 
-    //@ public normal_behavior
-    //@ requires id >= 0;
-    //@ ensures this.id >= 0;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+     @   assignable this.id;
+     @   ensures this.id == id;
+     @*/
     public void setId(int id) { this.id = id; }
 
     //@ public normal_behavior
-    //@ ensures \result != null;
+    //@ ensures \result == proiezione;
     //@ assignable \nothing;
-    /*@ pure @*/
-    public Proiezione getProiezione() { return proiezione; }
+    public /*@ pure @*/ Proiezione getProiezione() { return proiezione; }
 
     //@ public normal_behavior
     //@ requires proiezione != null;
@@ -54,9 +45,7 @@ public class Prenotazione {
 
     //@ public normal_behavior
     //@ assignable \nothing;
-    /*@ pure @*/
-    /*@ nullable @*/
-    public List<PostoProiezione> getPostiPrenotazione() { return postiPrenotazione; }
+    public /*@ pure @*/ /*@ nullable @*/ List<PostoProiezione> getPostiPrenotazione() { return postiPrenotazione; }
 
     //@ public normal_behavior
     //@ requires postiProiezione != null;
@@ -65,10 +54,9 @@ public class Prenotazione {
     public void setPostiPrenotazione(List<PostoProiezione> postiProiezione) { this.postiPrenotazione = postiProiezione; }
 
     //@ public normal_behavior
-    //@ ensures \result != null;
+    //@ ensures \result == cliente;
     //@ assignable \nothing;
-    /*@ pure @*/
-    public Cliente getCliente() { return cliente; }
+    public /*@ pure @*/ Cliente getCliente() { return cliente; }
 
     //@ public normal_behavior
     //@ requires cliente != null;

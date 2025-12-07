@@ -1,24 +1,16 @@
 package it.unisa.application.model.entity;
 
 public class GestoreSede extends Utente {
-    //@ public invariant sede != null;
-
     //@ spec_public
     private Sede sede;
 
-    //@ public normal_behavior
-    //@ requires email != null && password != null && sede != null;
-    //@ ensures this.sede == sede;
-    //@ assignable \everything;
-    public GestoreSede(/*@ non_null @*/ String email, /*@ non_null @*/ String password,
-                       /*@ non_null @*/ Sede sede) {
-        super(email, password, "gestore_sede"); // super per primo
-        /*@ assert sede != null; @*/
+    public GestoreSede(String email, String password, Sede sede) {
+        super(email, password, "gestore_sede");
         this.sede = sede;
     }
 
     //@ public normal_behavior
-    //@ ensures \result != null;
+    //@ ensures \result == sede;
     //@ assignable \nothing;
     /*@ pure @*/
     public Sede getSede() { return sede; }

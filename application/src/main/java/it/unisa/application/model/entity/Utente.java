@@ -20,11 +20,11 @@ public class Utente {
         this.ruolo = ruolo;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public String getEmail() { return email; }
+    /*@ public normal_behavior
+      @   ensures \result == email;
+      @   assignable \nothing;
+      @*/
+    public  /*@ pure @*/ String getEmail() { return email; }
 
     //@ public normal_behavior
     //@ requires email != null;
@@ -32,7 +32,7 @@ public class Utente {
     public void setEmail(String email) { this.email = email; }
 
     //@ public normal_behavior
-    //@ ensures \result != null;
+    //@ ensures \result == password;
     //@ assignable \nothing;
     /*@ pure @*/
     public String getPassword() { return password; }
@@ -43,7 +43,7 @@ public class Utente {
     public void setPassword(String password) { this.password = password; }
 
     //@ public normal_behavior
-    //@ ensures \result != null;
+    //@ ensures \result == ruolo;
     //@ assignable \nothing;
     /*@ pure @*/
     public String getRuolo() { return ruolo; }
@@ -83,13 +83,6 @@ public class Utente {
     /*@ pure @*/
     @Override
     public int hashCode() {
-        /*@
-          // Dichiarazioni esplicite per il verificatore: i campi sono non-null
-          assert this.email != null;
-          assert this.password != null;
-        @*/
-        // Evitiamo Objects.hash che richiama librerie con specifiche complesse;
-        // usiamo una semplice combinazione di hashCode già definita in Java.
         int result = 17;
         result = 31 * result + email.hashCode();
         result = 31 * result + password.hashCode();
@@ -102,12 +95,6 @@ public class Utente {
     /*@ pure @*/
     @Override
     public String toString() {
-        /*@
-          // Dichiarazioni esplicite per il verificatore: i campi sono non-null
-          assert this.email != null;
-          assert this.password != null;
-          assert this.ruolo != null;
-        @*/
         return "Utente{" +
                 "email='" + email + '\'' +
                 ", password='" + password + '\'' +

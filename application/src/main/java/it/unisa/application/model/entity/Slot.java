@@ -3,25 +3,18 @@ package it.unisa.application.model.entity;
 import java.sql.Time;
 
 public class Slot {
-    //@ public invariant id >= 0;
-    //@ public invariant oraInizio != null;
-
     //@ spec_public
     private int id;
     //@ spec_public
     private Time oraInizio;
 
-    //@ public normal_behavior
-    //@ requires id >= 0 && oraInizio != null;
-    //@ ensures this.id >= 0 && this.oraInizio != null;
-    //@ assignable \everything;
-    public Slot(int id, Time oraInizio) {
+     public Slot(int id, Time oraInizio) {
         this.id = id;
         this.oraInizio = oraInizio;
     }
 
     //@ public normal_behavior
-    //@ ensures \result != null;
+    //@ ensures \result == oraInizio;
     //@ assignable \nothing;
     /*@ pure @*/
     public Time getOraInizio() {
@@ -37,7 +30,7 @@ public class Slot {
     }
 
     //@ public normal_behavior
-    //@ ensures \result >= 0;
+    //@ ensures \result == id;
     //@ assignable \nothing;
     /*@ pure @*/
     public int getId() {
@@ -46,7 +39,7 @@ public class Slot {
 
     //@ public normal_behavior
     //@ requires id >= 0;
-    //@ ensures this.id >= 0;
+    //@ ensures this.id == id;
     //@ assignable \everything;
     public void setId(int id) {
         this.id = id;

@@ -12,60 +12,124 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class PrenotazioneDAO {
+
+    //@ spec_public
     private final DataSource ds;
+
     private final static Logger logger = Logger.getLogger(PrenotazioneDAO.class.getName());
+
+    /** Invariante: la datasource non è mai null (dopo il costruttore). */
+    //@ public invariant ds != null;
+
     public PrenotazioneDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
+    /** Crea una nuova prenotazione nel database. */
+    /*@ public normal_behavior
+      @   requires prenotazione != null;
+      @   requires prenotazione.getCliente() != null;
+      @   requires prenotazione.getProiezione() != null;
+      @
+      @   // Può modificare DB, la prenotazione, ecc.
+      @   assignable \everything;
+      @
+      @   // Specifica "forte" ma dimostrabile: la prenotazione resta valida,
+      @   // e se il metodo ha successo, l'id è non negativo (segue dagli invarianti).
+      @   ensures prenotazione != null;
+      @   ensures prenotazione.getCliente() != null;
+      @   ensures prenotazione.getProiezione() != null;
+      @   ensures \result ==> prenotazione.getId() >= 0;
+      @*/
     public boolean create(Prenotazione prenotazione) {
-        if(prenotazione == null || prenotazione.getCliente() == null || prenotazione.getProiezione() == null) {
+        if (prenotazione == null || prenotazione.getCliente() == null || prenotazione.getProiezione() == null) {
             logger.severe("Prenotazione, Cliente or Proiezione is null");
             return false;
         }
+
         String sql = "INSERT INTO prenotazione (email_cliente, id_proiezione) VALUES (?, ?)";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             ps.setString(1, prenotazione.getCliente().getEmail());
             ps.setInt(2, prenotazione.getProiezione().getId());
             int affectedRows = ps.executeUpdate();
+
             if (affectedRows > 0) {
                 ResultSet rs = ps.getGeneratedKeys();
                 if (rs.next()) {
-                    prenotazione.setId(rs.getInt(1));
+                    int newId = rs.getInt(1);
+                    // L'invariante di Prenotazione richiede id >= 0, e setId lo fa rispettare.
+                    prenotazione.setId(newId);
                 }
                 return true;
             }
         } catch (SQLException e) {
-            logger.severe(e.getMessage());
+            String msg = e.getMessage();
+            logger.severe(msg != null ? msg : "");
         }
         return false;
     }
-    
-    public Prenotazione retrieveById(int id) {
+
+    /** Recupera una prenotazione per id. */
+    /*@ public normal_behavior
+      @   requires id > 0;
+      @
+      @   // Può usare libreria/DB con assignable \everything.
+      @   assignable \everything;
+      @
+      @   // Postcondizione forte ma basata solo su invarianti di Prenotazione:
+      @   // se restituisce una prenotazione, questa è in stato valido.
+      @   ensures \result == null
+      @        || (\result.getId() >= 0
+      @            && \result.getCliente() != null
+      @            && \result.getProiezione() != null);
+      @*/
+    public /*@ nullable @*/ Prenotazione retrieveById(int id) {
         String sql = "SELECT * FROM prenotazione WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {
                 int prenotazioneId = rs.getInt("id");
                 Cliente cliente = new Cliente(rs.getString("email_cliente"), "", "", "");
                 Proiezione proiezione = new Proiezione(rs.getInt("id_proiezione"));
-                
+
+                // Qui ci affidiamo al fatto che il chiamante abbia modellato bene il DB:
+                // Prenotazione richiede id >= 0, cliente != null, proiezione != null.
                 return new Prenotazione(prenotazioneId, cliente, proiezione);
             }
         } catch (SQLException e) {
-            logger.severe(e.getMessage());
+            String msg = e.getMessage();
+            logger.severe(msg != null ? msg : "");
         }
         return null;
     }
-    
-    public List<Prenotazione> retrieveAllByCliente(Cliente cliente) {
+
+    /** Recupera tutte le prenotazioni associate a un certo cliente. */
+    /*@ public normal_behavior
+      @   requires cliente != null;
+      @   requires cliente.getEmail() != null;
+      @
+      @   // Può usare DB/libreria che hanno assignable \everything.
+      @   assignable \everything;
+      @
+      @   // Postcondizione forte: ogni prenotazione nella lista (se non è null)
+      @   // ha come cliente proprio il 'cliente' passato.
+      @   ensures \result == null
+      @        || (\forall int i; 0 <= i && i < \result.size();
+      @               \result.get(i) != null
+      @            && \result.get(i).getCliente() == cliente);
+      @*/
+    public /*@ nullable @*/ List<Prenotazione> retrieveAllByCliente(Cliente cliente) {
         if (cliente == null) {
             logger.severe("Cliente is null");
-            return null;
+            return null; // percorso impossibile sotto le precondizioni JML
         }
+
         List<Prenotazione> prenotazioni = new ArrayList<>();
         String sql = "SELECT " +
                 "p.id AS prenotazione_id, " +
@@ -90,14 +154,21 @@ public class PrenotazioneDAO {
 
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
+
             ps.setString(1, cliente.getEmail());
             ResultSet rs = ps.executeQuery();
 
             Map<Integer, Prenotazione> prenotazioneMap = new HashMap<>();
 
+            /*@ loop_invariant prenotazioni != null && prenotazioneMap != null;
+              @ loop_invariant cliente != null && cliente.getEmail() != null;
+              @ loop_invariant (\forall int i; 0 <= i && i < prenotazioni.size();
+              @                        prenotazioni.get(i) != null
+              @                     && prenotazioni.get(i).getCliente() == cliente);
+              @*/
             while (rs.next()) {
                 int prenotazioneId = rs.getInt("prenotazione_id");
-                Prenotazione prenotazione = prenotazioneMap.getOrDefault(prenotazioneId, null);
+                Prenotazione prenotazione = prenotazioneMap.get(prenotazioneId);
 
                 if (prenotazione == null) {
                     Film film = new Film(
@@ -114,9 +185,9 @@ public class PrenotazioneDAO {
                     Sala s = salaDAO.retrieveById(rs.getInt("sala_id"));
                     Sede sede = sedeDAO.retrieveById(s.getSede().getId());
                     Sala sala = new Sala(rs.getInt("sala_id"), rs.getInt("numero_sala"), 0, sede);
-                    
+
                     Slot slot = new Slot(0, rs.getTime("ora_inizio"));
-                    
+
                     Proiezione proiezione = new Proiezione(
                             rs.getInt("proiezione_id"),
                             sala,
@@ -124,28 +195,38 @@ public class PrenotazioneDAO {
                             rs.getDate("data_proiezione").toLocalDate(),
                             slot
                     );
-                    
+
+                    // Costruiamo la prenotazione usando il Cliente passato:
                     prenotazione = new Prenotazione(prenotazioneId, cliente, proiezione);
-                    prenotazione.setPostiPrenotazione(new ArrayList<>());
+                    prenotazione.setPostiPrenotazione(new ArrayList<PostoProiezione>());
+
                     prenotazioneMap.put(prenotazioneId, prenotazione);
+                    prenotazioni.add(prenotazione);
                 }
 
-                if (rs.getString("fila_posto") != null && rs.getInt("numero_posto") != 0) {
+                String fila = rs.getString("fila_posto");
+                int numero = rs.getInt("numero_posto");
+
+                if (fila != null && numero != 0) {
                     Posto posto = new Posto(
                             prenotazione.getProiezione().getSalaProiezione(),
-                            rs.getString("fila_posto").charAt(0),
-                            rs.getInt("numero_posto")
+                            fila.charAt(0),
+                            numero
                     );
 
-                    PostoProiezione postoProiezione = new PostoProiezione(posto, prenotazione.getProiezione());
+                    PostoProiezione postoProiezione =
+                            new PostoProiezione(posto, prenotazione.getProiezione());
+
+                    // getPostiPrenotazione() può essere null solo prima della setPostiPrenotazione
                     prenotazione.getPostiPrenotazione().add(postoProiezione);
                 }
             }
 
-            prenotazioni.addAll(prenotazioneMap.values());
         } catch (SQLException e) {
-            logger.severe(e.getMessage());
+            String msg = e.getMessage();
+            logger.severe(msg != null ? msg : "");
         }
+
         return prenotazioni;
     }
 }

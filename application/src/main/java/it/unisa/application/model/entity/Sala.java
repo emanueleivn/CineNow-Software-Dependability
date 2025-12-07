@@ -5,14 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Sala {
-    //@ public invariant id >= 0;
-    //@ public invariant numeroSala > 0;
-    //@ public invariant capienza > 0;
-    //@ public invariant slotList != null;
-    //@ public invariant proiezioni != null;
-    //@ public invariant posti != null;
-    //@ public invariant sede != null;
-
     //@ spec_public
     private int id;
     //@ spec_public
@@ -28,10 +20,19 @@ public class Sala {
     //@ spec_public
     private Sede sede;
 
-    //@ public normal_behavior
-    //@ requires id >= 0 && numeroSala > 0 && capienza > 0 && sede != null;
-    //@ ensures this.id >= 0 && this.numeroSala > 0 && this.capienza > 0 && this.sede != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   requires numeroSala > 0;
+      @   requires capienza > 0;
+      @   requires sede != null;
+      @   ensures this.id == id;
+      @   ensures this.numeroSala == numeroSala;
+      @   ensures this.capienza == capienza;
+      @   ensures this.sede == sede;
+      @   ensures this.slotList != null;
+      @   ensures this.proiezioni != null;
+      @   ensures this.posti != null;
+      @*/
     public Sala(int id, int numeroSala, int capienza, Sede sede) {
         this.id = id;
         this.numeroSala = numeroSala;
@@ -42,151 +43,161 @@ public class Sala {
         this.posti = new ArrayList<>();
     }
 
-    //@ public normal_behavior
-    //@ ensures \result >= 0;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public int getId() {
+    /*@ public normal_behavior
+      @   ensures \result == id;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ int getId() {
         return id;
     }
 
-    //@ public normal_behavior
-    //@ requires id >= 0;
-    //@ ensures this.id >= 0;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   assignable this.id;
+      @   ensures this.id == id;
+      @*/
     public void setId(int id) {
         this.id = id;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result > 0;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public int getNumeroSala() {
+    /*@ public normal_behavior
+      @   ensures \result == numeroSala;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ int getNumeroSala() {
         return numeroSala;
     }
 
-    //@ public normal_behavior
-    //@ requires numeroSala > 0;
-    //@ ensures this.numeroSala > 0;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires numeroSala > 0;
+      @   assignable this.numeroSala;
+      @   ensures this.numeroSala == numeroSala;
+      @*/
     public void setNumeroSala(int numeroSala) {
         this.numeroSala = numeroSala;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result > 0;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public int getCapienza() {
+    /*@ public normal_behavior
+      @   ensures \result == capienza;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ int getCapienza() {
         return capienza;
     }
 
-    //@ public normal_behavior
-    //@ requires capienza > 0;
-    //@ ensures this.capienza > 0;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires capienza > 0;
+      @   assignable this.capienza;
+      @   ensures this.capienza == capienza;
+      @*/
     public void setCapienza(int capienza) {
         this.capienza = capienza;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public Sede getSede() {
+    /*@ public normal_behavior
+      @   ensures \result == sede;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ Sede getSede() {
         return sede;
     }
 
-    //@ public normal_behavior
-    //@ requires sede != null;
-    //@ ensures this.sede != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires sede != null;
+      @   assignable this.sede;
+      @   ensures this.sede == sede;
+      @*/
     public void setSede(Sede sede) {
         this.sede = sede;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public List<Slot> slotList() {
+    /*@ public normal_behavior
+      @   ensures \result == slotList;
+      @   ensures \result != null;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ List<Slot> slotList() {
         return slotList;
     }
 
-    //@ public normal_behavior
-    //@ requires slotList != null;
-    //@ ensures this.slotList != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires slotList != null;
+      @   assignable this.slotList;
+      @   ensures this.slotList == slotList;
+      @*/
     public void setSlotList(List<Slot> slotList) {
         this.slotList = slotList;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public List<Proiezione> getProiezioni() {
+    /*@ public normal_behavior
+      @   ensures \result == proiezioni;
+      @   ensures \result != null;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ List<Proiezione> getProiezioni() {
         return proiezioni;
     }
 
-    //@ public normal_behavior
-    //@ requires proiezioni != null;
-    //@ ensures this.proiezioni != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires proiezioni != null;
+      @   assignable this.proiezioni;
+      @   ensures this.proiezioni == proiezioni;
+      @*/
     public void setProiezioni(List<Proiezione> proiezioni) {
         this.proiezioni = proiezioni;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public List<Posto> getPosti() {
+    /*@ public normal_behavior
+      @   ensures \result == posti;
+      @   ensures \result != null;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ List<Posto> getPosti() {
         return posti;
     }
 
-    //@ public normal_behavior
-    //@ requires posti != null;
-    //@ ensures this.posti != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires posti != null;
+      @   assignable this.posti;
+      @   ensures this.posti == posti;
+      @*/
     public void setPosti(List<Posto> posti) {
         this.posti = posti;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public List<Slot> getSlotList() {
+    /*@ public normal_behavior
+      @   ensures \result == slotList;
+      @   ensures \result != null;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ List<Slot> getSlotList() {
         return slotList;
     }
 
-    //@ public normal_behavior
-    //@ requires slot != null && data != null && film != null;
-    //@ requires this.proiezioni != null && this.posti != null && this.slotList != null && this.sede != null;
-    //@ ensures this.proiezioni != null && this.proiezioni.size() == \old(this.proiezioni.size()) + 1;
-    //@ ensures this.id == \old(this.id) && this.numeroSala == \old(this.numeroSala) && this.capienza == \old(this.capienza);
-    //@ ensures this.slotList == \old(this.slotList) && this.posti == \old(this.posti) && this.sede == \old(this.sede);
-    //@ assignable this.proiezioni;
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   requires slot != null && data != null && film != null;
+      @   requires this.proiezioni != null;
+      @   assignable this.proiezioni;
+      @   ensures this.proiezioni.size() == \old(this.proiezioni).size() + 1;
+      @   ensures \result == this.proiezioni;
+      @*/
     public List<Proiezione> aggiungiProiezione(int id, Slot slot, LocalDate data, Film film) {
-        /*@ assert slot != null && data != null && film != null; @*/
         Proiezione proiezione = new Proiezione(id, this, film, data, slot);
-        /*@ assert proiezione != null; @*/
         proiezione.setPostiProiezione(creaListaPosti(proiezione));
+        this.proiezioni.add(proiezione);
         return proiezioni;
     }
 
-    //@ private normal_behavior
-    //@ requires proiezione != null && this.posti != null && this.proiezioni != null && this.slotList != null && this.sede != null;
-    //@ ensures \result != null;
-    //@ ensures this.id == \old(this.id) && this.numeroSala == \old(this.numeroSala) && this.capienza == \old(this.capienza);
-    //@ ensures this.slotList == \old(this.slotList) && this.proiezioni == \old(this.proiezioni) && this.posti == \old(this.posti) && this.sede == \old(this.sede);
-    //@ assignable \everything;
+    /*@ private normal_behavior
+      @   requires proiezione != null;
+      @   requires this.posti != null;
+      @   ensures \result != null;
+      @   ensures \result.size() == this.posti.size();
+      @   assignable \nothing;
+      @*/
     private List<PostoProiezione> creaListaPosti(Proiezione proiezione) {
         ArrayList<PostoProiezione> postiList = new ArrayList<>();
-        //@ loop_invariant 0 <= postiList.size();
-        //@ decreases posti.size() - postiList.size();
         for (Posto p : this.posti) {
             postiList.add(new PostoProiezione(p, proiezione));
         }

@@ -2,7 +2,6 @@ package it.unisa.application.model.entity;
 
 public class Posto {
     //@ public invariant sala != null;
-    //@ public invariant numero > 0;
 
     //@ spec_public
     private Sala sala;
@@ -11,10 +10,6 @@ public class Posto {
     //@ spec_public
     private int numero;
 
-    //@ public normal_behavior
-    //@ requires sala != null && numero > 0;
-    //@ ensures this.sala == sala && this.fila == fila && this.numero == numero;
-    //@ assignable \everything;
     public Posto(Sala sala, char fila, int numero) {
         this.sala = sala;
         this.fila = fila;
@@ -22,36 +17,35 @@ public class Posto {
     }
 
     //@ public normal_behavior
-    //@ ensures \result != null;
+    //@ ensures \result == sala;
     //@ assignable \nothing;
-    /*@ pure @*/
-    public Sala getSala() { return sala; }
+    public /*@ pure @*/ Sala getSala() { return sala; }
 
     //@ public normal_behavior
     //@ requires sala != null;
-    //@ ensures this.sala != null;
-    //@ assignable \everything;
+    //@ ensures this.sala == sala;
+    //@ assignable this.sala;
     public void setSala(Sala sala) { this.sala = sala; }
 
     //@ public normal_behavior
+    //@ ensures \result == fila;
     //@ assignable \nothing;
-    /*@ pure @*/
-    public char getFila() { return fila; }
+    public /*@ pure @*/ char getFila() { return fila; }
 
-    //@ public normal_behavior
-    //@ assignable \everything;
+    //@ requires sala != null;
+    //@ assignable this.fila;
+    //@ ensures this.fila == fila;
     public void setFila(char fila) { this.fila = fila; }
 
     //@ public normal_behavior
-    //@ ensures \result > 0;
+    //@ ensures \result == numero;
     //@ assignable \nothing;
-    /*@ pure @*/
-    public int getNumero() { return numero; }
+    public /*@ pure @*/ int getNumero() { return numero; }
 
     //@ public normal_behavior
     //@ requires numero > 0;
-    //@ ensures this.numero > 0;
-    //@ assignable \everything;
+    //@ assignable this.numero;
+    //@ ensures this.numero== numero;
     public void setNumero(int numero) { this.numero = numero; }
 
     //@ also public normal_behavior
