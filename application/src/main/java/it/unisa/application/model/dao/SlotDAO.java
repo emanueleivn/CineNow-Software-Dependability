@@ -11,13 +11,24 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SlotDAO {
+    //@ spec_public
     private final DataSource ds;
+    //@ spec_public
     private static final Logger logger = Logger.getLogger(SlotDAO.class.getName());
 
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @   ensures ds != null;
+      @*/
     public SlotDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   assignable \nothing;
+      @   ensures \result == null || \result.getId() == id;
+      @*/
     public Slot retrieveById(int id) {
         String sql = "SELECT * FROM slot WHERE id = ?";
         try (Connection connection = ds.getConnection();
@@ -34,6 +45,11 @@ public class SlotDAO {
         return null;
     }
 
+    /*@ public normal_behavior
+      @   requires proiezione != null;
+      @   assignable \nothing;
+      @   ensures \result == null || \result.getId() == proiezione.getOrarioProiezione().getId();
+      @*/
     public Slot retrieveByProiezione(Proiezione proiezione){
         if (proiezione == null || proiezione.getOrarioProiezione() == null) {
             logger.warning("Proiezione o slot associato null");
@@ -55,6 +71,10 @@ public class SlotDAO {
         return null;
     }
 
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @   ensures \result != null;
+      @*/
     public List<Slot> retrieveAllSlots() {
         List<Slot> list = new ArrayList<>();
         String sql = "SELECT * FROM slot ORDER BY ora_inizio";

@@ -12,12 +12,24 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class ProiezioneDAO {
+    //@ spec_public
     private final DataSource ds;
+    //@ spec_public
     private final static Logger logger = Logger.getLogger(ProiezioneDAO.class.getName());
+
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @   ensures ds != null;
+      @*/
     public ProiezioneDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
+    /*@ public normal_behavior
+      @   requires proiezione != null;
+      @   assignable \everything;
+      @   ensures \result ==> proiezione.getId() >= 0;
+      @*/
     public boolean create(Proiezione proiezione) {
         if(proiezione==null){
             logger.severe("Proiezione null");
@@ -104,6 +116,11 @@ public class ProiezioneDAO {
         return false;
     }
 
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   assignable \nothing;
+      @   ensures \result == null || \result.getId() == id;
+      @*/
     public Proiezione retrieveById(int id) {
         String sql = "SELECT * FROM proiezione WHERE id = ?";
         try (Connection connection = ds.getConnection();
@@ -127,6 +144,11 @@ public class ProiezioneDAO {
         return null;
     }
 
+    /*@ public normal_behavior
+      @   requires film != null && sede != null;
+      @   assignable \nothing;
+      @   ensures \result != null;
+      @*/
     public List<Proiezione> retrieveByFilm(Film film, Sede sede) {
         if (film == null || sede == null) {
             logger.severe("Film o Sede null");

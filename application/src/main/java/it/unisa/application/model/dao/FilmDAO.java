@@ -10,13 +10,24 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class FilmDAO {
+    //@ spec_public
     private final DataSource ds;
+    //@ spec_public
     private final static Logger logger = Logger.getLogger(FilmDAO.class.getName());
 
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @   ensures ds != null;
+      @*/
     public FilmDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
+    /*@ public normal_behavior
+      @   requires film != null;
+      @   assignable \everything;
+      @   ensures \result ==> film.getId() >= 0;
+      @*/
     public boolean create(Film film) {
         if(film == null) {
             logger.severe("Film null");
@@ -47,6 +58,11 @@ public class FilmDAO {
     }
 
 
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   assignable \nothing;
+      @   ensures \result == null || \result.getId() == id;
+      @*/
     public Film retrieveById(int id) {
         String sql = "SELECT * FROM film WHERE id = ?";
         try (Connection connection = ds.getConnection();
@@ -72,6 +88,10 @@ public class FilmDAO {
     }
 
 
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @   ensures \result != null;
+      @*/
     public List<Film> retrieveAll() {
         List<Film> films = new ArrayList<>();
         String sql = "SELECT * FROM film";

@@ -13,13 +13,24 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class PostoProiezioneDAO {
+    //@ spec_public
     private final DataSource ds;
+    //@ spec_public
     private final static Logger logger = Logger.getLogger(PostoProiezioneDAO.class.getName());
-    
+
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @   ensures ds != null;
+      @*/
     public PostoProiezioneDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
-    
+
+    /*@ public normal_behavior
+      @   requires postoProiezione != null;
+      @   assignable \everything;
+      @   ensures \result ==> postoProiezione.getProiezione() != null;
+      @*/
     public boolean create(PostoProiezione postoProiezione) {
         if (postoProiezione == null) {
             logger.severe("postoProiezione is null");
@@ -39,7 +50,12 @@ public class PostoProiezioneDAO {
         }
         return false;
     }
-    
+
+    /*@ public normal_behavior
+      @   requires proiezione != null;
+      @   assignable \nothing;
+      @   ensures \result != null;
+      @*/
     public List<PostoProiezione> retrieveAllByProiezione(Proiezione proiezione) {
         if (proiezione == null) {
             logger.severe("Proiezione is null");
@@ -63,7 +79,12 @@ public class PostoProiezioneDAO {
         }
         return postiProiezione;
     }
-    
+
+    /*@ public normal_behavior
+      @   requires postoProiezione != null;
+      @   requires idPrenotazione >= 0;
+      @   assignable \everything;
+      @*/
     public boolean occupaPosto(PostoProiezione postoProiezione, int idPrenotazione) {
         String updateSql = "UPDATE posto_proiezione SET stato = false WHERE id_sala = ? AND fila = ? AND numero = ? AND id_proiezione = ?";
         String insertSql = "INSERT INTO occupa (id_sala, fila, numero, id_proiezione, id_prenotazione) VALUES (?, ?, ?, ?, ?)";

@@ -10,13 +10,24 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 public class ClienteDAO {
+    //@ spec_public
     private final DataSource ds;
+    //@ spec_public
     private final static Logger logger = Logger.getLogger(ClienteDAO.class.getName());
 
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @   ensures ds != null;
+      @*/
     public ClienteDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
+    /*@ public normal_behavior
+      @   requires cliente != null;
+      @   assignable \everything;
+      @   ensures \result ==> cliente.getEmail() != null;
+      @*/
     public boolean create(Cliente cliente) {
         if(cliente == null) {
             logger.severe("cliente null");
@@ -45,6 +56,11 @@ public class ClienteDAO {
         }
     }
 
+    /*@ public normal_behavior
+      @   requires email != null && password != null;
+      @   assignable \nothing;
+      @   ensures \result == null || \result.getEmail().equals(email);
+      @*/
     public Cliente retrieveByEmail(String email, String password) {
         String sql = "SELECT c.email, c.nome, c.cognome " +
                      "FROM cliente c " +

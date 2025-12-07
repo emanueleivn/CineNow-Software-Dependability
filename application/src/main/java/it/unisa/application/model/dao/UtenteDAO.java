@@ -11,14 +11,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class UtenteDAO {
+    //@ spec_public
     private final DataSource ds;
+    //@ spec_public
     private static final Logger logger = Logger.getLogger(UtenteDAO.class.getName());
 
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @   ensures ds != null;
+      @*/
     public UtenteDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
 
+    /*@ public normal_behavior
+      @   requires utente != null;
+      @   assignable \everything;
+      @   ensures \result ==> utente.getEmail() != null;
+      @*/
     public boolean create(Utente utente) {
         if (utente == null) {
             logger.warning("Utente nullo o dati mancanti");
@@ -37,6 +48,11 @@ public class UtenteDAO {
         }
     }
 
+    /*@ public normal_behavior
+      @   requires email != null;
+      @   assignable \nothing;
+      @   ensures \result == null || \result.getEmail().equals(email);
+      @*/
     public Utente retrieveByEmail(String email) {
         String sql = "SELECT email, password, ruolo " +
                 "FROM utente " +
