@@ -4,6 +4,7 @@ import it.unisa.application.model.dao.ClienteDAO;
 import it.unisa.application.model.dao.UtenteDAO;
 import it.unisa.application.model.entity.Cliente;
 import it.unisa.application.sottosistemi.gestione_utente.service.RegistrazioneService;
+import it.unisa.application.utilities.*;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
@@ -46,14 +47,27 @@ public class RegistrazioneServiceBenchmark {
         when(utenteDAOMock.retrieveByEmail(invalidEmail)).thenReturn(null);
         when(clienteDAOMock.create(any(Cliente.class))).thenReturn(true);
 
+        // Crea il ValidateStrategyManager reale con i validatori configurati
+        ValidateStrategyManager validationManager = new ValidateStrategyManager();
+        validationManager.addValidator("email", new EmailValidator());
+        validationManager.addValidator("password", new PasswordValidator());
+        validationManager.addValidator("nome", new CampoValidator());
+        validationManager.addValidator("cognome", new CampoValidator());
+
         registrazioneService = mock(RegistrazioneService.class, CALLS_REAL_METHODS);
-        injectDAOs(registrazioneService, utenteDAOMock, clienteDAOMock);
+        injectDependencies(registrazioneService, utenteDAOMock, clienteDAOMock, validationManager);
     }
 
-    private void injectDAOs(RegistrazioneService service,
-                            UtenteDAO utenteDAO,
-                            ClienteDAO clienteDAO) {
+    private void injectDependencies(RegistrazioneService service,
+                                    UtenteDAO utenteDAO,
+                                    ClienteDAO clienteDAO,
+                                    ValidateStrategyManager validationManager) {
         try {
+            java.lang.reflect.Field validationManagerField =
+                    RegistrazioneService.class.getDeclaredField("validationManager");
+            validationManagerField.setAccessible(true);
+            validationManagerField.set(service, validationManager);
+
             java.lang.reflect.Field utenteDAOField =
                     RegistrazioneService.class.getDeclaredField("utenteDAO");
             utenteDAOField.setAccessible(true);
@@ -64,7 +78,7 @@ public class RegistrazioneServiceBenchmark {
             clienteDAOField.setAccessible(true);
             clienteDAOField.set(service, clienteDAO);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException("Errore durante l'iniezione dei DAO", e);
+            throw new RuntimeException("Errore durante l'iniezione delle dipendenze", e);
         }
     }
 
