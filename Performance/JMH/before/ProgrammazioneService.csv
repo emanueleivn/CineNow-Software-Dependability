@@ -1,0 +1,3 @@
+Benchmark,Mode,Cnt,Score,Error,Units
+ProgrammazioneServiceBenchmark.aggiungiProiezioneFewSlots,avgt,80,55563.974,10050.877,ns/op
+ProgrammazioneServiceBenchmark.aggiungiProiezioneManySlots,avgt,80,51504.137,7324.349,ns/op

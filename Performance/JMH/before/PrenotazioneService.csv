@@ -1,0 +1,5 @@
+Benchmark,Mode,Cnt,Score,Error,Units
+PrenotazioneServiceBenchmark.aggiungiOrdineWithFewSeats,avgt,80,40347.453,6314.321,ns/op
+PrenotazioneServiceBenchmark.aggiungiOrdineWithManySeats,avgt,80,111974.708,18056.368,ns/op
+PrenotazioneServiceBenchmark.aggiungiOrdineWithNullCliente,avgt,80,25207.773,1717.028,ns/op
+PrenotazioneServiceBenchmark.aggiungiOrdineWithOccupiedSeats,avgt,80,24579.229,1392.579,ns/op

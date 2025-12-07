@@ -1,0 +1,4 @@
+Benchmark,Mode,Cnt,Score,Error,Units
+StoricoOrdiniServiceBenchmark.storicoOrdiniWithManyOrders,avgt,80,23576.114,5534.541,ns/op
+StoricoOrdiniServiceBenchmark.storicoOrdiniWithNoOrders,avgt,80,21982.762,3754.736,ns/op
+StoricoOrdiniServiceBenchmark.storicoOrdiniWithNullCliente,avgt,80,25075.994,1652.932,ns/op

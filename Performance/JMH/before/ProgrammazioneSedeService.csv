@@ -1,0 +1,4 @@
+Benchmark,Mode,Cnt,Score,Error,Units
+ProgrammazioneSedeServiceBenchmark.getProgrammazioneFewShows,avgt,80,27352.298,4278.419,ns/op
+ProgrammazioneSedeServiceBenchmark.getProiezioniFilmNoResults,avgt,80,31271.431,5579.502,ns/op
+ProgrammazioneSedeServiceBenchmark.getProiezioniFilmWeekly,avgt,80,29338.983,4573.274,ns/op

@@ -1,0 +1,4 @@
+Benchmark,Mode,Cnt,Score,Error,Units
+SlotServiceBenchmark.slotDisponibiliLongRange,avgt,80,1581688.770,382271.209,ns/op
+SlotServiceBenchmark.slotDisponibiliShortRange,avgt,80,229557.271,49867.602,ns/op
+SlotServiceBenchmark.slotDisponibiliSingleDay,avgt,80,122731.786,28158.797,ns/op
