@@ -1,7 +1,7 @@
-package it.unisa.application.benchmark.utilities;
+package benchmark;
 
-import it.unisa.application.utilities.EmailValidator;
 import it.unisa.application.utilities.CampoValidator;
+import it.unisa.application.utilities.EmailValidator;
 import it.unisa.application.utilities.ValidateStrategyManager;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -11,13 +11,13 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Benchmark per i validatori - email, campo, strategy manager
+ * Benchmark per i validatori: EmailValidator, CampoValidator,
+ * ValidateStrategyManager batch.
  */
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
-@Warmup(iterations = 2)
-@Measurement(iterations = 3)
-@Fork(1)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@Warmup(iterations = 15, time = 1)
+@Measurement(iterations = 20, time = 1)
 @State(Scope.Benchmark)
 public class ValidatorBenchmark {
 

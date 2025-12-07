@@ -1,4 +1,4 @@
-package it.unisa.application.benchmark.utilities;
+package benchmark;
 
 import it.unisa.application.utilities.PasswordHash;
 import org.openjdk.jmh.annotations.*;
@@ -7,13 +7,12 @@ import org.openjdk.jmh.infra.Blackhole;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Benchmark per PasswordHash - SHA-512 hashing
+ * Benchmark per PasswordHash - hashing SHA-512.
  */
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
-@Warmup(iterations = 2)
-@Measurement(iterations = 3)
-@Fork(1)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
+@Warmup(iterations = 15, time = 1)
+@Measurement(iterations = 20, time = 1)
 @State(Scope.Benchmark)
 public class PasswordHashBenchmark {
 
@@ -25,7 +24,8 @@ public class PasswordHashBenchmark {
     public void setup() {
         shortPassword = "pass1234";
         mediumPassword = "MySecurePassword12345";
-        longPassword = "MyVerySecurePasswordWith64CharactersLongEnoughForAnySecurityRequirement";
+        longPassword =
+                "MyVerySecurePasswordWith64CharactersLongEnoughForAnySecurityRequirement";
     }
 
     @Benchmark
