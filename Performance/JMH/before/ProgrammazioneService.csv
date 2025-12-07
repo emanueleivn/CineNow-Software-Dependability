@@ -1,5 +1,3 @@
 Benchmark,Mode,Cnt,Score,Error,Units
-ProgrammazioneServiceBenchmark.aggiungiProiezioneFewSlots,avgt,80,57711.765,11283.334,ns/op
-ProgrammazioneServiceBenchmark.aggiungiProiezioneFilmNonEsistente,avgt,80,2272737.713,195326.159,ns/op
-ProgrammazioneServiceBenchmark.aggiungiProiezioneManySlots,avgt,80,62185.595,12436.443,ns/op
-ProgrammazioneServiceBenchmark.aggiungiProiezioneSalaNonEsistente,avgt,80,2108556.498,184736.726,ns/op
+ProgrammazioneServiceBenchmark.aggiungiProiezioneFewSlots,avgt,80,55563.974,10050.877,ns/op
+ProgrammazioneServiceBenchmark.aggiungiProiezioneManySlots,avgt,80,51504.137,7324.349,ns/op
