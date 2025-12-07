@@ -11,6 +11,12 @@ public class Cliente extends Utente {
     //@ spec_public
     private List<Prenotazione> prenotazioni;
 
+    /*@ public normal_behavior
+      @   requires email != null && password != null && nome != null && cognome != null;
+      @   assignable \everything;
+      @   ensures this.nome == nome && this.cognome == cognome;
+      @   ensures this.prenotazioni != null;
+      @*/
     public Cliente(String email, String password, String nome, String cognome) {
         super(email, password, "cliente");
         this.nome = nome;
@@ -46,7 +52,6 @@ public class Cliente extends Utente {
 
     /*@ public normal_behavior
       @   ensures \result == prenotazioni;
-      @   ensures \result != null;
       @   assignable \nothing;
       @*/
     public /*@ pure @*/ List<Prenotazione> storicoOrdini() { return prenotazioni; }
@@ -55,7 +60,6 @@ public class Cliente extends Utente {
       @   requires prenotazioni != null;
       @   assignable this.prenotazioni;
       @   ensures this.prenotazioni == prenotazioni;
-      @   ensures this.prenotazioni != null;
       @*/
     public void setPrenotazioni(List<Prenotazione> prenotazioni) { this.prenotazioni = prenotazioni; }
 

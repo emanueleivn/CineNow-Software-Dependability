@@ -13,6 +13,14 @@ public class Prenotazione {
     //@ spec_public
     private Cliente cliente;
 
+    /*@ public normal_behavior
+      @   requires id >= 0 && cliente != null && proiezione != null;
+      @   assignable \everything;
+      @   ensures this.id == id;
+      @   ensures this.cliente == cliente;
+      @   ensures this.proiezione == proiezione;
+      @   ensures this.postiPrenotazione == null;
+      @*/
     public Prenotazione(int id, Cliente cliente, Proiezione proiezione) {
         this.id = id;
         this.cliente = cliente;
@@ -32,36 +40,42 @@ public class Prenotazione {
      @*/
     public void setId(int id) { this.id = id; }
 
-    //@ public normal_behavior
-    //@ ensures \result == proiezione;
-    //@ assignable \nothing;
+    /*@ public normal_behavior
+      @   ensures \result == proiezione;
+      @   assignable \nothing;
+      @*/
     public /*@ pure @*/ Proiezione getProiezione() { return proiezione; }
 
-    //@ public normal_behavior
-    //@ requires proiezione != null;
-    //@ ensures this.proiezione != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires proiezione != null;
+      @   assignable this.proiezione;
+      @   ensures this.proiezione == proiezione;
+      @*/
     public void setProiezione(Proiezione proiezione) { this.proiezione = proiezione; }
 
-    //@ public normal_behavior
-    //@ assignable \nothing;
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @*/
     public /*@ pure @*/ /*@ nullable @*/ List<PostoProiezione> getPostiPrenotazione() { return postiPrenotazione; }
 
-    //@ public normal_behavior
-    //@ requires postiProiezione != null;
-    //@ ensures this.postiPrenotazione != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires postiProiezione != null;
+      @   assignable this.postiPrenotazione;
+      @   ensures this.postiPrenotazione == postiProiezione;
+      @*/
     public void setPostiPrenotazione(List<PostoProiezione> postiProiezione) { this.postiPrenotazione = postiProiezione; }
 
-    //@ public normal_behavior
-    //@ ensures \result == cliente;
-    //@ assignable \nothing;
+    /*@ public normal_behavior
+      @   ensures \result == cliente;
+      @   assignable \nothing;
+      @*/
     public /*@ pure @*/ Cliente getCliente() { return cliente; }
 
-    //@ public normal_behavior
-    //@ requires cliente != null;
-    //@ ensures this.cliente != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires cliente != null;
+      @   assignable this.cliente;
+      @   ensures this.cliente == cliente;
+      @*/
     public void setCliente(Cliente cliente) { this.cliente = cliente; }
 
     //@ also public normal_behavior

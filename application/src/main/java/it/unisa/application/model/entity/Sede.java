@@ -17,9 +17,8 @@ public class Sede {
 
     /*@ public normal_behavior
       @   requires id >= 0;
+      @   assignable \everything;
       @   ensures this.id == id;
-      @   ensures this.nome == null;
-      @   ensures this.indirizzo == null;
       @   ensures this.sale != null;
       @*/
     public Sede(int id){
@@ -30,6 +29,7 @@ public class Sede {
     /*@ public normal_behavior
       @   requires id >= 0;
       @   requires nome != null && indirizzo != null;
+      @   assignable \everything;
       @   ensures this.id == id;
       @   ensures this.nome == nome;
       @   ensures this.indirizzo == indirizzo;

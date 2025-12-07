@@ -20,6 +20,15 @@ public class Film {
     //@ spec_public
     private boolean isProiettato;
 
+    /*@ public normal_behavior
+      @   requires titolo != null && genere != null && classificazione != null && durata > 0
+      @            && descrizione != null;
+      @   assignable \everything;
+      @   ensures this.id == id && this.titolo == titolo && this.genere == genere
+      @           && this.classificazione == classificazione && this.durata == durata
+      @           && this.locandina == locandina && this.descrizione == descrizione
+      @           && this.isProiettato == isProiettato;
+      @*/
     public Film(int id, String titolo, String genere, String classificazione, int durata,
                 byte[] locandina, String descrizione, boolean isProiettato) {
         this.id = id;

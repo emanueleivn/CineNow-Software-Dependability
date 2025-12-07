@@ -25,13 +25,12 @@ public class Sala {
       @   requires numeroSala > 0;
       @   requires capienza > 0;
       @   requires sede != null;
+      @   assignable \everything;
       @   ensures this.id == id;
       @   ensures this.numeroSala == numeroSala;
       @   ensures this.capienza == capienza;
       @   ensures this.sede == sede;
-      @   ensures this.slotList != null;
-      @   ensures this.proiezioni != null;
-      @   ensures this.posti != null;
+      @   ensures this.slotList != null && this.proiezioni != null && this.posti != null;
       @*/
     public Sala(int id, int numeroSala, int capienza, Sede sede) {
         this.id = id;
@@ -113,7 +112,6 @@ public class Sala {
 
     /*@ public normal_behavior
       @   ensures \result == slotList;
-      @   ensures \result != null;
       @   assignable \nothing;
       @*/
     public /*@ pure @*/ List<Slot> slotList() {
@@ -131,7 +129,6 @@ public class Sala {
 
     /*@ public normal_behavior
       @   ensures \result == proiezioni;
-      @   ensures \result != null;
       @   assignable \nothing;
       @*/
     public /*@ pure @*/ List<Proiezione> getProiezioni() {
@@ -149,7 +146,6 @@ public class Sala {
 
     /*@ public normal_behavior
       @   ensures \result == posti;
-      @   ensures \result != null;
       @   assignable \nothing;
       @*/
     public /*@ pure @*/ List<Posto> getPosti() {
@@ -167,7 +163,6 @@ public class Sala {
 
     /*@ public normal_behavior
       @   ensures \result == slotList;
-      @   ensures \result != null;
       @   assignable \nothing;
       @*/
     public /*@ pure @*/ List<Slot> getSlotList() {

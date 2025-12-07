@@ -21,6 +21,7 @@ public class Proiezione {
     /*@ public normal_behavior
       @   requires salaProiezione != null && filmProiezione != null && dataProiezione != null && orarioProiezione != null;
       @   requires id >= 0;
+      @   assignable \everything;
       @   ensures this.id == id;
       @   ensures this.salaProiezione == salaProiezione;
       @   ensures this.filmProiezione == filmProiezione;
@@ -41,6 +42,7 @@ public class Proiezione {
     /*@ public normal_behavior
       @   requires salaProiezione != null && filmProiezione != null && dataProiezione != null && orarioProiezione != null && postiProiezione != null;
       @   requires id >= 0;
+      @   assignable \everything;
       @   ensures this.id == id;
       @   ensures this.salaProiezione == salaProiezione;
       @   ensures this.filmProiezione == filmProiezione;
@@ -61,6 +63,7 @@ public class Proiezione {
 
     /*@ public normal_behavior
       @   requires id >= 0;
+      @   assignable \everything;
       @   ensures this.id == id;
       @   ensures this.postiProiezione != null;
       @*/
