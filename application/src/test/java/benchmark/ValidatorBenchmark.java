@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @Warmup(iterations = 15, time = 1)
-@Measurement(iterations = 20, time = 1)
+@Measurement(iterations = 40, time = 1)
 @State(Scope.Benchmark)
 public class ValidatorBenchmark {
 

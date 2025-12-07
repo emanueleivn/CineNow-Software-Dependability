@@ -13,9 +13,9 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 public class BenchmarkRunner {
     public static void main(String[] args) throws Exception {
         Options opt = new OptionsBuilder()
-                .include(AutenticazioneServiceBenchmark.class.getSimpleName())
-                // .include(CatalogoServiceBenchmark.class.getSimpleName())
-                .include(PasswordHashBenchmark.class.getSimpleName())
+               .include(AutenticazioneServiceBenchmark.class.getSimpleName())
+               //  .include(CatalogoServiceBenchmark.class.getSimpleName())
+               // .include(PasswordHashBenchmark.class.getSimpleName())
                 // .include(PrenotazioneServiceBenchmark.class.getSimpleName())
                 // .include(ProgrammazioneSedeServiceBenchmark.class.getSimpleName())
                 // .include(ProgrammazioneServiceBenchmark.class.getSimpleName())
@@ -23,7 +23,7 @@ public class BenchmarkRunner {
                 // .include(SlotServiceBenchmark.class.getSimpleName())
                 // .include(StoricoOrdiniServiceBenchmark.class.getSimpleName())
                 // .include(ValidatorBenchmark.class.getSimpleName())
-                .forks(1)
+                .forks(2)
                 .build();
 
         new Runner(opt).run();
