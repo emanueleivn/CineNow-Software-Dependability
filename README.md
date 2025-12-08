@@ -42,4 +42,4 @@
 ## Installazione e Avvio del Progetto
 ### Clona il Repository
 ```bash
-git clone https://github.com/emanueleivn/CineNow.git
+git clone https://github.com/Antonio-Caiazzo/CineNow-Software-Dependability.git
