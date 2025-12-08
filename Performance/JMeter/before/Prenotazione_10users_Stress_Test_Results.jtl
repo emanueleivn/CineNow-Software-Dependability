@@ -1,111 +1,111 @@
 timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
-1765189024429,18,1. Home Page,200,,Utenti Concorrenti 1-1,text,true,,6687,145,1,1,http://localhost:8080/application_war_exploded/Home,18,0,11
-1765189024871,2,1. Home Page,200,,Utenti Concorrenti 1-2,text,true,,6687,145,2,2,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189024758,141,2. Login,200,,Utenti Concorrenti 1-1,text,true,,6746,527,2,2,http://localhost:8080/application_war_exploded/Home,140,0,0
-1765189024758,140,2. Login-0,302,,Utenti Concorrenti 1-1,,true,,163,329,2,2,http://localhost:8080/application_war_exploded/login,140,0,0
-1765189024898,1,2. Login-1,200,,Utenti Concorrenti 1-1,text,true,,6583,198,2,2,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189025205,10,3. Dettagli Film,200,,Utenti Concorrenti 1-1,text,true,,67922,308,3,3,http://localhost:8080/application_war_exploded/DettagliFilm,8,0,0
-1765189025179,126,2. Login,200,,Utenti Concorrenti 1-2,text,true,,6746,527,3,3,http://localhost:8080/application_war_exploded/Home,125,0,0
-1765189025179,125,2. Login-0,302,,Utenti Concorrenti 1-2,,true,,163,329,3,3,http://localhost:8080/application_war_exploded/login,125,0,0
-1765189025304,1,2. Login-1,200,,Utenti Concorrenti 1-2,text,true,,6583,198,3,3,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189025374,2,1. Home Page,200,,Utenti Concorrenti 1-3,text,true,,6687,145,3,3,http://localhost:8080/application_war_exploded/Home,2,0,1
-1765189025517,19,4. Proiezioni Film,200,,Utenti Concorrenti 1-1,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,19,0,0
-1765189025611,7,3. Dettagli Film,200,,Utenti Concorrenti 1-2,text,true,,67922,308,4,4,http://localhost:8080/application_war_exploded/DettagliFilm,6,0,0
-1765189025681,125,2. Login,200,,Utenti Concorrenti 1-3,text,true,,6746,527,4,4,http://localhost:8080/application_war_exploded/Home,124,0,0
-1765189025681,124,2. Login-0,302,,Utenti Concorrenti 1-3,,true,,163,329,4,4,http://localhost:8080/application_war_exploded/login,124,0,0
-1765189025805,1,2. Login-1,200,,Utenti Concorrenti 1-3,text,true,,6583,198,4,4,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189025844,4,5. Scelta Posto,200,,Utenti Concorrenti 1-1,text,true,,103280,306,4,4,http://localhost:8080/application_war_exploded/SceltaPosto,3,0,0
-1765189025868,2,1. Home Page,200,,Utenti Concorrenti 1-4,text,true,,6687,145,4,4,http://localhost:8080/application_war_exploded/Home,2,0,1
-1765189025920,8,4. Proiezioni Film,200,,Utenti Concorrenti 1-2,text,true,,12109,310,4,4,http://localhost:8080/application_war_exploded/ProiezioniFilm,8,0,0
-1765189026112,7,3. Dettagli Film,200,,Utenti Concorrenti 1-3,text,true,,67922,308,5,5,http://localhost:8080/application_war_exploded/DettagliFilm,6,0,0
-1765189026151,3,6. Checkout,200,,Utenti Concorrenti 1-1,text,true,,6867,241,5,5,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-1&totale=8.50,3,0,0
-1765189026234,6,5. Scelta Posto,200,,Utenti Concorrenti 1-2,text,true,,103280,306,5,5,http://localhost:8080/application_war_exploded/SceltaPosto,6,0,0
-1765189026175,124,2. Login,200,,Utenti Concorrenti 1-4,text,true,,6746,527,5,5,http://localhost:8080/application_war_exploded/Home,123,0,0
-1765189026175,123,2. Login-0,302,,Utenti Concorrenti 1-4,,true,,163,329,5,5,http://localhost:8080/application_war_exploded/login,123,0,0
-1765189026298,1,2. Login-1,200,,Utenti Concorrenti 1-4,text,true,,6583,198,5,5,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189026373,1,1. Home Page,200,,Utenti Concorrenti 1-5,text,true,,6687,145,5,5,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189026425,9,4. Proiezioni Film,200,,Utenti Concorrenti 1-3,text,true,,12109,310,5,5,http://localhost:8080/application_war_exploded/ProiezioniFilm,9,0,0
-1765189026541,1,6. Checkout,200,,Utenti Concorrenti 1-2,text,true,,6867,241,5,5,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-2&totale=8.50,1,0,0
-1765189026458,110,7. Completa Prenotazione,200,,Utenti Concorrenti 1-1,text,true,,214361,606,6,6,http://localhost:8080/application_war_exploded/storicoOrdini,6,0,0
-1765189026458,6,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-1,,true,,172,399,6,6,http://localhost:8080/application_war_exploded/AggiungiOrdine,6,0,0
-1765189026464,104,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-1,text,true,,214189,207,6,6,http://localhost:8080/application_war_exploded/storicoOrdini,103,0,0
-1765189026601,2,3. Dettagli Film,200,,Utenti Concorrenti 1-4,text,true,,67922,308,5,5,http://localhost:8080/application_war_exploded/DettagliFilm,1,0,0
-1765189026738,3,5. Scelta Posto,200,,Utenti Concorrenti 1-3,text,true,,103280,306,5,5,http://localhost:8080/application_war_exploded/SceltaPosto,2,0,0
-1765189026675,84,2. Login,200,,Utenti Concorrenti 1-5,text,true,,6746,527,5,5,http://localhost:8080/application_war_exploded/Home,83,0,0
-1765189026675,83,2. Login-0,302,,Utenti Concorrenti 1-5,,true,,163,329,5,5,http://localhost:8080/application_war_exploded/login,83,0,0
-1765189026759,0,2. Login-1,200,,Utenti Concorrenti 1-5,text,true,,6583,198,5,5,http://localhost:8080/application_war_exploded/Home,0,0,0
-1765189026870,2,1. Home Page,200,,Utenti Concorrenti 1-6,text,true,,6687,145,5,5,http://localhost:8080/application_war_exploded/Home,2,0,1
-1765189026905,5,4. Proiezioni Film,200,,Utenti Concorrenti 1-4,text,true,,12109,310,5,5,http://localhost:8080/application_war_exploded/ProiezioniFilm,5,0,0
-1765189026846,78,7. Completa Prenotazione,200,,Utenti Concorrenti 1-2,text,true,,204887,606,5,5,http://localhost:8080/application_war_exploded/storicoOrdini,3,0,0
-1765189026846,3,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-2,,true,,172,399,5,5,http://localhost:8080/application_war_exploded/AggiungiOrdine,3,0,0
-1765189026849,75,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-2,text,true,,204715,207,5,5,http://localhost:8080/application_war_exploded/storicoOrdini,74,0,0
-1765189027042,1,6. Checkout,200,,Utenti Concorrenti 1-3,text,true,,6867,241,4,4,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-3&totale=8.50,1,0,0
-1765189027065,2,3. Dettagli Film,200,,Utenti Concorrenti 1-5,text,true,,67922,308,5,5,http://localhost:8080/application_war_exploded/DettagliFilm,2,0,0
-1765189027216,6,5. Scelta Posto,200,,Utenti Concorrenti 1-4,text,true,,103280,306,5,5,http://localhost:8080/application_war_exploded/SceltaPosto,5,0,0
-1765189027174,128,2. Login,200,,Utenti Concorrenti 1-6,text,true,,6746,527,5,5,http://localhost:8080/application_war_exploded/Home,127,0,0
-1765189027174,127,2. Login-0,302,,Utenti Concorrenti 1-6,,true,,163,329,5,5,http://localhost:8080/application_war_exploded/login,127,0,0
-1765189027301,1,2. Login-1,200,,Utenti Concorrenti 1-6,text,true,,6583,198,5,5,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189027366,1,1. Home Page,200,,Utenti Concorrenti 1-7,text,true,,6687,145,5,5,http://localhost:8080/application_war_exploded/Home,1,0,1
-1765189027369,4,4. Proiezioni Film,200,,Utenti Concorrenti 1-5,text,true,,12109,310,5,5,http://localhost:8080/application_war_exploded/ProiezioniFilm,4,0,0
-1765189027348,68,7. Completa Prenotazione,200,,Utenti Concorrenti 1-3,text,true,,204678,606,5,5,http://localhost:8080/application_war_exploded/storicoOrdini,3,0,0
-1765189027348,3,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-3,,true,,172,399,5,5,http://localhost:8080/application_war_exploded/AggiungiOrdine,3,0,0
-1765189027351,65,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-3,text,true,,204506,207,5,5,http://localhost:8080/application_war_exploded/storicoOrdini,65,0,0
-1765189027523,1,6. Checkout,200,,Utenti Concorrenti 1-4,text,true,,6867,241,4,4,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-4&totale=8.50,1,0,0
-1765189027603,3,3. Dettagli Film,200,,Utenti Concorrenti 1-6,text,true,,67922,308,5,5,http://localhost:8080/application_war_exploded/DettagliFilm,3,0,0
-1765189027679,9,5. Scelta Posto,200,,Utenti Concorrenti 1-5,text,true,,103280,306,5,5,http://localhost:8080/application_war_exploded/SceltaPosto,9,0,0
-1765189027674,125,2. Login,200,,Utenti Concorrenti 1-7,text,true,,6746,527,5,5,http://localhost:8080/application_war_exploded/Home,124,0,0
-1765189027674,124,2. Login-0,302,,Utenti Concorrenti 1-7,,true,,163,329,5,5,http://localhost:8080/application_war_exploded/login,124,0,0
-1765189027799,0,2. Login-1,200,,Utenti Concorrenti 1-7,text,true,,6583,198,5,5,http://localhost:8080/application_war_exploded/Home,0,0,0
-1765189027868,1,1. Home Page,200,,Utenti Concorrenti 1-8,text,true,,6687,145,5,5,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189027825,71,7. Completa Prenotazione,200,,Utenti Concorrenti 1-4,text,true,,214923,606,5,5,http://localhost:8080/application_war_exploded/storicoOrdini,2,0,0
-1765189027825,2,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-4,,true,,172,399,5,5,http://localhost:8080/application_war_exploded/AggiungiOrdine,2,0,0
-1765189027827,69,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-4,text,true,,214751,207,5,5,http://localhost:8080/application_war_exploded/storicoOrdini,68,0,0
-1765189027912,4,4. Proiezioni Film,200,,Utenti Concorrenti 1-6,text,true,,12109,310,4,4,http://localhost:8080/application_war_exploded/ProiezioniFilm,4,0,0
-1765189027993,1,6. Checkout,200,,Utenti Concorrenti 1-5,text,true,,6867,241,4,4,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-5&totale=8.50,1,0,0
-1765189028104,4,3. Dettagli Film,200,,Utenti Concorrenti 1-7,text,true,,67922,308,5,5,http://localhost:8080/application_war_exploded/DettagliFilm,4,0,0
-1765189028222,5,5. Scelta Posto,200,,Utenti Concorrenti 1-6,text,true,,103280,306,5,5,http://localhost:8080/application_war_exploded/SceltaPosto,4,0,0
-1765189028175,122,2. Login,200,,Utenti Concorrenti 1-8,text,true,,6746,527,5,5,http://localhost:8080/application_war_exploded/Home,121,0,0
-1765189028175,121,2. Login-0,302,,Utenti Concorrenti 1-8,,true,,163,329,5,5,http://localhost:8080/application_war_exploded/login,121,0,0
-1765189028296,1,2. Login-1,200,,Utenti Concorrenti 1-8,text,true,,6583,198,5,5,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189028296,66,7. Completa Prenotazione,200,,Utenti Concorrenti 1-5,text,true,,205455,606,5,5,http://localhost:8080/application_war_exploded/storicoOrdini,3,0,0
-1765189028296,3,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-5,,true,,172,399,5,5,http://localhost:8080/application_war_exploded/AggiungiOrdine,3,0,0
-1765189028299,63,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-5,text,true,,205283,207,5,5,http://localhost:8080/application_war_exploded/storicoOrdini,62,0,0
-1765189028363,1,1. Home Page,200,,Utenti Concorrenti 1-9,text,true,,6687,145,4,4,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189028414,5,4. Proiezioni Film,200,,Utenti Concorrenti 1-7,text,true,,12109,310,4,4,http://localhost:8080/application_war_exploded/ProiezioniFilm,5,0,0
-1765189028528,2,6. Checkout,200,,Utenti Concorrenti 1-6,text,true,,6867,241,4,4,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-6&totale=8.50,2,0,0
-1765189028603,4,3. Dettagli Film,200,,Utenti Concorrenti 1-8,text,true,,67922,308,5,5,http://localhost:8080/application_war_exploded/DettagliFilm,4,0,0
-1765189028721,5,5. Scelta Posto,200,,Utenti Concorrenti 1-7,text,true,,103280,306,5,5,http://localhost:8080/application_war_exploded/SceltaPosto,4,0,0
-1765189028670,129,2. Login,200,,Utenti Concorrenti 1-9,text,true,,6746,527,5,5,http://localhost:8080/application_war_exploded/Home,128,0,0
-1765189028670,128,2. Login-0,302,,Utenti Concorrenti 1-9,,true,,163,329,5,5,http://localhost:8080/application_war_exploded/login,128,0,0
-1765189028799,0,2. Login-1,200,,Utenti Concorrenti 1-9,text,true,,6583,198,5,5,http://localhost:8080/application_war_exploded/Home,0,0,0
-1765189028861,1,1. Home Page,200,,Utenti Concorrenti 1-10,text,true,,6687,145,5,5,http://localhost:8080/application_war_exploded/Home,1,0,1
-1765189028835,70,7. Completa Prenotazione,200,,Utenti Concorrenti 1-6,text,true,,205240,606,5,5,http://localhost:8080/application_war_exploded/storicoOrdini,3,0,0
-1765189028835,3,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-6,,true,,172,399,5,5,http://localhost:8080/application_war_exploded/AggiungiOrdine,3,0,0
-1765189028838,67,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-6,text,true,,205068,207,5,5,http://localhost:8080/application_war_exploded/storicoOrdini,66,0,0
-1765189028909,4,4. Proiezioni Film,200,,Utenti Concorrenti 1-8,text,true,,12109,310,4,4,http://localhost:8080/application_war_exploded/ProiezioniFilm,4,0,0
-1765189029032,1,6. Checkout,200,,Utenti Concorrenti 1-7,text,true,,6867,241,4,4,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-7&totale=8.50,1,0,0
-1765189029103,3,3. Dettagli Film,200,,Utenti Concorrenti 1-9,text,true,,67922,308,4,4,http://localhost:8080/application_war_exploded/DettagliFilm,3,0,0
-1765189029217,5,5. Scelta Posto,200,,Utenti Concorrenti 1-8,text,true,,103280,306,4,4,http://localhost:8080/application_war_exploded/SceltaPosto,4,0,0
-1765189029168,130,2. Login,200,,Utenti Concorrenti 1-10,text,true,,6746,527,4,4,http://localhost:8080/application_war_exploded/Home,129,0,0
-1765189029168,129,2. Login-0,302,,Utenti Concorrenti 1-10,,true,,163,329,4,4,http://localhost:8080/application_war_exploded/login,129,0,0
-1765189029297,1,2. Login-1,200,,Utenti Concorrenti 1-10,text,true,,6583,198,4,4,http://localhost:8080/application_war_exploded/Home,1,0,0
-1765189029338,74,7. Completa Prenotazione,200,,Utenti Concorrenti 1-7,text,true,,215485,606,4,4,http://localhost:8080/application_war_exploded/storicoOrdini,3,0,0
-1765189029338,3,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-7,,true,,172,399,4,4,http://localhost:8080/application_war_exploded/AggiungiOrdine,3,0,0
-1765189029341,71,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-7,text,true,,215313,207,4,4,http://localhost:8080/application_war_exploded/storicoOrdini,70,0,0
-1765189029412,4,4. Proiezioni Film,200,,Utenti Concorrenti 1-9,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,4,0,0
-1765189029525,1,6. Checkout,200,,Utenti Concorrenti 1-8,text,true,,6867,241,3,3,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-8&totale=8.50,1,0,0
-1765189029602,3,3. Dettagli Film,200,,Utenti Concorrenti 1-10,text,true,,67922,308,3,3,http://localhost:8080/application_war_exploded/DettagliFilm,3,0,0
-1765189029721,12,5. Scelta Posto,200,,Utenti Concorrenti 1-9,text,true,,103280,306,3,3,http://localhost:8080/application_war_exploded/SceltaPosto,11,0,0
-1765189029910,7,4. Proiezioni Film,200,,Utenti Concorrenti 1-10,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,7,0,0
-1765189029832,119,7. Completa Prenotazione,200,,Utenti Concorrenti 1-8,text,true,,206018,606,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,7,0,0
-1765189029832,7,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-8,,true,,172,399,3,3,http://localhost:8080/application_war_exploded/AggiungiOrdine,7,0,0
-1765189029839,112,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-8,text,true,,205846,207,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,111,0,0
-1765189030035,2,6. Checkout,200,,Utenti Concorrenti 1-9,text,true,,6867,241,2,2,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-9&totale=8.50,2,0,0
-1765189030223,12,5. Scelta Posto,200,,Utenti Concorrenti 1-10,text,true,,103280,306,2,2,http://localhost:8080/application_war_exploded/SceltaPosto,12,0,0
-1765189030343,129,7. Completa Prenotazione,200,,Utenti Concorrenti 1-9,text,true,,205809,606,2,2,http://localhost:8080/application_war_exploded/storicoOrdini,9,0,0
-1765189030343,9,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-9,,true,,172,399,2,2,http://localhost:8080/application_war_exploded/AggiungiOrdine,9,0,0
-1765189030353,119,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-9,text,true,,205637,207,2,2,http://localhost:8080/application_war_exploded/storicoOrdini,118,0,0
-1765189030541,2,6. Checkout,200,,Utenti Concorrenti 1-10,text,true,,6868,242,1,1,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-10&totale=8.50,2,0,0
-1765189030849,133,7. Completa Prenotazione,200,,Utenti Concorrenti 1-10,text,true,,216048,607,1,1,http://localhost:8080/application_war_exploded/storicoOrdini,9,0,0
-1765189030849,9,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-10,,true,,172,400,1,1,http://localhost:8080/application_war_exploded/AggiungiOrdine,9,0,0
-1765189030858,124,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-10,text,true,,215876,207,1,1,http://localhost:8080/application_war_exploded/storicoOrdini,123,0,0
+1765232993387,19,1. Home Page,200,,Utenti Concorrenti 1-1,text,true,,6687,145,1,1,http://localhost:8080/application_war_exploded/Home,18,0,13
+1765232993714,155,2. Login,200,,Utenti Concorrenti 1-1,text,true,,6746,527,1,1,http://localhost:8080/application_war_exploded/Home,153,0,0
+1765232993714,153,2. Login-0,302,,Utenti Concorrenti 1-1,,true,,163,329,1,1,http://localhost:8080/application_war_exploded/login,153,0,0
+1765232993868,1,2. Login-1,200,,Utenti Concorrenti 1-1,text,true,,6583,198,1,1,http://localhost:8080/application_war_exploded/Home,1,0,0
+1765232994170,13,3. Dettagli Film,200,,Utenti Concorrenti 1-1,text,true,,67922,308,2,2,http://localhost:8080/application_war_exploded/DettagliFilm,11,0,0
+1765232994321,5,1. Home Page,200,,Utenti Concorrenti 1-2,text,true,,6687,145,2,2,http://localhost:8080/application_war_exploded/Home,5,0,2
+1765232994490,24,4. Proiezioni Film,200,,Utenti Concorrenti 1-1,text,true,,12109,310,2,2,http://localhost:8080/application_war_exploded/ProiezioniFilm,24,0,0
+1765232994633,119,2. Login,200,,Utenti Concorrenti 1-2,text,true,,6746,527,2,2,http://localhost:8080/application_war_exploded/Home,118,0,0
+1765232994633,118,2. Login-0,302,,Utenti Concorrenti 1-2,,true,,163,329,2,2,http://localhost:8080/application_war_exploded/login,118,0,0
+1765232994751,1,2. Login-1,200,,Utenti Concorrenti 1-2,text,true,,6583,198,2,2,http://localhost:8080/application_war_exploded/Home,1,0,0
+1765232994818,5,5. Scelta Posto,200,,Utenti Concorrenti 1-1,text,true,,103280,306,2,2,http://localhost:8080/application_war_exploded/SceltaPosto,5,0,0
+1765232995058,6,3. Dettagli Film,200,,Utenti Concorrenti 1-2,text,true,,67922,308,3,3,http://localhost:8080/application_war_exploded/DettagliFilm,6,0,0
+1765232995128,5,6. Checkout,200,,Utenti Concorrenti 1-1,text,true,,6867,241,3,3,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-1&totale=8.50,5,0,0
+1765232995321,4,1. Home Page,200,,Utenti Concorrenti 1-3,text,true,,6687,145,3,3,http://localhost:8080/application_war_exploded/Home,4,0,1
+1765232995371,18,4. Proiezioni Film,200,,Utenti Concorrenti 1-2,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,17,0,0
+1765232995440,150,7. Completa Prenotazione,200,,Utenti Concorrenti 1-1,text,true,,263323,606,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,10,0,0
+1765232995440,10,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-1,,true,,172,399,3,3,http://localhost:8080/application_war_exploded/AggiungiOrdine,10,0,0
+1765232995451,139,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-1,text,true,,263151,207,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,138,0,0
+1765232995695,3,5. Scelta Posto,200,,Utenti Concorrenti 1-2,text,true,,103280,306,2,2,http://localhost:8080/application_war_exploded/SceltaPosto,3,0,0
+1765232995629,76,2. Login,200,,Utenti Concorrenti 1-3,text,true,,6746,527,2,2,http://localhost:8080/application_war_exploded/Home,75,0,0
+1765232995629,75,2. Login-0,302,,Utenti Concorrenti 1-3,,true,,163,329,2,2,http://localhost:8080/application_war_exploded/login,75,0,0
+1765232995704,1,2. Login-1,200,,Utenti Concorrenti 1-3,text,true,,6583,198,2,2,http://localhost:8080/application_war_exploded/Home,0,0,0
+1765232996004,5,6. Checkout,200,,Utenti Concorrenti 1-2,text,true,,6867,241,2,2,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-2&totale=8.50,5,0,0
+1765232996010,5,3. Dettagli Film,200,,Utenti Concorrenti 1-3,text,true,,67922,308,3,3,http://localhost:8080/application_war_exploded/DettagliFilm,4,0,0
+1765232996318,3,1. Home Page,200,,Utenti Concorrenti 1-4,text,true,,6687,145,3,3,http://localhost:8080/application_war_exploded/Home,3,0,1
+1765232996317,15,4. Proiezioni Film,200,,Utenti Concorrenti 1-3,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,15,0,0
+1765232996311,141,7. Completa Prenotazione,200,,Utenti Concorrenti 1-2,text,true,,242018,606,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,10,0,0
+1765232996311,10,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-2,,true,,172,399,3,3,http://localhost:8080/application_war_exploded/AggiungiOrdine,10,0,0
+1765232996322,130,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-2,text,true,,241846,207,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,129,0,0
+1765232996639,8,5. Scelta Posto,200,,Utenti Concorrenti 1-3,text,true,,103280,306,2,2,http://localhost:8080/application_war_exploded/SceltaPosto,7,0,0
+1765232996627,135,2. Login,200,,Utenti Concorrenti 1-4,text,true,,6746,527,2,2,http://localhost:8080/application_war_exploded/Home,134,0,0
+1765232996627,134,2. Login-0,302,,Utenti Concorrenti 1-4,,true,,163,329,2,2,http://localhost:8080/application_war_exploded/login,134,0,0
+1765232996761,1,2. Login-1,200,,Utenti Concorrenti 1-4,text,true,,6583,198,2,2,http://localhost:8080/application_war_exploded/Home,1,0,0
+1765232996954,4,6. Checkout,200,,Utenti Concorrenti 1-3,text,true,,6867,241,2,2,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-3&totale=8.50,3,0,0
+1765232997068,6,3. Dettagli Film,200,,Utenti Concorrenti 1-4,text,true,,67922,308,3,3,http://localhost:8080/application_war_exploded/DettagliFilm,5,0,0
+1765232997315,2,1. Home Page,200,,Utenti Concorrenti 1-5,text,true,,6687,145,3,3,http://localhost:8080/application_war_exploded/Home,2,0,1
+1765232997379,6,4. Proiezioni Film,200,,Utenti Concorrenti 1-4,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,6,0,0
+1765232997264,139,7. Completa Prenotazione,200,,Utenti Concorrenti 1-3,text,true,,240685,606,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,8,0,0
+1765232997264,8,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-3,,true,,172,399,3,3,http://localhost:8080/application_war_exploded/AggiungiOrdine,8,0,0
+1765232997273,130,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-3,text,true,,240513,207,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,129,0,0
+1765232997690,5,5. Scelta Posto,200,,Utenti Concorrenti 1-4,text,true,,103280,306,2,2,http://localhost:8080/application_war_exploded/SceltaPosto,4,0,0
+1765232997623,133,2. Login,200,,Utenti Concorrenti 1-5,text,true,,6746,527,2,2,http://localhost:8080/application_war_exploded/Home,131,0,0
+1765232997623,131,2. Login-0,302,,Utenti Concorrenti 1-5,,true,,163,329,2,2,http://localhost:8080/application_war_exploded/login,131,0,0
+1765232997754,2,2. Login-1,200,,Utenti Concorrenti 1-5,text,true,,6583,198,2,2,http://localhost:8080/application_war_exploded/Home,2,0,0
+1765232997997,1,6. Checkout,200,,Utenti Concorrenti 1-4,text,true,,6867,241,2,2,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-4&totale=8.50,1,0,0
+1765232998061,2,3. Dettagli Film,200,,Utenti Concorrenti 1-5,text,true,,67922,308,3,3,http://localhost:8080/application_war_exploded/DettagliFilm,2,0,0
+1765232998316,1,1. Home Page,200,,Utenti Concorrenti 1-6,text,true,,6687,145,3,3,http://localhost:8080/application_war_exploded/Home,1,0,0
+1765232998364,5,4. Proiezioni Film,200,,Utenti Concorrenti 1-5,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,5,0,0
+1765232998304,123,7. Completa Prenotazione,200,,Utenti Concorrenti 1-4,text,true,,263885,606,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,4,0,0
+1765232998304,4,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-4,,true,,172,399,3,3,http://localhost:8080/application_war_exploded/AggiungiOrdine,4,0,0
+1765232998308,119,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-4,text,true,,263713,207,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,118,0,0
+1765232998675,5,5. Scelta Posto,200,,Utenti Concorrenti 1-5,text,true,,103280,306,2,2,http://localhost:8080/application_war_exploded/SceltaPosto,4,0,0
+1765232998623,130,2. Login,200,,Utenti Concorrenti 1-6,text,true,,6746,527,2,2,http://localhost:8080/application_war_exploded/Home,129,0,0
+1765232998623,129,2. Login-0,302,,Utenti Concorrenti 1-6,,true,,163,329,2,2,http://localhost:8080/application_war_exploded/login,129,0,0
+1765232998752,1,2. Login-1,200,,Utenti Concorrenti 1-6,text,true,,6583,198,2,2,http://localhost:8080/application_war_exploded/Home,1,0,0
+1765232998986,5,6. Checkout,200,,Utenti Concorrenti 1-5,text,true,,6867,241,2,2,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-5&totale=8.50,5,0,0
+1765232999059,6,3. Dettagli Film,200,,Utenti Concorrenti 1-6,text,true,,67922,308,3,3,http://localhost:8080/application_war_exploded/DettagliFilm,6,0,0
+1765232999317,3,1. Home Page,200,,Utenti Concorrenti 1-7,text,true,,6687,145,3,3,http://localhost:8080/application_war_exploded/Home,3,0,1
+1765232999367,7,4. Proiezioni Film,200,,Utenti Concorrenti 1-6,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,7,0,0
+1765232999296,139,7. Completa Prenotazione,200,,Utenti Concorrenti 1-5,text,true,,242581,606,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,7,0,0
+1765232999296,7,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-5,,true,,172,399,3,3,http://localhost:8080/application_war_exploded/AggiungiOrdine,7,0,0
+1765232999304,131,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-5,text,true,,242409,207,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,130,0,0
+1765232999680,4,5. Scelta Posto,200,,Utenti Concorrenti 1-6,text,true,,103280,306,2,2,http://localhost:8080/application_war_exploded/SceltaPosto,4,0,0
+1765232999621,138,2. Login,200,,Utenti Concorrenti 1-7,text,true,,6746,527,2,2,http://localhost:8080/application_war_exploded/Home,137,0,0
+1765232999621,137,2. Login-0,302,,Utenti Concorrenti 1-7,,true,,163,329,2,2,http://localhost:8080/application_war_exploded/login,137,0,0
+1765232999758,1,2. Login-1,200,,Utenti Concorrenti 1-7,text,true,,6583,198,2,2,http://localhost:8080/application_war_exploded/Home,0,0,0
+1765232999989,4,6. Checkout,200,,Utenti Concorrenti 1-6,text,true,,6867,241,2,2,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-6&totale=8.50,4,0,0
+1765233000062,4,3. Dettagli Film,200,,Utenti Concorrenti 1-7,text,true,,67922,308,3,3,http://localhost:8080/application_war_exploded/DettagliFilm,4,0,0
+1765233000318,4,1. Home Page,200,,Utenti Concorrenti 1-8,text,true,,6687,145,3,3,http://localhost:8080/application_war_exploded/Home,4,0,2
+1765233000374,7,4. Proiezioni Film,200,,Utenti Concorrenti 1-7,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,7,0,0
+1765233000300,142,7. Completa Prenotazione,200,,Utenti Concorrenti 1-6,text,true,,241247,606,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,9,0,0
+1765233000300,9,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-6,,true,,172,399,3,3,http://localhost:8080/application_war_exploded/AggiungiOrdine,9,0,0
+1765233000310,132,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-6,text,true,,241075,207,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,131,0,0
+1765233000686,4,5. Scelta Posto,200,,Utenti Concorrenti 1-7,text,true,,103280,306,2,2,http://localhost:8080/application_war_exploded/SceltaPosto,4,0,0
+1765233000627,124,2. Login,200,,Utenti Concorrenti 1-8,text,true,,6746,527,2,2,http://localhost:8080/application_war_exploded/Home,124,0,0
+1765233000627,124,2. Login-0,302,,Utenti Concorrenti 1-8,,true,,163,329,2,2,http://localhost:8080/application_war_exploded/login,124,0,0
+1765233000751,0,2. Login-1,200,,Utenti Concorrenti 1-8,text,true,,6583,198,2,2,http://localhost:8080/application_war_exploded/Home,0,0,0
+1765233000996,3,6. Checkout,200,,Utenti Concorrenti 1-7,text,true,,6867,241,2,2,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-7&totale=8.50,3,0,0
+1765233001057,4,3. Dettagli Film,200,,Utenti Concorrenti 1-8,text,true,,67922,308,3,3,http://localhost:8080/application_war_exploded/DettagliFilm,3,0,0
+1765233001316,3,1. Home Page,200,,Utenti Concorrenti 1-9,text,true,,6687,145,3,3,http://localhost:8080/application_war_exploded/Home,3,0,1
+1765233001364,9,4. Proiezioni Film,200,,Utenti Concorrenti 1-8,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,9,0,0
+1765233001305,148,7. Completa Prenotazione,200,,Utenti Concorrenti 1-7,text,true,,264447,606,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,8,0,0
+1765233001305,8,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-7,,true,,172,399,3,3,http://localhost:8080/application_war_exploded/AggiungiOrdine,8,0,0
+1765233001314,139,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-7,text,true,,264275,207,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,138,0,0
+1765233001678,4,5. Scelta Posto,200,,Utenti Concorrenti 1-8,text,true,,103280,306,2,2,http://localhost:8080/application_war_exploded/SceltaPosto,3,0,0
+1765233001621,117,2. Login,200,,Utenti Concorrenti 1-9,text,true,,6746,527,2,2,http://localhost:8080/application_war_exploded/Home,117,0,0
+1765233001621,117,2. Login-0,302,,Utenti Concorrenti 1-9,,true,,163,329,2,2,http://localhost:8080/application_war_exploded/login,117,0,0
+1765233001738,0,2. Login-1,200,,Utenti Concorrenti 1-9,text,true,,6583,198,2,2,http://localhost:8080/application_war_exploded/Home,0,0,0
+1765233001988,4,6. Checkout,200,,Utenti Concorrenti 1-8,text,true,,6867,241,2,2,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-8&totale=8.50,4,0,0
+1765233002044,6,3. Dettagli Film,200,,Utenti Concorrenti 1-9,text,true,,67922,308,3,3,http://localhost:8080/application_war_exploded/DettagliFilm,6,0,0
+1765233002309,4,1. Home Page,200,,Utenti Concorrenti 1-10,text,true,,6687,145,3,3,http://localhost:8080/application_war_exploded/Home,3,0,1
+1765233002356,7,4. Proiezioni Film,200,,Utenti Concorrenti 1-9,text,true,,12109,310,3,3,http://localhost:8080/application_war_exploded/ProiezioniFilm,7,0,0
+1765233002299,126,7. Completa Prenotazione,200,,Utenti Concorrenti 1-8,text,true,,243143,606,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,9,0,0
+1765233002299,9,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-8,,true,,172,399,3,3,http://localhost:8080/application_war_exploded/AggiungiOrdine,9,0,0
+1765233002308,117,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-8,text,true,,242971,207,3,3,http://localhost:8080/application_war_exploded/storicoOrdini,117,0,0
+1765233002668,6,5. Scelta Posto,200,,Utenti Concorrenti 1-9,text,true,,103280,306,2,2,http://localhost:8080/application_war_exploded/SceltaPosto,5,0,0
+1765233002619,143,2. Login,200,,Utenti Concorrenti 1-10,text,true,,6746,527,2,2,http://localhost:8080/application_war_exploded/Home,142,0,0
+1765233002619,142,2. Login-0,302,,Utenti Concorrenti 1-10,,true,,163,329,2,2,http://localhost:8080/application_war_exploded/login,142,0,0
+1765233002762,0,2. Login-1,200,,Utenti Concorrenti 1-10,text,true,,6583,198,2,2,http://localhost:8080/application_war_exploded/Home,0,0,0
+1765233002980,4,6. Checkout,200,,Utenti Concorrenti 1-9,text,true,,6867,241,2,2,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-9&totale=8.50,4,0,0
+1765233003068,7,3. Dettagli Film,200,,Utenti Concorrenti 1-10,text,true,,67922,308,2,2,http://localhost:8080/application_war_exploded/DettagliFilm,7,0,0
+1765233003381,7,4. Proiezioni Film,200,,Utenti Concorrenti 1-10,text,true,,12109,310,2,2,http://localhost:8080/application_war_exploded/ProiezioniFilm,7,0,0
+1765233003291,151,7. Completa Prenotazione,200,,Utenti Concorrenti 1-9,text,true,,241809,606,2,2,http://localhost:8080/application_war_exploded/storicoOrdini,8,0,0
+1765233003291,8,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-9,,true,,172,399,2,2,http://localhost:8080/application_war_exploded/AggiungiOrdine,8,0,0
+1765233003300,142,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-9,text,true,,241637,207,2,2,http://localhost:8080/application_war_exploded/storicoOrdini,141,0,0
+1765233003693,13,5. Scelta Posto,200,,Utenti Concorrenti 1-10,text,true,,103280,306,1,1,http://localhost:8080/application_war_exploded/SceltaPosto,12,0,0
+1765233004012,2,6. Checkout,200,,Utenti Concorrenti 1-10,text,true,,6868,242,1,1,http://localhost:8080/application_war_exploded/Checkout?proiezioneId=501&posti=A-10&totale=8.50,2,0,0
+1765233004318,152,7. Completa Prenotazione,200,,Utenti Concorrenti 1-10,text,true,,265010,607,1,1,http://localhost:8080/application_war_exploded/storicoOrdini,6,0,0
+1765233004318,6,7. Completa Prenotazione-0,302,,Utenti Concorrenti 1-10,,true,,172,400,1,1,http://localhost:8080/application_war_exploded/AggiungiOrdine,6,0,0
+1765233004325,145,7. Completa Prenotazione-1,200,,Utenti Concorrenti 1-10,text,true,,264838,207,1,1,http://localhost:8080/application_war_exploded/storicoOrdini,143,0,0
