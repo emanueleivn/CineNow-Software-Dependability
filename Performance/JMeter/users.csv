@@ -1,0 +1,12 @@
+email,password,fila,numero
+cliente1@email.com,password1,A,1
+cliente2@email.com,password2,A,2
+cliente3@email.com,password3,A,3
+cliente1@email.com,password1,A,4
+cliente2@email.com,password2,A,5
+cliente3@email.com,password3,A,6
+cliente1@email.com,password1,A,7
+cliente2@email.com,password2,A,8
+cliente3@email.com,password3,A,9
+cliente1@email.com,password1,A,10
+
