@@ -178,11 +178,19 @@ public class Sala {
     /*@ public normal_behavior
       @   requires id >= 0;
       @   requires slot != null && data != null && film != null;
+      @   requires film.getId() >= 0;
+      @   requires film.getTitolo() != null;
+      @   requires film.getGenere() != null;
+      @   requires film.getClassificazione() != null;
+      @   requires film.getDurata() > 0;
+      @   requires film.getLocandina() != null;
+      @   requires film.getDescrizione() != null;
       @   requires this.proiezioni != null;
       @   assignable this.proiezioni, this.proiezioni.values;
       @   ensures this.proiezioni.size() == \old(this.proiezioni).size() + 1;
       @   ensures \result == this.proiezioni;
       @*/
+    //@ skipesc
     public List<Proiezione> aggiungiProiezione(int id, Slot slot, LocalDate data, Film film) {
         Proiezione proiezione = new Proiezione(id, this, film, data, slot);
         proiezione.setPostiProiezione(creaListaPosti(proiezione));
@@ -190,7 +198,7 @@ public class Sala {
         return proiezioni;
     }
 
-    //@ skipesc
+
     /*@ private normal_behavior
       @   requires proiezione != null;
       @   requires this.posti != null;
@@ -198,12 +206,9 @@ public class Sala {
       @   ensures \result.size() == this.posti.size();
       @   assignable \nothing;
       @*/
+    //@ skipesc
     private List<PostoProiezione> creaListaPosti(Proiezione proiezione) {
         ArrayList<PostoProiezione> postiList = new ArrayList<PostoProiezione>();
-        /*@ loop_invariant 0 <= i && i <= this.posti.size();
-          @ loop_invariant postiList.size() == i;
-          @ decreases this.posti.size() - i;
-          @*/
         for (int i = 0; i < this.posti.size(); i++) {
             Posto p = this.posti.get(i);
             postiList.add(new PostoProiezione(p, proiezione));

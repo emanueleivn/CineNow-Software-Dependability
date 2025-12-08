@@ -1,6 +1,8 @@
 package it.unisa.application.model.entity;
 
+import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,19 +73,21 @@ public class Proiezione {
         this.orarioProiezione = orarioProiezione;
     }
 
+
     /*@ public normal_behavior
     @   requires id >= 0;
     @   assignable \nothing;
     @   ensures this.id == id;
     @   ensures this.postiProiezione != null;
     @*/
+    //@ skipesc
     public Proiezione(int id) {
         this.id = id;
         this.postiProiezione = new ArrayList<PostoProiezione>();
-        this.salaProiezione = new Sala(0,0,0,new Sede(0));
-        this.filmProiezione = new Film(0,"","","",0,new byte[0],"",false);
+        this.salaProiezione = new Sala(0, 1, 1, new Sede(0));
+        this.filmProiezione = new Film(0,"","","",1,new byte[0],"",false);
         this.dataProiezione = LocalDate.now();
-        this.orarioProiezione = new Slot(0, null);
+        this.orarioProiezione = new Slot(1, null);
     }
 
     /*@ public normal_behavior

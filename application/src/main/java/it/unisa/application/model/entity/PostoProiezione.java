@@ -24,7 +24,7 @@ public class PostoProiezione {
     }
 
     /*@ public normal_behavior
-      @   requires sala != null && proiezione != null;
+      @   requires sala != null && proiezione != null && fila > 0 && numero > 0;
       @   assignable \nothing;
       @   ensures this.posto != null;
       @   ensures this.proiezione == proiezione;
