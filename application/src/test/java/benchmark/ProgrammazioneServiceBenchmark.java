@@ -50,7 +50,9 @@ public class ProgrammazioneServiceBenchmark {
             testSala = new Sala(1, 1, 100, new Sede(1, "Test Sede", "Via Test"));
 
             when(filmDAOMock.retrieveById(1)).thenReturn(testFilm);
+            when(filmDAOMock.retrieveById(999)).thenReturn(null);
             when(salaDAOMock.retrieveById(1)).thenReturn(testSala);
+            when(salaDAOMock.retrieveById(999)).thenReturn(null);
 
             List<Slot> slots = new ArrayList<>();
             for (int i = 1; i <= 8; i++) {
@@ -120,6 +122,28 @@ public class ProgrammazioneServiceBenchmark {
                 state.testFilm.getId(),
                 state.testSala.getId(),
                 state.manySlotIds,
+                state.testDate
+        );
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void aggiungiProiezioneFilmNonEsistente(ProgrammazioneState state, Blackhole bh) {
+        boolean result = state.programmazioneService.aggiungiProiezione(
+                999,
+                state.testSala.getId(),
+                state.fewSlotIds,
+                state.testDate
+        );
+        bh.consume(result);
+    }
+
+    @Benchmark
+    public void aggiungiProiezioneSalaNonEsistente(ProgrammazioneState state, Blackhole bh) {
+        boolean result = state.programmazioneService.aggiungiProiezione(
+                state.testFilm.getId(),
+                999,
+                state.fewSlotIds,
                 state.testDate
         );
         bh.consume(result);
