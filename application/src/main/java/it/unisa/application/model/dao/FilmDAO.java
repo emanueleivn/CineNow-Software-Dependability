@@ -63,7 +63,7 @@ public class FilmDAO {
       @   ensures \result == null || \result.getId() == id;
       @*/
     public /*@ nullable @*/ Film retrieveById(int id) {
-        String sql = "SELECT * FROM film WHERE id = ?";
+        String sql = "SELECT id, titolo, genere, classificazione, durata, locandina, descrizione, is_proiettato FROM film WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -92,7 +92,7 @@ public class FilmDAO {
       @*/
     public /*@ non_null @*/ List<Film> retrieveAll() {
         List<Film> films = new ArrayList<>();
-        String sql = "SELECT * FROM film";
+        String sql = "SELECT id, titolo, genere, classificazione, durata, locandina, descrizione, is_proiettato FROM film";
         try (Connection connection = ds.getConnection();
              Statement stmt = connection.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {

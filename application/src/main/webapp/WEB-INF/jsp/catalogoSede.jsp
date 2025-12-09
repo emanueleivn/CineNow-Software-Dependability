@@ -9,8 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogo Film</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}static/style/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.css">
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
@@ -22,7 +21,7 @@
             if (catalogo != null && !catalogo.isEmpty()) {
                 for (Film film : catalogo) {
                     String locandinaBase64 = null;
-                    if (film.getLocandina() != null) {
+                    if (film.getLocandina() != null && film.getLocandina().length > 0) {
                         locandinaBase64 = Base64.getEncoder().encodeToString(film.getLocandina());
                     }
         %>
@@ -30,14 +29,14 @@
             <form action="${pageContext.request.contextPath}/DettagliFilm" method="post">
                 <input type="hidden" name="filmId" value="<%= film.getId() %>">
                 <input type="hidden" name="sedeId" value="<%= request.getAttribute("sedeId") %>">
-                <button type="submit" class="film-button" style="border: none;">
+                <button type="submit" class="film-button">
                     <div class="film-card">
                         <% if (locandinaBase64 != null) { %>
                         <img src="data:image/jpeg;base64,<%= locandinaBase64 %>"
-                             alt="Locandina di <%= film.getTitolo() %>" class="img-fluid">
+                             alt="Locandina di <%= film.getTitolo() %>" class="img-fluid" loading="lazy">
                         <% } else { %>
                         <img src="${pageContext.request.contextPath}/static/images/logo.png"
-                             alt="Locandina non disponibile" class="img-fluid">
+                             alt="Locandina non disponibile" class="img-fluid" loading="lazy">
                         <% } %>
                         <div class="film-card-body">
                             <h5 class="film-title"><%= film.getTitolo() %></h5>
@@ -55,11 +54,32 @@
         </div>
         <% } %>
     </div>
+
+    <%-- Paginazione --%>
+    <%
+        Integer currentPage = (Integer) request.getAttribute("currentPage");
+        Integer totalPages = (Integer) request.getAttribute("totalPages");
+        String sede = request.getParameter("sede");
+        if (totalPages != null && totalPages > 1) {
+    %>
+    <div class="pagination-container">
+        <% if (currentPage > 1) { %>
+        <a href="${pageContext.request.contextPath}/Catalogo?sede=<%= sede %>&page=<%= currentPage - 1 %>" class="btn-pagination">&larr; Precedente</a>
+        <% } else { %>
+        <span class="btn-pagination disabled">&larr; Precedente</span>
+        <% } %>
+
+        <span class="page-info">Pagina <%= currentPage %> di <%= totalPages %></span>
+
+        <% if (currentPage < totalPages) { %>
+        <a href="${pageContext.request.contextPath}/Catalogo?sede=<%= sede %>&page=<%= currentPage + 1 %>" class="btn-pagination">Successiva &rarr;</a>
+        <% } else { %>
+        <span class="btn-pagination disabled">Successiva &rarr;</span>
+        <% } %>
+    </div>
+    <% } %>
 </div>
 
 <jsp:include page="/WEB-INF/jsp/footer.jsp"/>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

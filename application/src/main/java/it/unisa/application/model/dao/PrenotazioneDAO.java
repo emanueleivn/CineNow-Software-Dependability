@@ -82,7 +82,7 @@ public class PrenotazioneDAO {
       @            && \result.getProiezione() != null);
       @*/
     public /*@ nullable @*/ Prenotazione retrieveById(int id) {
-        String sql = "SELECT * FROM prenotazione WHERE id = ?";
+        String sql = "SELECT id, email_cliente, id_proiezione FROM prenotazione WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
 
@@ -139,7 +139,8 @@ public class PrenotazioneDAO {
                 "JOIN slot sl ON pr.id_orario = sl.id " +
                 "LEFT JOIN occupa o ON o.id_prenotazione = p.id " +
                 "LEFT JOIN posto_proiezione pp ON pp.id_sala = o.id_sala AND pp.fila = o.fila AND pp.numero = o.numero AND pp.id_proiezione = pr.id " +
-                "WHERE p.email_cliente = ?";
+                "WHERE p.email_cliente = ? " +
+                "ORDER BY p.id DESC";
 
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {

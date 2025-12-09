@@ -30,7 +30,7 @@ public class SlotDAO {
       @   ensures \result == null || \result.getId() == id;
       @*/
     public /*@ nullable @*/ Slot retrieveById(int id) {
-        String sql = "SELECT * FROM slot WHERE id = ?";
+        String sql = "SELECT id, ora_inizio FROM slot WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -56,7 +56,7 @@ public class SlotDAO {
             logger.warning("Proiezione o slot associato null");
             return null;
         }
-        String sql = "SELECT * FROM slot WHERE id = ?";
+        String sql = "SELECT id, ora_inizio FROM slot WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, proiezione.getOrarioProiezione().getId());
@@ -78,7 +78,7 @@ public class SlotDAO {
       @*/
     public /*@ non_null @*/ List<Slot> retrieveAllSlots() {
         List<Slot> list = new ArrayList<>();
-        String sql = "SELECT * FROM slot ORDER BY ora_inizio";
+        String sql = "SELECT id, ora_inizio FROM slot ORDER BY ora_inizio";
 
         try (Connection con = ds.getConnection();
              PreparedStatement ps = con.prepareStatement(sql);

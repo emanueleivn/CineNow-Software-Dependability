@@ -14,6 +14,7 @@ import java.util.List;
 
 @WebServlet("/catalogo")
 public class VisualizzaCatalogoServlet extends HttpServlet {
+    private static final int ITEMS_PER_PAGE = 9;
     private final CatalogoService catalogoService = new CatalogoService();
 
     @Override
@@ -23,7 +24,30 @@ public class VisualizzaCatalogoServlet extends HttpServlet {
             request.setAttribute("errorMessage", "Nessun film trovato.");
             request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
         } else {
-            request.setAttribute("catalogo", catalogo);
+            // Paginazione
+            int page = 1;
+            String pageParam = request.getParameter("page");
+            if (pageParam != null) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                    if (page < 1) page = 1;
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+
+            int totalItems = catalogo.size();
+            int totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            int startIndex = (page - 1) * ITEMS_PER_PAGE;
+            int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+
+            List<Film> paginatedCatalogo = catalogo.subList(startIndex, endIndex);
+
+            request.setAttribute("catalogo", paginatedCatalogo);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
             request.getRequestDispatcher("/WEB-INF/jsp/catalogo.jsp").forward(request, response);
         }
     }

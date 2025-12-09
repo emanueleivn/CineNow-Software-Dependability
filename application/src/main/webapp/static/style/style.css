@@ -1,7 +1,8 @@
 body {
     background-color: #222222;
     color: #f8f9fa;
-    font-family: 'Luckiest Guy', cursive;
+    font-family: 'Luckiest Guy', sans-serif;
+    font-style: normal;
     letter-spacing: 0.5px;
 }
 
@@ -174,3 +175,52 @@ input[type="text"], input[type="password"],input[type="email"],input[type="numbe
     color: coral !important;
 }
 
+.pagination-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 5px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.pagination-container .btn-pagination {
+    flex: 0 0 auto;
+}
+
+.pagination-container .page-info {
+    flex: 0 0 auto;
+    text-align: center;
+}
+
+.pagination-container .btn-pagination {
+    background-color: #333;
+    border: 1px solid #444;
+    color: #f8f9fa;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+}
+
+.pagination-container .btn-pagination:hover:not(.disabled) {
+    background-color: #00aaff;
+    border-color: #00aaff;
+    color: #fff;
+}
+
+.pagination-container .btn-pagination.disabled {
+    background-color: #222;
+    border-color: #333;
+    color: #666;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.pagination-container .page-info {
+    color: #f8f9fa;
+    font-size: 1rem;
+}

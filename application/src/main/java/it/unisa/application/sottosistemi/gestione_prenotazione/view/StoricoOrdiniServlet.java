@@ -16,6 +16,7 @@ import java.util.List;
 
 @WebServlet("/storicoOrdini")
 public class StoricoOrdiniServlet extends HttpServlet {
+    private static final int ITEMS_PER_PAGE = 5;
     private final StoricoOrdiniService storicoOrdiniService = new StoricoOrdiniService();
 
     @Override
@@ -28,7 +29,31 @@ public class StoricoOrdiniServlet extends HttpServlet {
             }
 
             List<Prenotazione> storico = storicoOrdiniService.storicoOrdini(cliente);
-            request.setAttribute("storico", storico);
+
+            // Paginazione
+            int page = 1;
+            String pageParam = request.getParameter("page");
+            if (pageParam != null) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                    if (page < 1) page = 1;
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+
+            int totalItems = storico.size();
+            int totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            int startIndex = (page - 1) * ITEMS_PER_PAGE;
+            int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+
+            List<Prenotazione> paginatedStorico = storico.subList(startIndex, endIndex);
+
+            request.setAttribute("storico", paginatedStorico);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
             request.getRequestDispatcher("/WEB-INF/jsp/storicoOrdini.jsp").forward(request, response);
 
         } catch (IllegalArgumentException e) {
