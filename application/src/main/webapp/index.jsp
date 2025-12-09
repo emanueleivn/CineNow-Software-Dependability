@@ -38,7 +38,7 @@
     <div class="col-md-4">
       <div class="card shadow-sm p-4">
         <h5 class="card-title">Prenota i tuoi biglietti</h5>
-        <p class="card-text">Con CineNow puoi prenotare i tuoi posti in pochi click e senza stress, direttamente online. TEST</p>
+        <p class="card-text">Con CineNow puoi prenotare i tuoi posti in pochi click e senza stress, direttamente online.</p>
       </div>
     </div>
     <div class="col-md-4">
