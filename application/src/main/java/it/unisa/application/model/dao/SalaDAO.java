@@ -32,7 +32,7 @@ public class SalaDAO {
       @   ensures \result == null || \result.getId() == id;
       @*/
     public /*@ nullable @*/ Sala retrieveById(int id) {
-        String sql = "SELECT * FROM sala WHERE id = ?";
+        String sql = "SELECT id, numero, capienza, id_sede FROM sala WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -55,7 +55,7 @@ public class SalaDAO {
       @*/
     public /*@ non_null @*/ List<Sala> retrieveAll() throws SQLException {
         List<Sala> sale = new ArrayList<>();
-        String query = "SELECT * FROM sala";
+        String query = "SELECT id, numero, capienza, id_sede FROM sala";
 
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(query);

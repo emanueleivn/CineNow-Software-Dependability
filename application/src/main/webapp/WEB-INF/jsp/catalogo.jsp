@@ -8,7 +8,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gestione Catalogo Film</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.css">
 </head>
 <body>
@@ -38,7 +37,7 @@
         if (catalogo != null && !catalogo.isEmpty()) {
           for (Film film : catalogo) {
             String base64Image = null;
-            if (film.getLocandina() != null) {
+            if (film.getLocandina() != null && film.getLocandina().length > 0) {
               base64Image = Base64.getEncoder().encodeToString(film.getLocandina());
             }
       %>
@@ -52,7 +51,7 @@
           <% if (base64Image != null) { %>
           <img src="data:image/jpeg;base64,<%= base64Image %>"
                alt="Locandina di <%= film.getTitolo() %>"
-               width="100" class="img-thumbnail">
+               width="100" class="img-thumbnail" loading="lazy">
           <% } else { %>
           <span class="text-muted">Nessuna locandina disponibile</span>
           <% } %>
@@ -70,12 +69,32 @@
       %>
       </tbody>
     </table>
+
+    <%-- Paginazione --%>
+    <%
+      Integer currentPage = (Integer) request.getAttribute("currentPage");
+      Integer totalPages = (Integer) request.getAttribute("totalPages");
+      if (totalPages != null && totalPages > 1) {
+    %>
+    <div class="pagination-container">
+      <% if (currentPage > 1) { %>
+      <a href="${pageContext.request.contextPath}/catalogo?page=<%= currentPage - 1 %>" class="btn-pagination">&larr; Precedente</a>
+      <% } else { %>
+      <span class="btn-pagination disabled">&larr; Precedente</span>
+      <% } %>
+
+      <span class="page-info">Pagina <%= currentPage %> di <%= totalPages %></span>
+
+      <% if (currentPage < totalPages) { %>
+      <a href="${pageContext.request.contextPath}/catalogo?page=<%= currentPage + 1 %>" class="btn-pagination">Successiva &rarr;</a>
+      <% } else { %>
+      <span class="btn-pagination disabled">Successiva &rarr;</span>
+      <% } %>
+    </div>
+    <% } %>
   </div>
 </div>
 
 <jsp:include page="/WEB-INF/jsp/footer.jsp"/>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

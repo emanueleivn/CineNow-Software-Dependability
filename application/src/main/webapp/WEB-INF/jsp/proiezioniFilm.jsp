@@ -7,7 +7,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Proiezioni - <%= request.getAttribute("filmNome") %> - <%= request.getAttribute("sedeNome") %></title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.css">
 </head>
 <body>
@@ -52,6 +51,31 @@
       %>
       </tbody>
     </table>
+
+    <%-- Paginazione --%>
+    <%
+      Integer currentPage = (Integer) request.getAttribute("currentPage");
+      Integer totalPages = (Integer) request.getAttribute("totalPages");
+      Integer filmId = (Integer) request.getAttribute("filmId");
+      Integer sedeId = (Integer) request.getAttribute("sedeId");
+      if (totalPages != null && totalPages > 1) {
+    %>
+    <div class="pagination-container">
+      <% if (currentPage > 1) { %>
+      <a href="${pageContext.request.contextPath}/ProiezioniFilm?filmId=<%= filmId %>&sedeId=<%= sedeId %>&page=<%= currentPage - 1 %>" class="btn-pagination">&larr; Precedente</a>
+      <% } else { %>
+      <span class="btn-pagination disabled">&larr; Precedente</span>
+      <% } %>
+
+      <span class="page-info">Pagina <%= currentPage %> di <%= totalPages %></span>
+
+      <% if (currentPage < totalPages) { %>
+      <a href="${pageContext.request.contextPath}/ProiezioniFilm?filmId=<%= filmId %>&sedeId=<%= sedeId %>&page=<%= currentPage + 1 %>" class="btn-pagination">Successiva &rarr;</a>
+      <% } else { %>
+      <span class="btn-pagination disabled">Successiva &rarr;</span>
+      <% } %>
+    </div>
+    <% } %>
     <%
     } else {
     %>
@@ -65,8 +89,5 @@
 </div>
 
 <jsp:include page="/WEB-INF/jsp/footer.jsp"/>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

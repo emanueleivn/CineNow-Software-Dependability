@@ -125,7 +125,7 @@ public class ProiezioneDAO {
       @*/
     //@ skipesc
     public /*@ nullable @*/ Proiezione retrieveById(int id) {
-        String sql = "SELECT * FROM proiezione WHERE id = ?";
+        String sql = "SELECT id, data, id_film, id_sala, id_orario FROM proiezione WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, id);
@@ -159,7 +159,7 @@ public class ProiezioneDAO {
             return null;
         }
         String sql = """
-            SELECT p.*, s.numero AS numero_sala, f.titolo AS titolo_film, f.durata AS durata_film, sl.ora_inizio AS orario
+            SELECT p.id, p.data, p.id_film, p.id_sala, p.id_orario, s.numero AS numero_sala, f.titolo AS titolo_film, f.durata AS durata_film, sl.ora_inizio AS orario
             FROM proiezione p
             JOIN sala s ON p.id_sala = s.id
             JOIN film f ON p.id_film = f.id
@@ -238,7 +238,7 @@ public class ProiezioneDAO {
     public /*@ non_null @*/ List<Proiezione> retrieveAllBySede(int sedeId) {
         List<Proiezione> proiezioni = new ArrayList<Proiezione>();
         String sql = """
-            SELECT p.*, s.numero AS numero_sala, f.titolo AS titolo_film, f.durata AS durata_film, sl.ora_inizio AS orario
+            SELECT p.id, p.data, p.id_film, p.id_sala, p.id_orario, s.numero AS numero_sala, f.titolo AS titolo_film, f.durata AS durata_film, sl.ora_inizio AS orario
             FROM proiezione p
             JOIN sala s ON p.id_sala = s.id
             JOIN film f ON p.id_film = f.id
@@ -251,7 +251,6 @@ public class ProiezioneDAO {
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, sedeId);
             ResultSet rs = ps.executeQuery();
-
 
             Map<String, List<Proiezione>> uniqueProiezioni = new HashMap<>();
 
@@ -314,7 +313,7 @@ public class ProiezioneDAO {
       @*/
     //@ skipesc
     public /*@ nullable @*/ Proiezione retrieveProiezioneBySalaSlotAndData(int salaId, int slotId, LocalDate data) {
-        String sql = "SELECT * FROM proiezione WHERE id_sala = ? AND id_orario = ? AND data = ?";
+        String sql = "SELECT id, data, id_film, id_sala, id_orario FROM proiezione WHERE id_sala = ? AND id_orario = ? AND data = ?";
         try (Connection connection = ds.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, salaId);
             ps.setInt(2, slotId);

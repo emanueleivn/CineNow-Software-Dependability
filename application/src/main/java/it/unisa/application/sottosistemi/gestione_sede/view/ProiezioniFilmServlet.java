@@ -17,9 +17,10 @@ import java.util.List;
 
 @WebServlet("/ProiezioniFilm")
 public class ProiezioniFilmServlet extends HttpServlet {
+    private static final int ITEMS_PER_PAGE = 7;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         ProgrammazioneSedeService service = new ProgrammazioneSedeService();
         FilmDAO filmDAO = new FilmDAO();
         SedeDAO sedeDAO = new SedeDAO();
@@ -37,18 +38,44 @@ public class ProiezioniFilmServlet extends HttpServlet {
                 return;
             }
 
-            req.setAttribute("programmazioneFilm", programmazioneFilm);
+            // Paginazione
+            int page = 1;
+            String pageParam = req.getParameter("page");
+            if (pageParam != null) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                    if (page < 1) page = 1;
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+
+            int totalItems = programmazioneFilm.size();
+            int totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            int startIndex = (page - 1) * ITEMS_PER_PAGE;
+            int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+
+            List<Proiezione> paginatedProiezioni = programmazioneFilm.subList(startIndex, endIndex);
+
+            req.setAttribute("programmazioneFilm", paginatedProiezioni);
             req.setAttribute("filmNome", film.getTitolo());
             req.setAttribute("sedeNome", sede.getNome());
-            req.getRequestDispatcher("/WEB-INF/jsp/proiezioniFilm.jsp").forward(req, resp);
+            req.setAttribute("filmId", filmId);
+            req.setAttribute("sedeId", sedeId);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPages", totalPages);
 
-        } catch (NumberFormatException e) {
-            req.setAttribute("errorMessage", "Parametri non validi.");
-            req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/jsp/proiezioniFilm.jsp").forward(req, resp);
         } catch (Exception e) {
-            e.printStackTrace();
-            req.setAttribute("errorMessage", "Si è verificato un errore durante il recupero delle proiezioni.");
+            req.setAttribute("errorMessage", "Errore durante il recupero delle proiezioni: " + e.getMessage());
             req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
         }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doGet(req, resp);
     }
 }

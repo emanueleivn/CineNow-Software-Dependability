@@ -14,6 +14,8 @@ import java.util.List;
 
 @WebServlet("/Catalogo")
 public class CatalogoSedeServlet extends HttpServlet {
+    private static final int ITEMS_PER_PAGE = 9;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String sede = req.getParameter("sede");
@@ -44,7 +46,30 @@ public class CatalogoSedeServlet extends HttpServlet {
                 return;
         }
         if (catalogo != null) {
-            req.setAttribute("catalogo", catalogo);
+            // Paginazione
+            int page = 1;
+            String pageParam = req.getParameter("page");
+            if (pageParam != null) {
+                try {
+                    page = Integer.parseInt(pageParam);
+                    if (page < 1) page = 1;
+                } catch (NumberFormatException e) {
+                    page = 1;
+                }
+            }
+
+            int totalItems = catalogo.size();
+            int totalPages = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            int startIndex = (page - 1) * ITEMS_PER_PAGE;
+            int endIndex = Math.min(startIndex + ITEMS_PER_PAGE, totalItems);
+
+            List<Film> paginatedCatalogo = catalogo.subList(startIndex, endIndex);
+
+            req.setAttribute("catalogo", paginatedCatalogo);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPages", totalPages);
             req.getRequestDispatcher("/WEB-INF/jsp/catalogoSede.jsp").forward(req, resp);
         } else {
             req.setAttribute("errorMessage", "Errore caricamento catalogo");

@@ -74,16 +74,40 @@
     </li>
     <%
       }
-    } else {
     %>
-    <div class="card bg-light text-center my-5">
-      <div class="card-body">
-        <h5 class="card-title">Nessun ordine trovato</h5>
-        <p class="card-text">Non hai effettuato alcuna prenotazione. Visita il nostro catalogo per prenotare il tuo prossimo film!</p>
-      </div>
-    </div>
-    <% } %>
   </ul>
+
+  <%-- Paginazione --%>
+  <%
+    Integer currentPage = (Integer) request.getAttribute("currentPage");
+    Integer totalPages = (Integer) request.getAttribute("totalPages");
+    if (totalPages != null && totalPages > 1) {
+  %>
+  <div class="pagination-container">
+    <% if (currentPage > 1) { %>
+    <a href="${pageContext.request.contextPath}/storicoOrdini?page=<%= currentPage - 1 %>" class="btn-pagination">&larr; Precedente</a>
+    <% } else { %>
+    <span class="btn-pagination disabled">&larr; Precedente</span>
+    <% } %>
+
+    <span class="page-info">Pagina <%= currentPage %> di <%= totalPages %></span>
+
+    <% if (currentPage < totalPages) { %>
+    <a href="${pageContext.request.contextPath}/storicoOrdini?page=<%= currentPage + 1 %>" class="btn-pagination">Successiva &rarr;</a>
+    <% } else { %>
+    <span class="btn-pagination disabled">Successiva &rarr;</span>
+    <% } %>
+  </div>
+  <% }
+  } else {
+  %>
+  <div class="card bg-light text-center my-5">
+    <div class="card-body">
+      <h5 class="card-title">Nessun ordine trovato</h5>
+      <p class="card-text">Non hai effettuato alcuna prenotazione. Visita il nostro catalogo per prenotare il tuo prossimo film!</p>
+    </div>
+  </div>
+  <% } %>
 </div>
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
 </body>

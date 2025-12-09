@@ -39,7 +39,7 @@
                         <a class="nav-link" href="<%= request.getContextPath() %>/catalogo">Gestione catalogo</a>
                     </li>
                 </ul>
-                <span class="navbar-brand text-danger fw-bold ms-auto" style="font-family:'Baloo Bhai 2',cursive;">Catena-Movieplex</span>
+                <span class="navbar-brand text-danger fw-bold ms-auto" style="font-family:'Baloo Bhai 2',sans-serif;">Catena-Movieplex</span>
             </div>
         </div>
     </nav>

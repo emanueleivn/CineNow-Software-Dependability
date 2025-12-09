@@ -51,7 +51,7 @@ public class SedeDAO {
       @   ensures \result != null;
       @*/
     public /*@ non_null @*/ List<Sede> retrieveAll() {
-        String sql = "SELECT * FROM sede";
+        String sql = "SELECT id, nome, via, citta, cap FROM sede";
         List<Sede> sedi = new ArrayList<>();
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql);
@@ -73,7 +73,7 @@ public class SedeDAO {
       @*/
     public /*@ non_null @*/ List<Sala> retrieveSaleBySede(int sedeId) {
         List<Sala> sale = new ArrayList<>();
-        String sql = "SELECT * FROM sala WHERE id_sede = ?";
+        String sql = "SELECT id, numero, capienza, id_sede FROM sala WHERE id_sede = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, sedeId);

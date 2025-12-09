@@ -65,7 +65,7 @@ public class PostoProiezioneDAO {
             return null;
         }
         List<PostoProiezione> postiProiezione = new ArrayList<>();
-        String sql = "SELECT * FROM posto_proiezione WHERE id_proiezione = ?";
+        String sql = "SELECT id_sala, fila, numero, stato FROM posto_proiezione WHERE id_proiezione = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, proiezione.getId());
