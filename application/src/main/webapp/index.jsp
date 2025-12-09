@@ -44,7 +44,7 @@
     <div class="col-md-4">
       <div class="card shadow-sm p-4">
         <h5 class="card-title">Esclusive Movieplex</h5>
-        <p class="card-text">Accedi a contenuti e promozioni riservate per vivere il cinema al massimo, solo nelle sale Movieplex. TEST</p>
+        <p class="card-text">Accedi a contenuti e promozioni riservate per vivere il cinema al massimo, solo nelle sale Movieplex.</p>
       </div>
     </div>
     <div class="col-md-4">
