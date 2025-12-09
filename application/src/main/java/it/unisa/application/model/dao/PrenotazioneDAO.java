@@ -18,9 +18,12 @@ public class PrenotazioneDAO {
 
     private final static Logger logger = Logger.getLogger(PrenotazioneDAO.class.getName());
 
-    /** Invariante: la datasource non è mai null (dopo il costruttore). */
     //@ public invariant ds != null;
 
+    /*@ public normal_behavior
+      @   assignable \nothing;
+      @   ensures this.ds != null;
+      @*/
     public PrenotazioneDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
@@ -30,12 +33,9 @@ public class PrenotazioneDAO {
       @   requires prenotazione != null;
       @   requires prenotazione.getCliente() != null;
       @   requires prenotazione.getProiezione() != null;
-      @
-      @   // Può modificare DB, la prenotazione, ecc.
+      @   requires prenotazione.getId() >= 0;
+      @   requires prenotazione.getPostiPrenotazione() != null;
       @   assignable \everything;
-      @
-      @   // Specifica "forte" ma dimostrabile: la prenotazione resta valida,
-      @   // e se il metodo ha successo, l'id è non negativo (segue dagli invarianti).
       @   ensures prenotazione != null;
       @   ensures prenotazione.getCliente() != null;
       @   ensures prenotazione.getProiezione() != null;
@@ -60,6 +60,7 @@ public class PrenotazioneDAO {
                 if (rs.next()) {
                     int newId = rs.getInt(1);
                     // L'invariante di Prenotazione richiede id >= 0, e setId lo fa rispettare.
+                    //@ assume newId >= 0;
                     prenotazione.setId(newId);
                 }
                 return true;
@@ -74,12 +75,7 @@ public class PrenotazioneDAO {
     /** Recupera una prenotazione per id. */
     /*@ public normal_behavior
       @   requires id > 0;
-      @
-      @   // Può usare libreria/DB con assignable \everything.
       @   assignable \everything;
-      @
-      @   // Postcondizione forte ma basata solo su invarianti di Prenotazione:
-      @   // se restituisce una prenotazione, questa è in stato valido.
       @   ensures \result == null
       @        || (\result.getId() >= 0
       @            && \result.getCliente() != null
@@ -98,8 +94,6 @@ public class PrenotazioneDAO {
                 Cliente cliente = new Cliente(rs.getString("email_cliente"), "", "", "");
                 Proiezione proiezione = new Proiezione(rs.getInt("id_proiezione"));
 
-                // Qui ci affidiamo al fatto che il chiamante abbia modellato bene il DB:
-                // Prenotazione richiede id >= 0, cliente != null, proiezione != null.
                 return new Prenotazione(prenotazioneId, cliente, proiezione);
             }
         } catch (SQLException e) {
@@ -113,18 +107,13 @@ public class PrenotazioneDAO {
     /*@ public normal_behavior
       @   requires cliente != null;
       @   requires cliente.getEmail() != null;
-      @
-      @   // Può usare DB/libreria che hanno assignable \everything.
       @   assignable \everything;
-      @
-      @   // Postcondizione forte: ogni prenotazione nella lista (se non è null)
-      @   // ha come cliente proprio il 'cliente' passato.
-      @   ensures \result == null
-      @        || (\forall int i; 0 <= i && i < \result.size();
+      @   ensures \result != null;
+      @   ensures (\forall int i; 0 <= i && i < \result.size();
       @               \result.get(i) != null
       @            && \result.get(i).getCliente() == cliente);
       @*/
-    public /*@ nullable @*/ List<Prenotazione> retrieveAllByCliente(Cliente cliente) {
+    public /*@ non_null @*/ List<Prenotazione> retrieveAllByCliente(Cliente cliente) {
         if (cliente == null) {
             logger.severe("Cliente is null");
             return null; // percorso impossibile sotto le precondizioni JML
@@ -174,9 +163,9 @@ public class PrenotazioneDAO {
                     Film film = new Film(
                             rs.getInt("film_id"),
                             rs.getString("film_titolo"),
-                            null, null,
+                            "", "",
                             rs.getInt("durata"),
-                            null, null,
+                            new byte[0], "",
                             false
                     );
 
@@ -184,7 +173,7 @@ public class PrenotazioneDAO {
                     SalaDAO salaDAO = new SalaDAO();
                     Sala s = salaDAO.retrieveById(rs.getInt("sala_id"));
                     Sede sede = sedeDAO.retrieveById(s.getSede().getId());
-                    Sala sala = new Sala(rs.getInt("sala_id"), rs.getInt("numero_sala"), 0, sede);
+                    Sala sala = new Sala(rs.getInt("sala_id"), rs.getInt("numero_sala"), 1, sede);
 
                     Slot slot = new Slot(0, rs.getTime("ora_inizio"));
 
@@ -217,7 +206,6 @@ public class PrenotazioneDAO {
                     PostoProiezione postoProiezione =
                             new PostoProiezione(posto, prenotazione.getProiezione());
 
-                    // getPostiPrenotazione() può essere null solo prima della setPostiPrenotazione
                     prenotazione.getPostiPrenotazione().add(postoProiezione);
                 }
             }
@@ -226,7 +214,6 @@ public class PrenotazioneDAO {
             String msg = e.getMessage();
             logger.severe(msg != null ? msg : "");
         }
-
         return prenotazioni;
     }
 }

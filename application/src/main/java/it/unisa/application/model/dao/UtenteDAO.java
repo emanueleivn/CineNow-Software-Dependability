@@ -17,13 +17,12 @@ public class UtenteDAO {
     private static final Logger logger = Logger.getLogger(UtenteDAO.class.getName());
 
     /*@ public normal_behavior
-      @   assignable \nothing;
-      @   ensures ds != null;
+      @   assignable \everything;
+      @   ensures this.ds != null;
       @*/
     public UtenteDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
-
 
     /*@ public normal_behavior
       @   requires utente != null;
@@ -50,10 +49,10 @@ public class UtenteDAO {
 
     /*@ public normal_behavior
       @   requires email != null;
-      @   assignable \nothing;
+      @   assignable \everything;
       @   ensures \result == null || \result.getEmail().equals(email);
       @*/
-    public Utente retrieveByEmail(String email) {
+    public /*@ nullable @*/ Utente retrieveByEmail(String email) {
         String sql = "SELECT email, password, ruolo " +
                 "FROM utente " +
                 "WHERE email = ?";

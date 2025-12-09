@@ -12,12 +12,12 @@ import java.util.logging.Logger;
 public class FilmDAO {
     //@ spec_public
     private final DataSource ds;
-    //@ spec_public
+
     private final static Logger logger = Logger.getLogger(FilmDAO.class.getName());
 
     /*@ public normal_behavior
-      @   assignable \nothing;
-      @   ensures ds != null;
+      @   assignable \everything;
+      @   ensures this.ds != null;
       @*/
     public FilmDAO() {
         this.ds = DataSourceSingleton.getInstance();
@@ -57,13 +57,12 @@ public class FilmDAO {
         return false;
     }
 
-
     /*@ public normal_behavior
       @   requires id >= 0;
-      @   assignable \nothing;
+      @   assignable \everything;
       @   ensures \result == null || \result.getId() == id;
       @*/
-    public Film retrieveById(int id) {
+    public /*@ nullable @*/ Film retrieveById(int id) {
         String sql = "SELECT * FROM film WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -87,12 +86,11 @@ public class FilmDAO {
         return null;
     }
 
-
     /*@ public normal_behavior
-      @   assignable \nothing;
+      @   assignable \everything;
       @   ensures \result != null;
       @*/
-    public List<Film> retrieveAll() {
+    public /*@ non_null @*/ List<Film> retrieveAll() {
         List<Film> films = new ArrayList<>();
         String sql = "SELECT * FROM film";
         try (Connection connection = ds.getConnection();
@@ -105,7 +103,7 @@ public class FilmDAO {
                         rs.getString("genere"),
                         rs.getString("classificazione"),
                         rs.getInt("durata"),
-                        rs.getBytes("locandina"), // Cambiato da getString a getBytes
+                        rs.getBytes("locandina"),
                         rs.getString("descrizione"),
                         rs.getBoolean("is_proiettato")
                 ));

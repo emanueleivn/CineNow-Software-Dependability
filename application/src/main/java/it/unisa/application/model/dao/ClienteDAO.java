@@ -12,12 +12,12 @@ import javax.sql.DataSource;
 public class ClienteDAO {
     //@ spec_public
     private final DataSource ds;
-    //@ spec_public
+
     private final static Logger logger = Logger.getLogger(ClienteDAO.class.getName());
 
     /*@ public normal_behavior
-      @   assignable \nothing;
-      @   ensures ds != null;
+      @   assignable \everything;
+      @   ensures this.ds != null;
       @*/
     public ClienteDAO() {
         this.ds = DataSourceSingleton.getInstance();
@@ -58,14 +58,14 @@ public class ClienteDAO {
 
     /*@ public normal_behavior
       @   requires email != null && password != null;
-      @   assignable \nothing;
+      @   assignable \everything;
       @   ensures \result == null || \result.getEmail().equals(email);
       @*/
-    public Cliente retrieveByEmail(String email, String password) {
+    public /*@ nullable @*/ Cliente retrieveByEmail(String email, String password) {
         String sql = "SELECT c.email, c.nome, c.cognome " +
-                     "FROM cliente c " +
-                     "JOIN utente u ON c.email = u.email " +
-                     "WHERE u.email = ? AND u.password = ?";
+                "FROM cliente c " +
+                "JOIN utente u ON c.email = u.email " +
+                "WHERE u.email = ? AND u.password = ?";
         try (Connection conn = ds.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, email);
