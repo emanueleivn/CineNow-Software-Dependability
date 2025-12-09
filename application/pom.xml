@@ -216,6 +216,28 @@
                             <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-merged.exec</dataFile>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.85</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
 
@@ -282,6 +304,8 @@
                     <mutators>
                         <mutator>DEFAULTS</mutator>
                     </mutators>
+                    <mutationThreshold>85</mutationThreshold>
+                    <coverageThreshold>85</coverageThreshold>
                 </configuration>
             </plugin>
         </plugins>
