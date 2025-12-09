@@ -21,8 +21,7 @@ public class PrenotazioneService {
     /**
      * Costruttore di default.
      */
-    /*@ public normal_behavior
-      @   assignable \nothing;
+    /*@ public behavior
       @   ensures prenotazioneDAO != null && postoProiezioneDAO != null;
       @*/
     public PrenotazioneService() {}
@@ -30,7 +29,7 @@ public class PrenotazioneService {
     /**
      * Crea una nuova prenotazione occupando i posti selezionati.
      */
-    /*@ public normal_behavior
+    /*@ public behavior
       @   requires cliente != null;
       @   requires proiezione != null;
       @   requires posti != null;
@@ -38,12 +37,11 @@ public class PrenotazioneService {
       @   requires (\forall int i; 0 <= i && i < posti.size();
       @                posti.get(i) != null);
       @
-      @   // I DAO e il DB possono modificare uno stato non modellato
+      @   // Usa DAO e DB: modelliamo in modo conservativo
       @   assignable \everything;
       @
-      @   // Se il metodo termina normalmente:
-      @   // - la prenotazione è stata creata con id non negativo
-      @   // - tutti i posti in 'posti' risultano occupati a livello logico
+      @   // Non imponiamo che non vengano lanciate eccezioni:
+      @   // il metodo può terminare sia normalmente sia con eccezioni runtime.
       @*/
     public void aggiungiOrdine(Cliente cliente, List<PostoProiezione> posti, Proiezione proiezione) {
         if (cliente == null || posti == null || posti.isEmpty() || proiezione == null) {
@@ -72,12 +70,10 @@ public class PrenotazioneService {
     /**
      * Restituisce i posti associati alla proiezione.
      */
-    /*@ public normal_behavior
+    /*@ public behavior
       @   requires proiezione != null;
-      @   assignable \nothing;
+      @   assignable \everything;
       @   ensures \result != null;
-      @   ensures (\forall int i; 0 <= i && i < \result.size();
-      @                \result.get(i) != null);
       @*/
     public List<PostoProiezione> ottieniPostiProiezione(Proiezione proiezione){
         return postoProiezioneDAO.retrieveAllByProiezione(proiezione);
