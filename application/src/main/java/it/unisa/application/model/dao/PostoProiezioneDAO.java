@@ -13,13 +13,26 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class PostoProiezioneDAO {
+    //@ spec_public
     private final DataSource ds;
+
     private final static Logger logger = Logger.getLogger(PostoProiezioneDAO.class.getName());
-    
+
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @   ensures this.ds != null;
+      @*/
+    //@ skipesc
     public PostoProiezioneDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
-    
+
+    /*@ public normal_behavior
+      @   requires postoProiezione != null;
+      @   assignable \everything;
+      @   ensures \result ==> postoProiezione.getProiezione() != null;
+      @*/
+    //@ skipesc
     public boolean create(PostoProiezione postoProiezione) {
         if (postoProiezione == null) {
             logger.severe("postoProiezione is null");
@@ -39,8 +52,14 @@ public class PostoProiezioneDAO {
         }
         return false;
     }
-    
-    public List<PostoProiezione> retrieveAllByProiezione(Proiezione proiezione) {
+
+    /*@ public normal_behavior
+      @   requires proiezione != null;
+      @   assignable \everything;
+      @   ensures \result != null;
+      @*/
+    //@ skipesc
+    public /*@ non_null @*/ List<PostoProiezione> retrieveAllByProiezione(Proiezione proiezione) {
         if (proiezione == null) {
             logger.severe("Proiezione is null");
             return null;
@@ -59,11 +78,17 @@ public class PostoProiezioneDAO {
                 postiProiezione.add(postoProiezione);
             }
         } catch (SQLException e) {
-           logger.severe(e.getMessage());
+            logger.severe(e.getMessage());
         }
         return postiProiezione;
     }
-    
+
+    /*@ public normal_behavior
+      @   requires postoProiezione != null;
+      @   requires idPrenotazione >= 0;
+      @   assignable \everything;
+      @*/
+    //@ skipesc
     public boolean occupaPosto(PostoProiezione postoProiezione, int idPrenotazione) {
         String updateSql = "UPDATE posto_proiezione SET stato = false WHERE id_sala = ? AND fila = ? AND numero = ? AND id_proiezione = ?";
         String insertSql = "INSERT INTO occupa (id_sala, fila, numero, id_proiezione, id_prenotazione) VALUES (?, ?, ?, ?, ?)";
@@ -91,5 +116,4 @@ public class PostoProiezioneDAO {
         }
         return false;
     }
-
 }

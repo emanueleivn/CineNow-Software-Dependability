@@ -12,12 +12,26 @@ import java.util.*;
 import java.util.logging.Logger;
 
 public class ProiezioneDAO {
+    //@ spec_public
     private final DataSource ds;
+    //@ spec_public
     private final static Logger logger = Logger.getLogger(ProiezioneDAO.class.getName());
+
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @   ensures this.ds != null;
+      @*/
     public ProiezioneDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
+    /*@ public normal_behavior
+      @   requires proiezione != null;
+      @   assignable \everything;
+      @   // se il metodo restituisce true, l'id della proiezione è non negativo
+      @   ensures \result ==> proiezione.getId() >= 0;
+      @*/
+    //@ skipesc
     public boolean create(Proiezione proiezione) {
         if(proiezione==null){
             logger.severe("Proiezione null");
@@ -35,7 +49,7 @@ public class ProiezioneDAO {
         try (Connection connection = ds.getConnection()) {
             connection.setAutoCommit(false);
 
-            List<Slot> availableSlots = new ArrayList<>();
+            List<Slot> availableSlots = new ArrayList<Slot>();
             try (PreparedStatement psGetSlots = connection.prepareStatement("SELECT id, ora_inizio FROM slot ORDER BY ora_inizio")) {
                 try (ResultSet rs = psGetSlots.executeQuery()) {
                     while (rs.next()) {
@@ -104,7 +118,13 @@ public class ProiezioneDAO {
         return false;
     }
 
-    public Proiezione retrieveById(int id) {
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   assignable \everything;
+      @   ensures \result == null || \result.getId() == id;
+      @*/
+    //@ skipesc
+    public /*@ nullable @*/ Proiezione retrieveById(int id) {
         String sql = "SELECT * FROM proiezione WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -127,7 +147,13 @@ public class ProiezioneDAO {
         return null;
     }
 
-    public List<Proiezione> retrieveByFilm(Film film, Sede sede) {
+    /*@ public normal_behavior
+      @   requires film != null && sede != null;
+      @   assignable \everything;
+      @   ensures \result != null;
+      @*/
+    //@ skipesc
+    public /*@ non_null @*/ List<Proiezione> retrieveByFilm(Film film, Sede sede) {
         if (film == null || sede == null) {
             logger.severe("Film o Sede null");
             return null;
@@ -142,7 +168,7 @@ public class ProiezioneDAO {
             ORDER BY p.data ASC, sl.ora_inizio ASC
             """;
 
-        List<Proiezione> proiezioni = new ArrayList<>();
+        List<Proiezione> proiezioni = new ArrayList<Proiezione>();
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, film.getId());
@@ -175,7 +201,7 @@ public class ProiezioneDAO {
 
                 List<Proiezione> proiezioniPerChiave = uniqueProiezioni.get(uniqueKey);
                 if (proiezioniPerChiave == null) {
-                    proiezioniPerChiave = new ArrayList<>();
+                    proiezioniPerChiave = new ArrayList<Proiezione>();
                     uniqueProiezioni.put(uniqueKey, proiezioniPerChiave);
                 }
                 boolean aggiungiProiezione = true;
@@ -203,8 +229,14 @@ public class ProiezioneDAO {
         return proiezioni;
     }
 
-    public List<Proiezione> retrieveAllBySede(int sedeId) {
-        List<Proiezione> proiezioni = new ArrayList<>();
+    /*@ public normal_behavior
+      @   requires sedeId >= 0;
+      @   assignable \everything;
+      @   ensures \result != null;
+      @*/
+    //@ skipesc
+    public /*@ non_null @*/ List<Proiezione> retrieveAllBySede(int sedeId) {
+        List<Proiezione> proiezioni = new ArrayList<Proiezione>();
         String sql = """
             SELECT p.*, s.numero AS numero_sala, f.titolo AS titolo_film, f.durata AS durata_film, sl.ora_inizio AS orario
             FROM proiezione p
@@ -245,7 +277,7 @@ public class ProiezioneDAO {
 
                 List<Proiezione> proiezioniPerChiave =
                         uniqueProiezioni.getOrDefault(uniqueKey,
-                                new ArrayList<>());
+                                new ArrayList<Proiezione>());
 
 
                 boolean aggiungiProiezione = true;
@@ -273,8 +305,15 @@ public class ProiezioneDAO {
         return proiezioni;
     }
 
-
-    public Proiezione retrieveProiezioneBySalaSlotAndData(int salaId, int slotId, LocalDate data) {
+    /*@ public normal_behavior
+      @   requires salaId >= 0;
+      @   requires slotId >= 0;
+      @   requires data != null;
+      @   assignable \everything;
+      @   ensures \result == null || \result.getId() >= 0;
+      @*/
+    //@ skipesc
+    public /*@ nullable @*/ Proiezione retrieveProiezioneBySalaSlotAndData(int salaId, int slotId, LocalDate data) {
         String sql = "SELECT * FROM proiezione WHERE id_sala = ? AND id_orario = ? AND data = ?";
         try (Connection connection = ds.getConnection(); PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, salaId);

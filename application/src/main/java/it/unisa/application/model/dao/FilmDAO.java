@@ -10,13 +10,24 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class FilmDAO {
+    //@ spec_public
     private final DataSource ds;
+
     private final static Logger logger = Logger.getLogger(FilmDAO.class.getName());
 
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @   ensures this.ds != null;
+      @*/
     public FilmDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
+    /*@ public normal_behavior
+      @   requires film != null;
+      @   assignable \everything;
+      @   ensures \result ==> film.getId() >= 0;
+      @*/
     public boolean create(Film film) {
         if(film == null) {
             logger.severe("Film null");
@@ -46,8 +57,12 @@ public class FilmDAO {
         return false;
     }
 
-
-    public Film retrieveById(int id) {
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   assignable \everything;
+      @   ensures \result == null || \result.getId() == id;
+      @*/
+    public /*@ nullable @*/ Film retrieveById(int id) {
         String sql = "SELECT * FROM film WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -71,8 +86,11 @@ public class FilmDAO {
         return null;
     }
 
-
-    public List<Film> retrieveAll() {
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @   ensures \result != null;
+      @*/
+    public /*@ non_null @*/ List<Film> retrieveAll() {
         List<Film> films = new ArrayList<>();
         String sql = "SELECT * FROM film";
         try (Connection connection = ds.getConnection();
@@ -85,7 +103,7 @@ public class FilmDAO {
                         rs.getString("genere"),
                         rs.getString("classificazione"),
                         rs.getInt("durata"),
-                        rs.getBytes("locandina"), // Cambiato da getString a getBytes
+                        rs.getBytes("locandina"),
                         rs.getString("descrizione"),
                         rs.getBoolean("is_proiettato")
                 ));

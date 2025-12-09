@@ -1,9 +1,6 @@
 package it.unisa.application.model.entity;
 
 public class PostoProiezione {
-    //@ public invariant posto != null;
-    //@ public invariant proiezione != null;
-
     //@ spec_public
     private Posto posto;
     //@ spec_public
@@ -11,63 +8,80 @@ public class PostoProiezione {
     //@ spec_public
     private boolean stato;
 
-    //@ public normal_behavior
-    //@ requires posto != null && proiezione != null;
-    //@ ensures this.posto != null && this.proiezione != null && this.stato == true;
-    //@ assignable \everything;
+    //@ public invariant posto != null && proiezione != null;
+
+    /*@ public normal_behavior
+      @   requires posto != null && proiezione != null;
+      @   assignable \nothing;
+      @   ensures this.posto == posto;
+      @   ensures this.proiezione == proiezione;
+      @   ensures this.stato == true;
+      @*/
     public PostoProiezione(Posto posto, Proiezione proiezione) {
         this.stato = true;
         this.posto = posto;
         this.proiezione = proiezione;
     }
 
+    /*@ public normal_behavior
+      @   requires sala != null && proiezione != null && fila > 0 && numero > 0;
+      @   assignable \nothing;
+      @   ensures this.posto != null;
+      @   ensures this.proiezione == proiezione;
+      @   ensures this.stato == true;
+      @*/
     public PostoProiezione(Sala sala, char fila, int numero, Proiezione proiezione) {
         this.posto = new Posto(sala, fila, numero);
         this.proiezione = proiezione;
         this.stato = true;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public Posto getPosto() {
+    /*@ public normal_behavior
+      @   ensures \result == posto;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ Posto getPosto() {
         return posto;
     }
 
-    //@ public normal_behavior
-    //@ requires posto != null;
-    //@ ensures this.posto != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires posto != null;
+      @   assignable this.posto;
+      @   ensures this.posto == posto;
+      @*/
     public void setPosto(Posto posto) {
         this.posto = posto;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public Proiezione getProiezione() {
+    /*@ public normal_behavior
+      @   ensures \result == proiezione;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ Proiezione getProiezione() {
         return proiezione;
     }
 
-    //@ public normal_behavior
-    //@ requires proiezione != null;
-    //@ ensures this.proiezione != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires proiezione != null;
+      @   assignable this.proiezione;
+      @   ensures this.proiezione == proiezione;
+      @*/
     public void setProiezione(Proiezione proiezione) {
         this.proiezione = proiezione;
     }
 
-    //@ public normal_behavior
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public boolean isStato() {
+    /*@ public normal_behavior
+      @   ensures \result == stato;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ boolean isStato() {
         return stato;
     }
 
-    //@ public normal_behavior
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   assignable this.stato;
+      @   ensures this.stato == stato;
+      @*/
     public void setStato(boolean stato) {
         this.stato = stato;
     }

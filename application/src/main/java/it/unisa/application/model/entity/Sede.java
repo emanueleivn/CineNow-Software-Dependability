@@ -6,96 +6,109 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Sede {
-    //@ public invariant id >= 0;
-    //@ public invariant sale != null;
-
     //@ spec_public
-    /*@ nullable @*/
     private String nome;
     //@ spec_public
-    /*@ nullable @*/
     private String indirizzo;
     //@ spec_public
     private int id;
     //@ spec_public
     private Set<Sala> sale;
 
-    //@ public normal_behavior
-    //@ requires id >= 0;
-    //@ ensures this.id >= 0 && this.sale != null;
-    //@ assignable \everything;
+    //@ public invariant id >= 0;
+    //@ public invariant nome != null;
+    //@ public invariant indirizzo != null;
+    //@ public invariant sale != null;
+
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   assignable \nothing;
+      @   ensures this.id == id;
+      @   ensures this.nome != null;
+      @   ensures this.indirizzo != null;
+      @   ensures this.sale != null;
+      @*/
     public Sede(int id){
         this.id = id;
-        sale = new HashSet<>();
+        this.nome = "";
+        this.indirizzo = "";
+        this.sale = new HashSet<Sala>();
     }
 
-    //@ public normal_behavior
-    //@ requires id >= 0 && nome != null && indirizzo != null;
-    //@ ensures this.id >= 0 && this.nome != null && this.indirizzo != null && this.sale != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   requires nome != null && indirizzo != null;
+      @   assignable \nothing;
+      @   ensures this.id == id;
+      @   ensures this.nome == nome;
+      @   ensures this.indirizzo == indirizzo;
+      @   ensures this.sale != null;
+      @*/
     public Sede(int id, String nome, String indirizzo){
         this.id = id;
         this.nome = nome;
         this.indirizzo = indirizzo;
-        this.sale = new HashSet<>();
+        this.sale = new HashSet<Sala>();
     }
 
-    //@ public normal_behavior
-    //@ ensures \result == this.nome;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    /*@ nullable @*/
-    public String getNome() { return nome; }
+    /*@ public normal_behavior
+      @   ensures \result == this.nome;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ String getNome() { return nome; }
 
-    //@ public normal_behavior
-    //@ requires nome != null;
-    //@ ensures this.nome != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires nome != null;
+      @   assignable this.nome;
+      @   ensures this.nome == nome;
+      @*/
     public void setNome(String nome) { this.nome = nome; }
 
-    //@ public normal_behavior
-    //@ ensures \result == this.indirizzo;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    /*@ nullable @*/
-    public String getIndirizzo() { return indirizzo; }
+    /*@ public normal_behavior
+      @   ensures \result == this.indirizzo;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ String getIndirizzo() { return indirizzo; }
 
-    //@ public normal_behavior
-    //@ requires indirizzo != null;
-    //@ ensures this.indirizzo != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires indirizzo != null;
+      @   assignable this.indirizzo;
+      @   ensures this.indirizzo == indirizzo;
+      @*/
     public void setIndirizzo(String indirizzo) { this.indirizzo = indirizzo; }
 
-    //@ public normal_behavior
-    //@ ensures \result >= 0;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public int getId() { return id; }
+    /*@ public normal_behavior
+      @   ensures \result == this.id;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ int getId() { return id; }
 
-    //@ public normal_behavior
-    //@ requires id >= 0;
-    //@ ensures this.id >= 0;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   assignable this.id;
+      @   ensures this.id == id;
+      @*/
     public void setId(int id) { this.id = id; }
 
-    //@ public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public Set<Sala> getSale() { return sale; }
+    /*@ public normal_behavior
+      @   ensures \result == this.sale;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ Set<Sala> getSale() { return sale; }
 
-    //@ public normal_behavior
-    //@ requires sale != null;
-    //@ ensures this.sale != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires sale != null;
+      @   assignable this.sale;
+      @   ensures this.sale == sale;
+      @*/
     public void setSale(Set<Sala> sale) { this.sale = sale; }
 
-    // Metodi con lambda/stream: esclusi da ESC/RAC per limitazioni delle specifiche Stream di OpenJML
+    // Metodi con lambda/stream: esclusi da ESC/RAC
     //@ skipesc
     //@ skiprac
     public List<Proiezione> getProgrammazione() {
-        return sale.stream().
-                flatMap(sala -> sala.getProiezioni().stream())
+        return sale.stream()
+                .flatMap(sala -> sala.getProiezioni().stream())
                 .collect(Collectors.toList());
     }
 

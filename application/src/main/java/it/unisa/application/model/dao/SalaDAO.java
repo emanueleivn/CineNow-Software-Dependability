@@ -13,13 +13,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SalaDAO {
+    //@ spec_public
     private final DataSource ds;
+    //@ spec_public
     private final static Logger logger = Logger.getLogger(SalaDAO.class.getName());
+
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @   ensures this.ds != null;
+      @*/
     public SalaDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
-    public Sala retrieveById(int id) {
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   assignable \everything;
+      @   ensures \result == null || \result.getId() == id;
+      @*/
+    public /*@ nullable @*/ Sala retrieveById(int id) {
         String sql = "SELECT * FROM sala WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -37,7 +49,11 @@ public class SalaDAO {
         return null;
     }
 
-    public List<Sala> retrieveAll() throws SQLException {
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @   ensures \result != null;
+      @*/
+    public /*@ non_null @*/ List<Sala> retrieveAll() throws SQLException {
         List<Sala> sale = new ArrayList<>();
         String query = "SELECT * FROM sala";
 

@@ -1,9 +1,6 @@
 package it.unisa.application.model.entity;
 
 public class Posto {
-    //@ public invariant sala != null;
-    //@ public invariant numero > 0;
-
     //@ spec_public
     private Sala sala;
     //@ spec_public
@@ -11,53 +8,65 @@ public class Posto {
     //@ spec_public
     private int numero;
 
-    //@ public normal_behavior
-    //@ requires sala != null && numero > 0;
-    //@ ensures this.sala == sala && this.fila == fila && this.numero == numero;
-    //@ assignable \everything;
+    //@ public invariant sala != null;
+    //@ public invariant numero > 0;
+
+    /*@ public normal_behavior
+      @   requires sala != null;
+      @   requires numero > 0;
+      @   assignable \nothing;
+      @   ensures this.sala == sala;
+      @   ensures this.fila == fila;
+      @   ensures this.numero == numero;
+      @*/
     public Posto(Sala sala, char fila, int numero) {
         this.sala = sala;
         this.fila = fila;
         this.numero = numero;
     }
 
-    //@ public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public Sala getSala() { return sala; }
+    /*@ public normal_behavior
+      @   ensures \result == sala;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ Sala getSala() { return sala; }
 
-    //@ public normal_behavior
-    //@ requires sala != null;
-    //@ ensures this.sala != null;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires sala != null;
+      @   assignable this.sala;
+      @   ensures this.sala == sala;
+      @*/
     public void setSala(Sala sala) { this.sala = sala; }
 
-    //@ public normal_behavior
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public char getFila() { return fila; }
+    /*@ public normal_behavior
+      @   ensures \result == fila;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ char getFila() { return fila; }
 
-    //@ public normal_behavior
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   assignable this.fila;
+      @   ensures this.fila == fila;
+      @*/
     public void setFila(char fila) { this.fila = fila; }
 
-    //@ public normal_behavior
-    //@ ensures \result > 0;
-    //@ assignable \nothing;
-    /*@ pure @*/
-    public int getNumero() { return numero; }
+    /*@ public normal_behavior
+      @   ensures \result == numero;
+      @   assignable \nothing;
+      @*/
+    public /*@ pure @*/ int getNumero() { return numero; }
 
-    //@ public normal_behavior
-    //@ requires numero > 0;
-    //@ ensures this.numero > 0;
-    //@ assignable \everything;
+    /*@ public normal_behavior
+      @   requires numero > 0;
+      @   assignable this.numero;
+      @   ensures this.numero == numero;
+      @*/
     public void setNumero(int numero) { this.numero = numero; }
 
-    //@ also public normal_behavior
-    //@ ensures \result != null;
-    //@ assignable \nothing;
-    /*@ pure @*/
+    /*@ also public normal_behavior
+      @   ensures \result != null;
+      @   assignable \nothing;
+      @*/
     @Override
     public String toString() {
         return "Posto{" +

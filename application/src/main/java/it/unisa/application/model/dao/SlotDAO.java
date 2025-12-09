@@ -11,14 +11,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SlotDAO {
+    //@ spec_public
     private final DataSource ds;
+    //@ spec_public
     private static final Logger logger = Logger.getLogger(SlotDAO.class.getName());
 
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @   ensures this.ds != null;
+      @*/
     public SlotDAO() {
         this.ds = DataSourceSingleton.getInstance();
     }
 
-    public Slot retrieveById(int id) {
+    /*@ public normal_behavior
+      @   requires id >= 0;
+      @   assignable \everything;
+      @   ensures \result == null || \result.getId() == id;
+      @*/
+    public /*@ nullable @*/ Slot retrieveById(int id) {
         String sql = "SELECT * FROM slot WHERE id = ?";
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -34,7 +45,13 @@ public class SlotDAO {
         return null;
     }
 
-    public Slot retrieveByProiezione(Proiezione proiezione){
+    /*@ public normal_behavior
+      @   requires proiezione != null;
+      @   assignable \everything;
+      @   ensures \result == null
+      @        || \result.getId() == proiezione.getOrarioProiezione().getId();
+      @*/
+    public /*@ nullable @*/ Slot retrieveByProiezione(Proiezione proiezione){
         if (proiezione == null || proiezione.getOrarioProiezione() == null) {
             logger.warning("Proiezione o slot associato null");
             return null;
@@ -55,7 +72,11 @@ public class SlotDAO {
         return null;
     }
 
-    public List<Slot> retrieveAllSlots() {
+    /*@ public normal_behavior
+      @   assignable \everything;
+      @   ensures \result != null;
+      @*/
+    public /*@ non_null @*/ List<Slot> retrieveAllSlots() {
         List<Slot> list = new ArrayList<>();
         String sql = "SELECT * FROM slot ORDER BY ora_inizio";
 
