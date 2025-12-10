@@ -1,4 +1,6 @@
 # CineNow
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAntonio-Caiazzo%2FCineNow-Software-Dependability.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2FAntonio-Caiazzo%2FCineNow-Software-Dependability?ref=badge_shield)
+
 
 ## Descrizione del Progetto
 **CineNow** è un'applicazione web progettata per semplificare e modernizzare la gestione delle prenotazioni di biglietti cinematografici dei cinema. Il progetto offrirà agli utenti un'esperienza digitale intuitiva e ai gestori strumenti avanzati per l'organizzazione e il monitoraggio delle proiezioni cinematografiche.
@@ -43,3 +45,7 @@
 ### Clona il Repository
 ```bash
 git clone https://github.com/Antonio-Caiazzo/CineNow-Software-Dependability.git
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FAntonio-Caiazzo%2FCineNow-Software-Dependability.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2FAntonio-Caiazzo%2FCineNow-Software-Dependability?ref=badge_large)
