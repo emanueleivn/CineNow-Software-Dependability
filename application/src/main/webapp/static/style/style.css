@@ -226,3 +226,50 @@ input[type="text"], input[type="password"],input[type="email"],input[type="numbe
     color: #f8f9fa;
     font-size: 1rem;
 }
+
+/* === LEGENDA POSTI === */
+
+.legend-posti {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;                 /* distanza tra i tre blocchi */
+    margin: 0 auto 1.5rem;
+    user-select: none;
+    text-align: left;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    white-space: nowrap;       /* tiene testo e quadratino sulla stessa riga */
+}
+
+.legend-square {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+/* colori coerenti con lo stato dei posti */
+.legend-disponibile {
+    background-color: #28a745;   /* verde */
+}
+
+.legend-selezionato {
+    background-color: #ffc107;   /* giallo */
+}
+
+.legend-occupato {
+    background-color: #dc3545;   /* rosso */
+}
+
+/* opzionale: la leggenda non riceve click */
+.legend-posti,
+.legend-posti * {
+    pointer-events: none;
+}

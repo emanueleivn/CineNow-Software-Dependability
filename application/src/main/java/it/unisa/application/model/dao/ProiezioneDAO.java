@@ -68,7 +68,9 @@ public class ProiezioneDAO {
             int requiredSlots = (int) Math.ceil(filmDurationMinutes / (double) slotDurationMinutes);
             Slot startingSlot = proiezione.getOrarioProiezione();
             int startIndex = -1;
-            for (int i = 0; i < availableSlots.size(); i++) {
+            // Salvo la size per evitare chiamate ripetute nel loop (O(n) -> O(1))
+            int slotsCount = availableSlots.size();
+            for (int i = 0; i < slotsCount; ++i) {
                 if (availableSlots.get(i).getId() == startingSlot.getId()) {
                     startIndex = i;
                     break;
@@ -79,30 +81,50 @@ public class ProiezioneDAO {
                 throw new RuntimeException("Slot di partenza non trovato.");
             }
             int actualSlots = Math.min(requiredSlots, availableSlots.size() - startIndex);
-            for (int i = 0; i < actualSlots; i++) {
-                Slot currentSlot = availableSlots.get(startIndex + i);
-                try (PreparedStatement psProiezione = connection.prepareStatement(insertProiezioneSql, Statement.RETURN_GENERATED_KEYS)) {
+
+            // Uso batch insert per ridurre le query al database (risolve N+1 query problem)
+            List<Integer> proiezioneIds = new ArrayList<>();
+
+            try (PreparedStatement psProiezione = connection.prepareStatement(insertProiezioneSql, Statement.RETURN_GENERATED_KEYS)) {
+                // Aggiungi tutti gli insert al batch
+                for (int i = 0; i < actualSlots; ++i) {
+                    Slot currentSlot = availableSlots.get(startIndex + i);
                     psProiezione.setDate(1, Date.valueOf(proiezione.getDataProiezione()));
                     psProiezione.setInt(2, proiezione.getFilmProiezione().getId());
                     psProiezione.setInt(3, proiezione.getSalaProiezione().getId());
                     psProiezione.setInt(4, currentSlot.getId());
-                    int affectedRows = psProiezione.executeUpdate();
-                    if (affectedRows > 0) {
-                        try (ResultSet rs = psProiezione.getGeneratedKeys()) {
-                            if (rs.next()) {
-                                int idProiezione = rs.getInt(1);
-                                proiezione.setId(idProiezione);
+                    psProiezione.addBatch();
+                }
 
-                                try (PreparedStatement psPostiProiezione = connection.prepareStatement(insertPostiProiezioneSql)) {
-                                    psPostiProiezione.setInt(1, idProiezione);
-                                    psPostiProiezione.setInt(2, proiezione.getSalaProiezione().getId());
-                                    psPostiProiezione.executeUpdate();
-                                }
-                            }
-                        }
+                // Esegui tutte le insert in una volta sola
+                int[] affectedRows = psProiezione.executeBatch();
+
+                // Recupera tutti gli ID generati
+                try (ResultSet rs = psProiezione.getGeneratedKeys()) {
+                    while (rs.next()) {
+                        int idProiezione = rs.getInt(1);
+                        proiezioneIds.add(idProiezione);
                     }
                 }
+
+                // Imposta l'ID della prima proiezione
+                if (!proiezioneIds.isEmpty()) {
+                    proiezione.setId(proiezioneIds.get(0));
+                }
             }
+
+            // Batch insert per i posti proiezione
+            if (!proiezioneIds.isEmpty()) {
+                try (PreparedStatement psPostiProiezione = connection.prepareStatement(insertPostiProiezioneSql)) {
+                    for (Integer idProiezione : proiezioneIds) {
+                        psPostiProiezione.setInt(1, idProiezione);
+                        psPostiProiezione.setInt(2, proiezione.getSalaProiezione().getId());
+                        psPostiProiezione.addBatch();
+                    }
+                    psPostiProiezione.executeBatch();
+                }
+            }
+
             connection.commit();
             return true;
 
@@ -111,7 +133,7 @@ public class ProiezioneDAO {
             try (Connection connection = ds.getConnection()) {
                 connection.rollback();
             } catch (SQLException rollbackException) {
-                logger.severe(e.getMessage());
+                logger.severe(rollbackException.getMessage());
             }
         }
 

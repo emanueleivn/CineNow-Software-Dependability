@@ -73,13 +73,15 @@ class ProiezioneDAOTest {
 
         when(mockConnection.prepareStatement(startsWith("INSERT INTO proiezione"), eq(Statement.RETURN_GENERATED_KEYS)))
                 .thenReturn(mockInsertProiezione);
-        when(mockInsertProiezione.executeUpdate()).thenReturn(1);
+
+        // Mock per batch insert
+        when(mockInsertProiezione.executeBatch()).thenReturn(new int[]{1});
         when(mockInsertProiezione.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
-        when(mockGeneratedKeys.next()).thenReturn(true);
+        when(mockGeneratedKeys.next()).thenReturn(true, false);
         when(mockGeneratedKeys.getInt(1)).thenReturn(42);
 
         when(mockConnection.prepareStatement(startsWith("INSERT INTO posto_proiezione"))).thenReturn(mockInsertPosti);
-        when(mockInsertPosti.executeUpdate()).thenReturn(1);
+        when(mockInsertPosti.executeBatch()).thenReturn(new int[]{1});
 
         ProiezioneDAO dao = new ProiezioneDAO();
         boolean result = dao.create(proiezione);
@@ -87,8 +89,10 @@ class ProiezioneDAOTest {
         assertTrue(result);
         assertEquals(42, proiezione.getId());
         verify(mockConnection).commit();
-        verify(mockInsertProiezione).executeUpdate();
-        verify(mockInsertPosti).executeUpdate();
+        verify(mockInsertProiezione).addBatch();
+        verify(mockInsertProiezione).executeBatch();
+        verify(mockInsertPosti).addBatch();
+        verify(mockInsertPosti).executeBatch();
     }
 
     @RepeatedTest(5)
@@ -167,7 +171,7 @@ class ProiezioneDAOTest {
         verify(mockConnection, times(1)).rollback();
     }
 
-    // affectedRows == 0 (branch else di if (affectedRows > 0))
+    // Test quando executeBatch non inserisce righe
     @RepeatedTest(5)
     void shouldNotInsertPostiWhenInsertProiezioneAffectsNoRowsInCreate() throws Exception {
         Film film = new Film(1, "Film Test", "Genere", "PG", 120, new byte[]{}, "desc", true);
@@ -178,23 +182,28 @@ class ProiezioneDAOTest {
         PreparedStatement mockSlotQuery = mock(PreparedStatement.class);
         ResultSet mockSlotRs = mock(ResultSet.class);
         PreparedStatement mockInsertProiezione = mock(PreparedStatement.class);
+        ResultSet mockGeneratedKeys = mock(ResultSet.class);
 
         when(mockConnection.prepareStatement(contains("SELECT id, ora_inizio"))).thenReturn(mockSlotQuery);
         when(mockSlotQuery.executeQuery()).thenReturn(mockSlotRs);
         when(mockSlotRs.next()).thenReturn(true, true, false);
-        // lo slot di partenza è presente
         when(mockSlotRs.getInt("id")).thenReturn(10, 11);
         when(mockSlotRs.getTime("ora_inizio")).thenReturn(Time.valueOf("20:00:00"), Time.valueOf("22:00:00"));
 
         when(mockConnection.prepareStatement(startsWith("INSERT INTO proiezione"), eq(Statement.RETURN_GENERATED_KEYS)))
                 .thenReturn(mockInsertProiezione);
-        when(mockInsertProiezione.executeUpdate()).thenReturn(0); // nessuna riga inserita
+
+        // executeBatch ritorna array vuoto (nessuna riga inserita)
+        when(mockInsertProiezione.executeBatch()).thenReturn(new int[]{0});
+        when(mockInsertProiezione.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
+        when(mockGeneratedKeys.next()).thenReturn(false);
 
         ProiezioneDAO dao = new ProiezioneDAO();
         boolean result = dao.create(proiezione);
 
         assertTrue(result); // il metodo comunque fa commit e ritorna true
-        verify(mockInsertProiezione).executeUpdate();
+        verify(mockInsertProiezione).addBatch();
+        verify(mockInsertProiezione).executeBatch();
         assertEquals(0, proiezione.getId(), "L'ID non deve essere aggiornato se non ci sono righe inserite");
     }
 
@@ -214,12 +223,14 @@ class ProiezioneDAOTest {
         when(mockConnection.prepareStatement(contains("SELECT id, ora_inizio"))).thenReturn(mockSlotQuery);
         when(mockSlotQuery.executeQuery()).thenReturn(mockSlotRs);
         when(mockSlotRs.next()).thenReturn(true, true, false);
-        when(mockSlotRs.getInt("id")).thenReturn(10, 11); // slot di partenza presente
+        when(mockSlotRs.getInt("id")).thenReturn(10, 11);
         when(mockSlotRs.getTime("ora_inizio")).thenReturn(Time.valueOf("20:00:00"), Time.valueOf("22:00:00"));
 
         when(mockConnection.prepareStatement(startsWith("INSERT INTO proiezione"), eq(Statement.RETURN_GENERATED_KEYS)))
                 .thenReturn(mockInsertProiezione);
-        when(mockInsertProiezione.executeUpdate()).thenReturn(1);
+
+        // executeBatch eseguito ma nessuna chiave generata
+        when(mockInsertProiezione.executeBatch()).thenReturn(new int[]{1});
         when(mockInsertProiezione.getGeneratedKeys()).thenReturn(mockGeneratedKeys);
         when(mockGeneratedKeys.next()).thenReturn(false); // nessuna chiave generata
 

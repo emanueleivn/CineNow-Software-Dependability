@@ -9,7 +9,9 @@ public class PasswordHash {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-512");
             byte[] hash = digest.digest(password.getBytes());
-            StringBuilder hexString = new StringBuilder();
+            // SHA-512 produce 64 byte, quindi 128 caratteri hex (2 per byte)
+            // Inizializzo con capacità appropriata per evitare riallocazioni
+            StringBuilder hexString = new StringBuilder(128);
             for (byte b : hash) {
                 String hex = Integer.toHexString(0xff & b);
                 if (hex.length() == 1) {

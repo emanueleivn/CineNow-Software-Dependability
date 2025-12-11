@@ -25,7 +25,7 @@
             <a href="<%= request.getContextPath() %>/areaGestoreSede.jsp" class="nav-link navbar-brand text-danger fw-bold ms-3">
                 <picture>
                     <source srcset="${pageContext.request.contextPath}/static/images/scritta-sito.webp" type="image/webp">
-                    <img src="${pageContext.request.contextPath}/static/images/scritta%20sito.png" alt="CineNow" class="ms-3" width="200" height="70" loading="lazy">
+                    <img src="${pageContext.request.contextPath}/static/images/scritta-sito.webp" alt="CineNow" class="ms-3" width="200" height="70" loading="lazy">
                 </picture>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
