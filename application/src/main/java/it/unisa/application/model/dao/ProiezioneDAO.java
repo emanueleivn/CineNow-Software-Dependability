@@ -68,7 +68,9 @@ public class ProiezioneDAO {
             int requiredSlots = (int) Math.ceil(filmDurationMinutes / (double) slotDurationMinutes);
             Slot startingSlot = proiezione.getOrarioProiezione();
             int startIndex = -1;
-            for (int i = 0; i < availableSlots.size(); i++) {
+            // Salvo la size per evitare chiamate ripetute nel loop (O(n) -> O(1))
+            int slotsCount = availableSlots.size();
+            for (int i = 0; i < slotsCount; ++i) {
                 if (availableSlots.get(i).getId() == startingSlot.getId()) {
                     startIndex = i;
                     break;
@@ -85,7 +87,7 @@ public class ProiezioneDAO {
 
             try (PreparedStatement psProiezione = connection.prepareStatement(insertProiezioneSql, Statement.RETURN_GENERATED_KEYS)) {
                 // Aggiungi tutti gli insert al batch
-                for (int i = 0; i < actualSlots; i++) {
+                for (int i = 0; i < actualSlots; ++i) {
                     Slot currentSlot = availableSlots.get(startIndex + i);
                     psProiezione.setDate(1, Date.valueOf(proiezione.getDataProiezione()));
                     psProiezione.setInt(2, proiezione.getFilmProiezione().getId());

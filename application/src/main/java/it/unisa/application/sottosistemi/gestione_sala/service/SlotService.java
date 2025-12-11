@@ -35,7 +35,9 @@ public class SlotService {
             List<Slot> allSlots = slotDAO.retrieveAllSlots();
             List<Map<String, Object>> slotList = new ArrayList<>();
 
-            for (int k = 0; k < allSlots.size(); k++) {
+            // Salvo la size per evitare chiamate ripetute nel loop (O(n) -> O(1))
+            int allSlotsCount = allSlots.size();
+            for (int k = 0; k < allSlotsCount; ++k) {
                 Slot slot = allSlots.get(k);
                 Proiezione existing = proiezioneDAO.retrieveProiezioneBySalaSlotAndData(salaId, slot.getId(), current);
                 Map<String, Object> slotData = new HashMap<>();

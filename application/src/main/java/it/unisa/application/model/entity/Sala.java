@@ -209,7 +209,9 @@ public class Sala {
     //@ skipesc
     private List<PostoProiezione> creaListaPosti(Proiezione proiezione) {
         ArrayList<PostoProiezione> postiList = new ArrayList<PostoProiezione>();
-        for (int i = 0; i < this.posti.size(); i++) {
+        // Salvo la size per evitare chiamate ripetute nel loop (O(n) -> O(1))
+        int postiCount = this.posti.size();
+        for (int i = 0; i < postiCount; ++i) {
             Posto p = this.posti.get(i);
             postiList.add(new PostoProiezione(p, proiezione));
         }

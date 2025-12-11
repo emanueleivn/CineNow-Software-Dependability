@@ -49,7 +49,9 @@ public class ProgrammazioneService {
 
             // Filtro manuale degli slot selezionati (senza stream)
             List<Slot> slotsSelezionati = new ArrayList<>();
-            for (int i = 0; i < slotsDisponibili.size(); i++) {
+            // Salvo la size per evitare chiamate ripetute nel loop (O(n) -> O(1))
+            int slotsDisponibiliCount = slotsDisponibili.size();
+            for (int i = 0; i < slotsDisponibiliCount; ++i) {
                 Slot slot = slotsDisponibili.get(i);
                 if (slotIds.contains(slot.getId())) {
                     slotsSelezionati.add(slot);
@@ -74,7 +76,8 @@ public class ProgrammazioneService {
     }
 
     private static void sortSlotsByOraInizio(List<Slot> slots) {
-        for (int i = 1; i < slots.size(); i++) {
+        int slotsSize = slots.size();
+        for (int i = 1; i < slotsSize; ++i) {
             Slot key = slots.get(i);
             int j = i - 1;
             while (j >= 0 && slots.get(j).getOraInizio().compareTo(key.getOraInizio()) > 0) {

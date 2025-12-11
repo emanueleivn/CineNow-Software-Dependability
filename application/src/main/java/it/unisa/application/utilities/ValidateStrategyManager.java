@@ -47,7 +47,7 @@ public class ValidateStrategyManager {
             if (!validator.validate(campi[processed])) {
                 result = result.concat(key + " non valido,");
             }
-            processed++;
+            ++processed;
         }
 
         if (!result.isEmpty()) {
