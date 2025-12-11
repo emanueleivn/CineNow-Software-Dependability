@@ -5,23 +5,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HomePage - CineNow</title>
-  <link rel="stylesheet" href="static/css/styles.css">
+  <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.min.css">
 </head>
 <body>
 <div class="container my-5">
   <div class="text-center my-5">
-    <img src="static/images/logo.png" alt="CineNow Logo" style="height: 300px;">
+    <picture>
+      <source srcset="${pageContext.request.contextPath}/static/images/logo.webp" type="image/webp">
+      <img src="${pageContext.request.contextPath}/static/images/logo.png" alt="CineNow Logo" width="300" height="300" loading="lazy">
+    </picture>
   </div>
   <div id="carouselExampleRide" class="carousel slide my-5" data-bs-ride="carousel">
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img src="static/images/locandine/nosferatu.jpg" class="d-block w-100" alt="locandina1">
+        <img src="${pageContext.request.contextPath}/static/images/locandine/nosferatu.jpg" class="d-block w-100" alt="locandina1" loading="lazy">
       </div>
       <div class="carousel-item">
-        <img src="static/images/locandine/mufasa.jpg" class="d-block w-100" alt="locandina2">
+        <img src="${pageContext.request.contextPath}/static/images/locandine/mufasa.jpg" class="d-block w-100" alt="locandina2" loading="lazy">
       </div>
       <div class="carousel-item">
-        <img src="static/images/locandine/doveosano.jpg" class="d-block w-100" alt="locandina3">
+        <img src="${pageContext.request.contextPath}/static/images/locandine/doveosano.jpg" class="d-block w-100" alt="locandina3" loading="lazy">
       </div>
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleRide" data-bs-slide="prev">

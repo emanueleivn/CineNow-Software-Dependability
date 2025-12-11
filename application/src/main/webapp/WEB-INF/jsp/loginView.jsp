@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html;charset=UTF-8" %>
 
 <!DOCTYPE html>
@@ -7,22 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineNow - Login</title>
-    <script src="${pageContext.request.contextPath}/static/js/validation.js" defer></script>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.css">
-    <style>
-        a {
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: coral;
-        }
-
-        a:focus, a:active {
-            color: coral;
-        }
-
-    </style>
+    <script src="${pageContext.request.contextPath}/static/js/validation.min.js" defer></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/print.css" media="print">
 </head>
 <body>
 

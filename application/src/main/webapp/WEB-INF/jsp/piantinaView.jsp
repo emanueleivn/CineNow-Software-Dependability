@@ -8,66 +8,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seleziona Posto</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .posto {
-            width: 30px;
-            height: 30px;
-            margin: 2px;
-            text-align: center;
-            line-height: 30px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .posto-disponibile {
-            background-color: #28a745;
-            color: white;
-        }
-
-        .posto-occupato {
-            background-color: #dc3545;
-            color: white;
-            cursor: not-allowed;
-        }
-
-        .posto-selezionato {
-            background-color: #ffc107;
-            color: black;
-        }
-
-        .posto:hover:not(.posto-occupato) {
-            background-color: #218838;
-        }
-
-        .fila-label {
-            font-weight: bold;
-            margin-right: 10px;
-            letter-spacing: 2px;
-        }
-
-        .checkout-section {
-            padding: 15px;
-        }
-
-        .checkout-section h3, .checkout-section h4 {
-            font-weight: bold;
-        }
-
-        .checkout-section button {
-            width: 100%;
-        }
-
-        .schermo {
-            width: 80%;
-            background-color: #343a40;
-            color: white;
-            border-radius: 5px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-
-    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.min.css" media="screen">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/piantinaView.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/print.css" media="print">
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>
@@ -77,19 +21,17 @@
         <div class="col-md-8 mb-5">
             <h1 class="text-center mb-4">Seleziona un Posto</h1>
             <div class="text-center mb-3">
-                <span class="posto posto-disponibile">Disponibile</span>
-                <span> - </span>
-                <span class="posto posto-occupato">Occupato</span>
-                <span> - </span>
-                <span class="posto posto-selezionato">Selezionato</span>
+                <span class="posto posto-disponibile d-inline-block">Disponibile</span>
+                <span class="mx-2">-</span>
+                <span class="posto posto-occupato d-inline-block">Occupato</span>
+                <span class="mx-2">-</span>
+                <span class="posto posto-selezionato d-inline-block">Selezionato</span>
             </div>
             <div class="d-flex justify-content-center mb-4">
-                <div class="schermo p-2 text-center">
-                    Schermo
-                </div>
+                <div class="schermo p-2 text-center">Schermo</div>
             </div>
 
-            <div class="d-flex flex-wrap justify-content-center">
+            <div class="d-flex flex-wrap justify-content-center" id="posti-container">
                 <%
                     List<PostoProiezione> posti = (List<PostoProiezione>) request.getAttribute("postiProiezione");
                     if (posti != null && !posti.isEmpty()) {
@@ -105,22 +47,20 @@
             </div>
             <div class="d-flex flex-wrap justify-content-center">
                 <%
-                    }
-                    currentFila = fila;
+                                }
+                                currentFila = fila;
                 %>
                 <div class="col-12 text-center fila-label mb-2">Fila <%= fila %></div>
                 <%
-                    }
+                            }
                 %>
                 <div class="posto <%= disponibile ? "posto-disponibile" : "posto-occupato" %> m-1"
                      data-fila="<%= String.valueOf(fila) %>"
                      data-numero="<%= numero %>"
-                     id="posto-<%= fila %>-<%= numero %>">
-                    <%= numero %>
-                </div>
+                     id="posto-<%= fila %>-<%= numero %>"><%= numero %></div>
                 <%
-                    }
-                } else {
+                        }
+                    } else {
                 %>
                 <div class="col-12 text-center">
                     <p class="text-muted">Nessun posto disponibile per questa proiezione.</p>
@@ -151,57 +91,6 @@
 </div>
 
 <jsp:include page="/WEB-INF/jsp/footer.jsp"/>
-
-<script>
-    let selectedSeats = [];
-    let total = 0;
-    const seatPrice = 7;
-
-    const availableSeats = document.querySelectorAll('.posto-disponibile');
-    const totalPriceEl = document.getElementById('totalPrice');
-    const totalPriceInput = document.getElementById('totalPriceInput');
-    const selectedPostiInput = document.getElementById('selectedPostiInput');
-    const checkoutButton = document.querySelector('#checkoutForm button[type="submit"]');
-
-    function updateSummary() {
-        totalPriceEl.textContent = total;
-        totalPriceInput.value = total;
-        selectedPostiInput.value = selectedSeats.join(',');
-    }
-
-    availableSeats.forEach(seat => {
-        seat.addEventListener('click', function() {
-            if (seat.classList.contains('posto-selezionato')) {
-                seat.classList.remove('posto-selezionato');
-                total -= seatPrice;
-                const seatKey = seat.dataset.fila + "-" + seat.dataset.numero;
-                selectedSeats = selectedSeats.filter(item => item !== seatKey);
-            } else {
-                seat.classList.add('posto-selezionato');
-                total += seatPrice;
-                const seatKey = seat.dataset.fila + "-" + seat.dataset.numero;
-                selectedSeats.push(seatKey);
-            }
-            updateSummary();
-        });
-    });
-
-    function resetSelection() {
-        document.querySelectorAll('.posto-selezionato').forEach(seat => {
-            seat.classList.remove('posto-selezionato');
-        });
-        selectedSeats = [];
-        total = 0;
-        updateSummary();
-    }
-
-    checkoutButton.addEventListener('click', function(event) {
-        if (selectedSeats.length === 0) {
-            event.preventDefault();
-            alert("Devi selezionare almeno un posto prima di procedere al checkout.");
-        }
-    });
-</script>
-
+<script src="${pageContext.request.contextPath}/static/js/sceltaPosto.min.js" defer></script>
 </body>
 </html>

@@ -6,64 +6,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineNow - Checkout</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.css">
-    <script src="${pageContext.request.contextPath}/static/js/checkoutValidation.js" defer></script>
-    <style>
-        a {
-            text-decoration: none;
-        }
-
-        a:hover {
-            color: coral;
-        }
-
-        a:focus, a:active {
-            color: coral;
-        }
-
-        .form-container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-container h2, .form-container h3 {
-            text-align: center;
-            color: #333;
-        }
-
-        .form-container input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-container button {
-            width: 100%;
-            padding: 10px;
-            background-color: #ff3b30;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .form-container button:hover {
-            background-color: #e63328;
-        }
-
-        .error-message {
-            color: red;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/print.css" media="print">
+    <script src="${pageContext.request.contextPath}/static/js/checkoutValidation.min.js" defer></script>
 </head>
 <body>
 

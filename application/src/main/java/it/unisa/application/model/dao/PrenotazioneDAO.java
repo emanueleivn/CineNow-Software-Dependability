@@ -139,8 +139,7 @@ public class PrenotazioneDAO {
                 "JOIN slot sl ON pr.id_orario = sl.id " +
                 "LEFT JOIN occupa o ON o.id_prenotazione = p.id " +
                 "LEFT JOIN posto_proiezione pp ON pp.id_sala = o.id_sala AND pp.fila = o.fila AND pp.numero = o.numero AND pp.id_proiezione = pr.id " +
-                "WHERE p.email_cliente = ? " +
-                "ORDER BY p.id DESC";
+                "WHERE p.email_cliente = ?";
 
         try (Connection connection = ds.getConnection();
              PreparedStatement ps = connection.prepareStatement(sql)) {
