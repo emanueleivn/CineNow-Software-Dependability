@@ -20,13 +20,22 @@
     <div class="row">
         <div class="col-md-8 mb-5">
             <h1 class="text-center mb-4">Seleziona un Posto</h1>
-            <div class="text-center mb-3">
-                <span class="posto posto-disponibile d-inline-block">Disponibile</span>
-                <span class="mx-2">-</span>
-                <span class="posto posto-occupato d-inline-block">Occupato</span>
-                <span class="mx-2">-</span>
-                <span class="posto posto-selezionato d-inline-block">Selezionato</span>
+            <div class="legend-posti">
+                <div class="legend-item">
+                    <span class="legend-square legend-disponibile"></span>
+                    <span class="legend-label">Disponibile</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-square legend-selezionato"></span>
+                    <span class="legend-label">Selezionato</span>
+                </div>
+                <div class="legend-item">
+                    <span class="legend-square legend-occupato"></span>
+                    <span class="legend-label">Occupato</span>
+                </div>
             </div>
+
+
             <div class="d-flex justify-content-center mb-4">
                 <div class="schermo p-2 text-center">Schermo</div>
             </div>
@@ -91,6 +100,6 @@
 </div>
 
 <jsp:include page="/WEB-INF/jsp/footer.jsp"/>
-<script src="${pageContext.request.contextPath}/static/js/sceltaPosto.min.js" defer></script>
+<script src="${pageContext.request.contextPath}/static/js/sceltaPosto.js"></script>
 </body>
 </html>

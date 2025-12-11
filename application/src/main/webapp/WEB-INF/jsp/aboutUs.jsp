@@ -20,9 +20,6 @@
                 <source srcset="${pageContext.request.contextPath}/static/images/logo.webp" type="image/webp">
                 <img src="${pageContext.request.contextPath}/static/images/logo.png" alt="Cinema" class="img-fluid rounded shadow-sm" width="400" height="400" loading="lazy">
             </picture>
-        </div>
-        <div class="col-md-6 d-flex align-items-center">
-            <div>
                 <h2>La nostra missione</h2>
                 <p>CineNow &egrave; nato con l'obiettivo di rivoluzionare il modo in cui vivi il cinema. Attraverso il nostro sistema innovativo, puoi prenotare i tuoi biglietti in modo rapido, scegliere i posti che preferisci e goderti l'esperienza del grande schermo senza stress.</p>
                 <p>Collaboriamo con la catena di cinema Movieplex per offrire un servizio di qualit&agrave;, mettendo a tua disposizione sale moderne, tecnologia all'avanguardia e una vasta programmazione.</p>

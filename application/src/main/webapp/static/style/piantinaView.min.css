@@ -1,4 +1,3 @@
-/* piantinaView.min.css - Stili per la pagina scelta posto */
 .posto{width:30px;height:30px;margin:2px;text-align:center;line-height:30px;border-radius:5px;cursor:pointer}
 .posto-disponibile{background-color:#28a745;color:#fff}
 .posto-occupato{background-color:#dc3545;color:#fff;cursor:not-allowed}
@@ -9,4 +8,10 @@
 .checkout-section h3,.checkout-section h4{font-weight:700}
 .checkout-section button{width:100%}
 .schermo{width:80%;background-color:#343a40;color:#fff;border-radius:5px;font-weight:700;letter-spacing:2px}
-
+.legend-posti{display:flex;flex-direction:row;justify-content:center;align-items:center;gap:2rem;margin:0 auto 1.5rem;user-select:none}
+.legend-item{display:flex;align-items:center;gap:.5rem;font-size:1rem;white-space:nowrap}
+.legend-square{width:22px;height:22px;border-radius:6px;display:inline-block}
+.legend-disponibile{background-color:#28a745}
+.legend-selezionato{background-color:#ffc107}
+.legend-occupato{background-color:#dc3545}
+.legend-posti,.legend-posti *{pointer-events:none}

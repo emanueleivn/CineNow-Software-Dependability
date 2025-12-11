@@ -10,7 +10,6 @@
   <title>Gestione Catalogo Film</title>
   <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.min.css">
   <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/print.css" media="print">
-</head>
 <body>
 <jsp:include page="/WEB-INF/jsp/headerCatena.jsp"/>
 
