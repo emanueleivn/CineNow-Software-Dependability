@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Us - CineNow</title>
-    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.min.css">
 </head>
 <body>
 <div class="container my-5">
@@ -16,7 +16,10 @@
 
     <div class="row my-5">
         <div class="col-md-6">
-            <img src="static/images/logo.png" alt="Cinema" class="img-fluid rounded shadow-sm">
+            <picture>
+                <source srcset="${pageContext.request.contextPath}/static/images/logo.webp" type="image/webp">
+                <img src="${pageContext.request.contextPath}/static/images/logo.png" alt="Cinema" class="img-fluid rounded shadow-sm" width="400" height="400" loading="lazy">
+            </picture>
         </div>
         <div class="col-md-6 d-flex align-items-center">
             <div>

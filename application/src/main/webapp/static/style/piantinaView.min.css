@@ -1,0 +1,12 @@
+/* piantinaView.min.css - Stili per la pagina scelta posto */
+.posto{width:30px;height:30px;margin:2px;text-align:center;line-height:30px;border-radius:5px;cursor:pointer}
+.posto-disponibile{background-color:#28a745;color:#fff}
+.posto-occupato{background-color:#dc3545;color:#fff;cursor:not-allowed}
+.posto-selezionato{background-color:#ffc107;color:#000}
+.posto:hover:not(.posto-occupato){background-color:#218838}
+.fila-label{font-weight:700;margin-right:10px;letter-spacing:2px}
+.checkout-section{padding:15px}
+.checkout-section h3,.checkout-section h4{font-weight:700}
+.checkout-section button{width:100%}
+.schermo{width:80%;background-color:#343a40;color:#fff;border-radius:5px;font-weight:700;letter-spacing:2px}
+

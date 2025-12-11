@@ -1,0 +1,103 @@
+/* print.css - Foglio di stile per la stampa */
+@media print {
+  /* Nascondi elementi non necessari in stampa */
+  header, footer, nav, .navbar, .top-bar,
+  button, .btn, form button,
+  .carousel, .carousel-control-prev, .carousel-control-next,
+  #calendar-container table td.slot-available,
+  .checkout-section button {
+    display: none !important;
+  }
+
+  /* Reset colori per stampa */
+  body {
+    background-color: #fff !important;
+    color: #000 !important;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 12pt;
+    line-height: 1.5;
+  }
+
+  /* Rimuovi sfondi e ombre */
+  *, *::before, *::after {
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  /* Link visibili */
+  a, a:visited {
+    color: #000 !important;
+    text-decoration: underline;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 10pt;
+  }
+
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after {
+    content: "";
+  }
+
+  /* Immagini */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  /* Evita interruzioni di pagina */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  p, blockquote, ul, ol, dl, table, pre {
+    page-break-inside: avoid;
+  }
+
+  /* Tabelle */
+  table {
+    border-collapse: collapse !important;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #000 !important;
+    padding: 8px;
+  }
+
+  /* Card e contenuti */
+  .card, .film-card {
+    border: 1px solid #ccc !important;
+    margin-bottom: 1em;
+    page-break-inside: avoid;
+  }
+
+  /* Container */
+  .container {
+    width: 100% !important;
+    max-width: none !important;
+  }
+
+  /* Posti cinema */
+  .posto {
+    border: 1px solid #000 !important;
+    color: #000 !important;
+  }
+
+  .posto-disponibile {
+    background-color: #ddd !important;
+  }
+
+  .posto-occupato {
+    background-color: #999 !important;
+  }
+
+  .posto-selezionato {
+    background-color: #fff !important;
+    border: 2px solid #000 !important;
+  }
+}
+

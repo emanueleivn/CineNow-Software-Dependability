@@ -9,7 +9,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogo Film</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/print.css" media="print">
 </head>
 <body>
 <jsp:include page="/WEB-INF/jsp/header.jsp"/>

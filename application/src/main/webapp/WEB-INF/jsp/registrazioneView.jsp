@@ -5,8 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CineNow - Registrazione</title>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/static/style/style.css">
-    <script src="${pageContext.request.contextPath}/static/js/validation.js"></script>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/style.min.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/style/print.css" media="print">
+    <script src="${pageContext.request.contextPath}/static/js/validation.min.js" defer></script>
 </head>
 <body>
 
@@ -47,4 +48,3 @@
 
 </body>
 </html>
-
