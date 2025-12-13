@@ -1,0 +1,4 @@
+Benchmark,Mode,Cnt,Score,Error,Units
+AutenticazioneServiceBenchmark.loginInvalidPassword,avgt,80,77188.021,42147.343,ns/op
+AutenticazioneServiceBenchmark.loginNonExistentUser,avgt,80,120736.623,66368.123,ns/op
+AutenticazioneServiceBenchmark.loginValidCredentials,avgt,80,243050.124,113286.549,ns/op
