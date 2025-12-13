@@ -26,6 +26,14 @@ public class ProgrammazioneService {
         this.proiezioneDAO = new ProiezioneDAO();
     }
 
+    // Costruttore protetto per permettere l'iniezione dei DAO nei test
+    protected ProgrammazioneService(FilmDAO filmDAO, SalaDAO salaDAO, SlotDAO slotDAO, ProiezioneDAO proiezioneDAO) {
+        this.filmDAO = filmDAO;
+        this.salaDAO = salaDAO;
+        this.slotDAO = slotDAO;
+        this.proiezioneDAO = proiezioneDAO;
+    }
+
     /**
      * Aggiunge una nuova proiezione in sala per la data indicata.
      */
@@ -70,7 +78,6 @@ public class ProgrammazioneService {
             Proiezione proiezione = new Proiezione(0, sala, film, data, primoSlot);
             return this.proiezioneDAO.create(proiezione);
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }

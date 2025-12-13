@@ -55,7 +55,7 @@ public class ProgrammazioneServiceBenchmark {
             when(salaDAOMock.retrieveById(999)).thenReturn(null);
 
             List<Slot> slots = new ArrayList<>();
-            for (int i = 1; i <= 8; i++) {
+            for (int i = 1; i <= 8; ++i) {
                 LocalTime startTime = LocalTime.of(9 + (i - 1) / 2,
                         (i - 1) % 2 == 0 ? 0 : 30);
                 slots.add(new Slot(i, Time.valueOf(startTime)));
@@ -63,45 +63,19 @@ public class ProgrammazioneServiceBenchmark {
             when(slotDAOMock.retrieveAllSlots()).thenReturn(slots);
             when(proiezioneDAOMock.create(any())).thenReturn(true);
 
-            programmazioneService = mock(ProgrammazioneService.class, CALLS_REAL_METHODS);
-            injectDAOs(programmazioneService, filmDAOMock, salaDAOMock, slotDAOMock, proiezioneDAOMock);
+            final FilmDAO fFilmDAO = filmDAOMock;
+            final SalaDAO fSalaDAO = salaDAOMock;
+            final SlotDAO fSlotDAO = slotDAOMock;
+            final ProiezioneDAO fProiezioneDAO = proiezioneDAOMock;
+
+            programmazioneService = new ProgrammazioneService(fFilmDAO, fSalaDAO, fSlotDAO, fProiezioneDAO) {};
 
             fewSlotIds = Arrays.asList(1, 2);
             manySlotIds = new ArrayList<>();
-            for (int i = 1; i <= 8; i++) {
+            for (int i = 1; i <= 8; ++i) {
                 manySlotIds.add(i);
             }
             testDate = LocalDate.now().plusDays(7);
-        }
-
-        private void injectDAOs(ProgrammazioneService service,
-                                FilmDAO filmDAO,
-                                SalaDAO salaDAO,
-                                SlotDAO slotDAO,
-                                ProiezioneDAO proiezioneDAO) {
-            try {
-                java.lang.reflect.Field filmDAOField =
-                        ProgrammazioneService.class.getDeclaredField("filmDAO");
-                filmDAOField.setAccessible(true);
-                filmDAOField.set(service, filmDAO);
-
-                java.lang.reflect.Field salaDAOField =
-                        ProgrammazioneService.class.getDeclaredField("salaDAO");
-                salaDAOField.setAccessible(true);
-                salaDAOField.set(service, salaDAO);
-
-                java.lang.reflect.Field slotDAOField =
-                        ProgrammazioneService.class.getDeclaredField("slotDAO");
-                slotDAOField.setAccessible(true);
-                slotDAOField.set(service, slotDAO);
-
-                java.lang.reflect.Field proiezioneDAOField =
-                        ProgrammazioneService.class.getDeclaredField("proiezioneDAO");
-                proiezioneDAOField.setAccessible(true);
-                proiezioneDAOField.set(service, proiezioneDAO);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException("Errore durante l'iniezione dei DAO", e);
-            }
         }
     }
 
