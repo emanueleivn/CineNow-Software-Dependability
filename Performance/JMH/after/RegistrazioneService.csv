@@ -1,0 +1,4 @@
+Benchmark,Mode,Cnt,Score,Error,Units
+RegistrazioneServiceBenchmark.registrazioneEmailInvalida,avgt,80,7393.352,842.399,ns/op
+RegistrazioneServiceBenchmark.registrazionePasswordCorta,avgt,80,24450.279,15598.904,ns/op
+RegistrazioneServiceBenchmark.registrazioneValida,avgt,80,187196.642,88695.987,ns/op
