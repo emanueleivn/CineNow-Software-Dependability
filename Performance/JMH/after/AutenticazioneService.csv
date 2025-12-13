@@ -1,0 +1,7 @@
+Benchmark,Mode,Cnt,Score,Error,Units
+ValidatorBenchmark.validateBatchInvalid,avgt,80,287.228,0.454,ns/op
+ValidatorBenchmark.validateBatchValid,avgt,80,499.698,1.229,ns/op
+ValidatorBenchmark.validateInvalidEmailNoAt,avgt,80,319.733,0.209,ns/op
+ValidatorBenchmark.validateInvalidNameWithNumbers,avgt,80,179.532,1.636,ns/op
+ValidatorBenchmark.validateValidEmail,avgt,80,315.404,0.504,ns/op
+ValidatorBenchmark.validateValidName,avgt,80,172.361,3.713,ns/op

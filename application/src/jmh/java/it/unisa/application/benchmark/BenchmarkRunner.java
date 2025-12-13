@@ -1,24 +1,31 @@
-package it.unisa.application.benchmark;
+package benchmark;
 
-import org.openjdk.jmh.Main;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 /**
- * Entry point per eseguire tutti i benchmark JMH del progetto CineNow
+ * Runner principale per eseguire i benchmark JMH.
+ * Modifica la classe nel metodo include() per eseguire benchmark diversi.
+ *
+ * Per eseguire: mvn clean compile test-compile exec:java
  */
 public class BenchmarkRunner {
     public static void main(String[] args) throws Exception {
-        // Esegui i benchmark JMH con timeout ridotto per evitare blocchi
-        String[] jmhArgs = {
-            ".*ServiceBenchmark.*",  // Esegui tutti i benchmark dei servizi
-            "-i", "3",                // 3 iterazioni di misurazione
-            "-w", "2",                // 2 iterazioni di warmup
-            "-f", "1",                // 1 fork
-            "-t", "1",                // 1 thread
-            "-bm", "avgt",            // Average time mode
-            "-tu", "us",              // Time unit: microsecondi
-            "-to", "10s"              // Timeout: 10 secondi per iterazione
-        };
+        Options opt = new OptionsBuilder()
+                  .include(AutenticazioneServiceBenchmark.class.getSimpleName())
+                //  .include(CatalogoServiceBenchmark.class.getSimpleName())
+                // .include(PasswordHashBenchmark.class.getSimpleName())
+                // .include(PrenotazioneServiceBenchmark.class.getSimpleName())
+                // .include(ProgrammazioneSedeServiceBenchmark.class.getSimpleName())
+                // .include(ProgrammazioneServiceBenchmark.class.getSimpleName())
+                // .include(RegistrazioneServiceBenchmark.class.getSimpleName())
+                // .include(SlotServiceBenchmark.class.getSimpleName())
+                // .include(StoricoOrdiniServiceBenchmark.class.getSimpleName())
+               // .include(ValidatorBenchmark.class.getSimpleName())
+                .forks(2)
+                .build();
 
-        Main.main(jmhArgs);
+        new Runner(opt).run();
     }
 }
