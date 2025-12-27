@@ -1,0 +1,7 @@
+exclude:
+  global:
+    - application/src/test/**
+    - application/target/**
+    - testResult/**
+    - risultati_test/**
+    - Performance/**
