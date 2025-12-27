@@ -33,7 +33,7 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn -B -ntp -f application/pom.xml sonar:sonar \
+        run: mvn -B -ntp -f application/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
           -Dsonar.organization=antonio-caiazzo \
           -Dsonar.projectKey=Antonio-Caiazzo_CineNow-Software-Dependability \
           -Dsonar.host.url=https://sonarcloud.io \
