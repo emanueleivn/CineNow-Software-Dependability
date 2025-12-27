@@ -12,7 +12,7 @@ ENV CATALINA_HOME=/usr/local/tomcat
 
 COPY --from=build /app/target/*.war $CATALINA_HOME/webapps/ROOT.war
 
-COPY --from=build /root/.m2/repository/com/mysql/mysql-connector-j/9.1.0/mysql-connector-j-9.1.0.jar \
+COPY --from=build /root/.m2/repository/com/mysql/mysql-connector-j/9.3.0/mysql-connector-j-9.3.0.jar \
   $CATALINA_HOME/lib/
 
 COPY docker/tomcat/ROOT.xml $CATALINA_HOME/conf/Catalina/localhost/ROOT.xml
