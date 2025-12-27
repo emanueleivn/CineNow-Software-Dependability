@@ -42,14 +42,11 @@ public class RegistrazioneServlet extends HttpServlet {
 
         Cliente cliente = regServ.registrazione(email, password, nome, cognome);
         if(cliente!=null){
-            // Sanitize user data before storing in session
-            cliente.setEmail(InputSanitizer.sanitize(cliente.getEmail()));
-            cliente.setRuolo(InputSanitizer.sanitize(cliente.getRuolo()));
-            cliente.setNome(InputSanitizer.sanitize(cliente.getNome()));
-            cliente.setCognome(InputSanitizer.sanitize(cliente.getCognome()));
+            // Sanitize user data before storing in session to prevent trust boundary violation
+            Cliente sanitizedCliente = (Cliente) InputSanitizer.sanitizeUtente(cliente);
 
             HttpSession session = req.getSession();
-            session.setAttribute("cliente", cliente);
+            session.setAttribute("cliente", sanitizedCliente);
             resp.sendRedirect(req.getContextPath() + "/Home");
         }else{
             req.setAttribute("errorMessage", "Formato non corretto o errore inserimento dati");

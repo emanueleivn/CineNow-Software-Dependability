@@ -37,23 +37,22 @@ public class LoginServlet extends HttpServlet {
 
         Utente utente = authService.login(email, password);
         if (utente != null) {
-            // Sanitize user data before storing in session
-            utente.setEmail(InputSanitizer.sanitize(utente.getEmail()));
-            utente.setRuolo(InputSanitizer.sanitize(utente.getRuolo()));
+            // Sanitize user data before storing in session to prevent trust boundary violation
+            Utente sanitizedUser = InputSanitizer.sanitizeUtente(utente);
 
             HttpSession session = request.getSession(true);
-            String ruolo = utente.getRuolo().toLowerCase();
+            String ruolo = sanitizedUser.getRuolo().toLowerCase();
             switch (ruolo) {
                 case "cliente":
-                    session.setAttribute("cliente", utente);
+                    session.setAttribute("cliente", sanitizedUser);
                     response.sendRedirect(request.getContextPath() + "/Home");
                     break;
                 case "gestore_sede":
-                    session.setAttribute("gestoreSede", utente);
+                    session.setAttribute("gestoreSede", sanitizedUser);
                     response.sendRedirect(request.getContextPath() + "/areaGestoreSede.jsp");
                     break;
                 case "gestore_catena":
-                    session.setAttribute("gestoreCatena", utente);
+                    session.setAttribute("gestoreCatena", sanitizedUser);
                     response.sendRedirect(request.getContextPath() + "/areaGestoreCatena.jsp");
                     break;
                 default:

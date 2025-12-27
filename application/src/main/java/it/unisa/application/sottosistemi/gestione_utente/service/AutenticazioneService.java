@@ -7,6 +7,7 @@ import it.unisa.application.model.entity.GestoreSede;
 import it.unisa.application.model.entity.Sede;
 import it.unisa.application.model.entity.Utente;
 import it.unisa.application.utilities.PasswordHash;
+import it.unisa.application.utilities.SecurePasswordComparator;
 import jakarta.servlet.http.HttpSession;
 
 
@@ -26,7 +27,8 @@ public class AutenticazioneService {
             return null;
         }
         String passHash = PasswordHash.hash(password);
-        if (!baseUser.getPassword().equals(passHash)) {
+        // Use secure comparison to prevent timing attacks
+        if (!SecurePasswordComparator.secureCompareDigest(baseUser.getPassword(), passHash)) {
             return null;
         }
         if (baseUser.getRuolo().equalsIgnoreCase("cliente")) {
