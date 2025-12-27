@@ -9,6 +9,8 @@ import it.unisa.application.model.entity.Utente;
 import it.unisa.application.utilities.PasswordHash;
 import jakarta.servlet.http.HttpSession;
 
+import java.security.MessageDigest;
+
 
 public class AutenticazioneService {
 
@@ -20,13 +22,27 @@ public class AutenticazioneService {
         this.clienteDAO = new ClienteDAO();
     }
 
+    /**
+     * Confronto constant-time per prevenire timing attacks
+     */
+    private boolean constantTimeEquals(String a, String b) {
+        if (a == null || b == null) {
+            return (a == null && b == null);
+        }
+        if (a.length() != b.length()) {
+            return false;
+        }
+        return MessageDigest.isEqual(a.getBytes(), b.getBytes());
+    }
+
     public Utente login(String email, String password) {
         Utente baseUser = utenteDAO.retrieveByEmail(email);
         if (baseUser == null) {
             return null;
         }
         String passHash = PasswordHash.hash(password);
-        if (!baseUser.getPassword().equals(passHash)) {
+        // Usa confronto constant-time per prevenire timing attacks
+        if (!constantTimeEquals(baseUser.getPassword(), passHash)) {
             return null;
         }
         if (baseUser.getRuolo().equalsIgnoreCase("cliente")) {

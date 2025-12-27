@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+
 @WebServlet("/registrazione")
 public class RegistrazioneServlet extends HttpServlet {
     RegistrazioneService regServ;
@@ -30,14 +31,26 @@ public class RegistrazioneServlet extends HttpServlet {
         String password = req.getParameter("password");
         String nome = req.getParameter("nome");
         String cognome = req.getParameter("cognome");
+
+        // Registrazione tramite service (dati validati dal service)
         Cliente cliente = regServ.registrazione(email, password, nome, cognome);
-        if(cliente!=null){
+
+        if (cliente != null && isValidCliente(cliente)) {
             HttpSession session = req.getSession();
             session.setAttribute("cliente", cliente);
             resp.sendRedirect(req.getContextPath() + "/Home");
-        }else{
+        } else {
             req.setAttribute("errorMessage", "Formato non corretto o errore inserimento dati");
             req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
         }
+    }
+
+    /**
+     * Valida che l'oggetto Cliente abbia dati coerenti prima di metterlo in sessione
+     */
+    private boolean isValidCliente(Cliente cliente) {
+        return cliente.getEmail() != null && !cliente.getEmail().isEmpty()
+                && cliente.getNome() != null && !cliente.getNome().isEmpty()
+                && cliente.getCognome() != null && !cliente.getCognome().isEmpty();
     }
 }

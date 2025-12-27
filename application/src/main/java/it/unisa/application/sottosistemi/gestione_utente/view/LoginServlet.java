@@ -26,8 +26,11 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
+
+        // Autenticazione tramite service (dati validati dal service)
         Utente utente = authService.login(email, password);
-        if (utente != null) {
+
+        if (utente != null && isValidUtente(utente)) {
             HttpSession session = request.getSession(true);
             String ruolo = utente.getRuolo().toLowerCase();
             switch (ruolo) {
@@ -51,5 +54,13 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("errorMessage", "Formato non corretto o errore inserimento dati");
             request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
         }
+    }
+
+    /**
+     * Valida che l'oggetto Utente abbia dati coerenti prima di metterlo in sessione
+     */
+    private boolean isValidUtente(Utente utente) {
+        return utente.getEmail() != null && !utente.getEmail().isEmpty()
+                && utente.getRuolo() != null && !utente.getRuolo().isEmpty();
     }
 }
