@@ -1,8 +1,20 @@
 <%@ page import="it.unisa.application.model.entity.Film" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Base64" %>
+<%@ page import="java.net.URLEncoder" %>
+<%@ page import="java.nio.charset.StandardCharsets" %>
 
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%
+    // Sanitizzazione parametro sede per prevenire XSS
+    String sedeParam = request.getParameter("sede");
+    String sedeEncoded = "";
+
+    // Validazione: solo caratteri alfanumerici e spazi
+    if (sedeParam != null && sedeParam.matches("^[a-zA-Z0-9\\s]+$")) {
+        sedeEncoded = URLEncoder.encode(sedeParam, StandardCharsets.UTF_8);
+    }
+%>
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -60,12 +72,11 @@
     <%
         Integer currentPage = (Integer) request.getAttribute("currentPage");
         Integer totalPages = (Integer) request.getAttribute("totalPages");
-        String sede = request.getParameter("sede");
         if (totalPages != null && totalPages > 1) {
     %>
     <div class="pagination-container">
         <% if (currentPage > 1) { %>
-        <a href="${pageContext.request.contextPath}/Catalogo?sede=<%= sede %>&page=<%= currentPage - 1 %>" class="btn-pagination">&larr; Precedente</a>
+        <a href="${pageContext.request.contextPath}/Catalogo?sede=<%= sedeEncoded %>&page=<%= currentPage - 1 %>" class="btn-pagination">&larr; Precedente</a>
         <% } else { %>
         <span class="btn-pagination disabled">&larr; Precedente</span>
         <% } %>
@@ -73,7 +84,7 @@
         <span class="page-info">Pagina <%= currentPage %> di <%= totalPages %></span>
 
         <% if (currentPage < totalPages) { %>
-        <a href="${pageContext.request.contextPath}/Catalogo?sede=<%= sede %>&page=<%= currentPage + 1 %>" class="btn-pagination">Successiva &rarr;</a>
+        <a href="${pageContext.request.contextPath}/Catalogo?sede=<%= sedeEncoded %>&page=<%= currentPage + 1 %>" class="btn-pagination">Successiva &rarr;</a>
         <% } else { %>
         <span class="btn-pagination disabled">Successiva &rarr;</span>
         <% } %>

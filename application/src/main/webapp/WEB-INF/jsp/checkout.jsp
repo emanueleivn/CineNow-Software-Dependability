@@ -1,4 +1,34 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%
+    // Sanitizzazione parametri per prevenire XSS
+    String totaleParam = request.getParameter("totale");
+    String proiezioneIdParam = request.getParameter("proiezioneId");
+    String postiParam = request.getParameter("posti");
+
+    // Validazione e sanitizzazione totale
+    String totale = "0.00";
+    if (totaleParam != null && totaleParam.matches("^\\d+(\\.\\d{1,2})?$")) {
+        totale = totaleParam;
+    }
+
+    // Validazione proiezioneId (solo numeri) - NON deve essere vuoto
+    String proiezioneId = null;
+    if (proiezioneIdParam != null && proiezioneIdParam.matches("^\\d+$")) {
+        proiezioneId = proiezioneIdParam;
+    }
+
+    // Validazione formato posti (es: "A-1,B-2" o solo "1,2,3")
+    String posti = null;
+    if (postiParam != null && postiParam.matches("^[A-Za-z0-9,\\-]+$")) {
+        posti = postiParam;
+    }
+
+    // Se i parametri critici sono null, redirect a errore
+    if (proiezioneId == null || posti == null) {
+        response.sendRedirect(request.getContextPath() + "/WEB-INF/jsp/error.jsp");
+        return;
+    }
+%>
 
 <!DOCTYPE html>
 <html lang="it">
@@ -18,7 +48,7 @@
 
 <div class="content">
     <div class="form-container">
-        <h3>Totale: €<%= request.getParameter("totale") %></h3>
+        <h3>Totale: €<%= totale %></h3>
         <h2>Pagamento</h2>
         <div id="error-message" class="error-message" style="display: none;"></div>
         <form id="checkoutForm" action="${pageContext.request.contextPath}/AggiungiOrdine" method="post">
@@ -26,9 +56,9 @@
             <input type="text" id="numeroCarta" name="numeroCarta" placeholder="Numero della carta" maxlength="16" required>
             <input type="text" id="scadenzaCarta" name="scadenzaCarta" placeholder="Data di scadenza (MM/AA)" maxlength="5" required>
             <input type="text" id="cvv" name="cvv" placeholder="CVV" maxlength="3" required>
-            <input type="hidden" name="proiezioneId" value="<%= request.getParameter("proiezioneId") %>">
-            <input type="hidden" name="posti" value="<%= request.getParameter("posti") %>">
-            <input type="hidden" name="totale" value="<%= request.getParameter("totale") %>">
+            <input type="hidden" name="proiezioneId" value="<%= proiezioneId %>">
+            <input type="hidden" name="posti" value="<%= posti %>">
+            <input type="hidden" name="totale" value="<%= totale %>">
 
             <button type="submit">Conferma</button>
         </form>
