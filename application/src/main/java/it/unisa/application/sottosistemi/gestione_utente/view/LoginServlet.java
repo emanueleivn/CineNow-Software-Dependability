@@ -2,6 +2,7 @@ package it.unisa.application.sottosistemi.gestione_utente.view;
 
 import it.unisa.application.model.entity.Utente;
 import it.unisa.application.sottosistemi.gestione_utente.service.AutenticazioneService;
+import it.unisa.application.utilities.InputSanitizer;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -27,10 +28,19 @@ public class LoginServlet extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        // Autenticazione tramite service (dati validati dal service)
-        Utente utente = authService.login(email, password);
+        // Validate input for safety before processing
+        if (!InputSanitizer.isSafe(email) || !InputSanitizer.isSafe(password)) {
+            request.setAttribute("errorMessage", "Input non valido rilevato");
+            request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            return;
+        }
 
-        if (utente != null && isValidUtente(utente)) {
+        Utente utente = authService.login(email, password);
+        if (utente != null) {
+            // Sanitize user data before storing in session
+            utente.setEmail(InputSanitizer.sanitize(utente.getEmail()));
+            utente.setRuolo(InputSanitizer.sanitize(utente.getRuolo()));
+
             HttpSession session = request.getSession(true);
             String ruolo = utente.getRuolo().toLowerCase();
             switch (ruolo) {
@@ -54,13 +64,5 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("errorMessage", "Formato non corretto o errore inserimento dati");
             request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
         }
-    }
-
-    /**
-     * Valida che l'oggetto Utente abbia dati coerenti prima di metterlo in sessione
-     */
-    private boolean isValidUtente(Utente utente) {
-        return utente.getEmail() != null && !utente.getEmail().isEmpty()
-                && utente.getRuolo() != null && !utente.getRuolo().isEmpty();
     }
 }

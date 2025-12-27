@@ -2,6 +2,7 @@ package it.unisa.application.sottosistemi.gestione_utente.view;
 
 import it.unisa.application.model.entity.Cliente;
 import it.unisa.application.sottosistemi.gestione_utente.service.RegistrazioneService;
+import it.unisa.application.utilities.InputSanitizer;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -10,7 +11,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-
 @WebServlet("/registrazione")
 public class RegistrazioneServlet extends HttpServlet {
     RegistrazioneService regServ;
@@ -32,25 +32,28 @@ public class RegistrazioneServlet extends HttpServlet {
         String nome = req.getParameter("nome");
         String cognome = req.getParameter("cognome");
 
-        // Registrazione tramite service (dati validati dal service)
-        Cliente cliente = regServ.registrazione(email, password, nome, cognome);
+        // Validate input for safety before processing
+        if (!InputSanitizer.isSafe(email) || !InputSanitizer.isSafe(password) ||
+            !InputSanitizer.isSafe(nome) || !InputSanitizer.isSafe(cognome)) {
+            req.setAttribute("errorMessage", "Input non valido rilevato");
+            req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            return;
+        }
 
-        if (cliente != null && isValidCliente(cliente)) {
+        Cliente cliente = regServ.registrazione(email, password, nome, cognome);
+        if(cliente!=null){
+            // Sanitize user data before storing in session
+            cliente.setEmail(InputSanitizer.sanitize(cliente.getEmail()));
+            cliente.setRuolo(InputSanitizer.sanitize(cliente.getRuolo()));
+            cliente.setNome(InputSanitizer.sanitize(cliente.getNome()));
+            cliente.setCognome(InputSanitizer.sanitize(cliente.getCognome()));
+
             HttpSession session = req.getSession();
             session.setAttribute("cliente", cliente);
             resp.sendRedirect(req.getContextPath() + "/Home");
-        } else {
+        }else{
             req.setAttribute("errorMessage", "Formato non corretto o errore inserimento dati");
             req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
         }
-    }
-
-    /**
-     * Valida che l'oggetto Cliente abbia dati coerenti prima di metterlo in sessione
-     */
-    private boolean isValidCliente(Cliente cliente) {
-        return cliente.getEmail() != null && !cliente.getEmail().isEmpty()
-                && cliente.getNome() != null && !cliente.getNome().isEmpty()
-                && cliente.getCognome() != null && !cliente.getCognome().isEmpty();
     }
 }
