@@ -29,16 +29,15 @@ jobs:
       - name: Check JaCoCo XML exists
         run: ls -la application/target/site/jacoco/jacoco.xml
 
-      - name: SonarCloud analysis (imports JaCoCo coverage)
+      - name: SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: mvn -B -ntp -f application/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-          -Dsonar.organization=antonio-caiazzo \
-          -Dsonar.projectKey=Antonio-Caiazzo_CineNow-Software-Dependability \
-          -Dsonar.host.url=https://sonarcloud.io \
-          -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
-          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+        run: |
+          mvn -B -ntp -f application/pom.xml org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.organization=antonio-caiazzo \
+            -Dsonar.projectKey=Antonio-Caiazzo_CineNow-Software-Dependability \
+            -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
       - name: Mutation testing with PIT
         run: mvn -B -ntp -f application/pom.xml org.pitest:pitest-maven:mutationCoverage
