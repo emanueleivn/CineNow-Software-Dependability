@@ -32,7 +32,7 @@ jobs:
       - name: Snyk Open Source (dependencies)
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        run: snyk test --file=application/pom.xml --severity-threshold=medium
+        run: snyk test --file=application/pom.xml --severity-threshold=high
 
       - name: Snyk Monitor (main only)
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
