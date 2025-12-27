@@ -11,7 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -22,6 +25,20 @@ jobs:
 
       - name: Build & test (Maven verify + JaCoCo)
         run: mvn -B -ntp -f application/pom.xml verify
+
+      - name: Check JaCoCo XML exists
+        run: ls -la application/target/site/jacoco/jacoco.xml
+
+      - name: SonarCloud analysis (imports JaCoCo coverage)
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn -B -ntp -f application/pom.xml sonar:sonar \
+          -Dsonar.organization=antonio-caiazzo \
+          -Dsonar.projectKey=Antonio-Caiazzo_CineNow-Software-Dependability \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
       - name: Mutation testing with PIT
         run: mvn -B -ntp -f application/pom.xml org.pitest:pitest-maven:mutationCoverage
