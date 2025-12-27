@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <%
     // Sanitizzazione parametri per prevenire XSS
     String totaleParam = request.getParameter("totale");
@@ -28,6 +30,11 @@
         response.sendRedirect(request.getContextPath() + "/WEB-INF/jsp/error.jsp");
         return;
     }
+
+    // Imposta gli attributi per JSTL
+    request.setAttribute("totale", totale);
+    request.setAttribute("proiezioneId", proiezioneId);
+    request.setAttribute("posti", posti);
 %>
 
 <!DOCTYPE html>
@@ -48,7 +55,7 @@
 
 <div class="content">
     <div class="form-container">
-        <h3>Totale: €<%= totale %></h3>
+        <h3>Totale: €<c:out value="${totale}"/></h3>
         <h2>Pagamento</h2>
         <div id="error-message" class="error-message" style="display: none;"></div>
         <form id="checkoutForm" action="${pageContext.request.contextPath}/AggiungiOrdine" method="post">
@@ -56,9 +63,9 @@
             <input type="text" id="numeroCarta" name="numeroCarta" placeholder="Numero della carta" maxlength="16" required>
             <input type="text" id="scadenzaCarta" name="scadenzaCarta" placeholder="Data di scadenza (MM/AA)" maxlength="5" required>
             <input type="text" id="cvv" name="cvv" placeholder="CVV" maxlength="3" required>
-            <input type="hidden" name="proiezioneId" value="<%= proiezioneId %>">
-            <input type="hidden" name="posti" value="<%= posti %>">
-            <input type="hidden" name="totale" value="<%= totale %>">
+            <input type="hidden" name="proiezioneId" value="<c:out value='${proiezioneId}'/>">
+            <input type="hidden" name="posti" value="<c:out value='${posti}'/>">
+            <input type="hidden" name="totale" value="<c:out value='${totale}'/>">
 
             <button type="submit">Conferma</button>
         </form>
