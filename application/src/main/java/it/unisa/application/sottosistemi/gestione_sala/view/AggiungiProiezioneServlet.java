@@ -54,9 +54,6 @@ public class AggiungiProiezioneServlet extends HttpServlet {
             request.setAttribute("films", films);
             request.setAttribute("sale", sale);
             request.getRequestDispatcher("/WEB-INF/jsp/aggiungiProiezione.jsp").forward(request, response);
-        } catch (ServletException | IOException e) {
-            logger.log(Level.SEVERE, "Errore durante il caricamento della pagina aggiungiProiezione", e);
-            throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il caricamento della pagina", e);
             try {
@@ -103,9 +100,6 @@ public class AggiungiProiezioneServlet extends HttpServlet {
                 request.setAttribute("errorMessage", "Errore durante l'aggiunta della proiezione.");
                 request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
             }
-        } catch (ServletException | IOException e) {
-            logger.log(Level.SEVERE, "Errore durante il salvataggio della proiezione", e);
-            throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il salvataggio", e);
             try {

@@ -32,7 +32,7 @@ public class GestioneProgrammazioneServlet extends HttpServlet {
                     page = Integer.parseInt(pageParam);
                     if (page < 1) page = 1;
                 } catch (NumberFormatException e) {
-                    page = 1;
+                    // page rimane 1
                 }
             }
 
@@ -57,9 +57,6 @@ public class GestioneProgrammazioneServlet extends HttpServlet {
             } catch (IOException ex) {
                 logger.log(Level.SEVERE, "Errore durante l'invio dell'errore HTTP", ex);
             }
-        } catch (ServletException | IOException e) {
-            logger.log(Level.SEVERE, "Errore durante il recupero delle proiezioni.", e);
-            throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il recupero delle proiezioni.", e);
             try {

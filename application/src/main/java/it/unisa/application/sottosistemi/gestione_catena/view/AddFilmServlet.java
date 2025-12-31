@@ -66,9 +66,8 @@ public class AddFilmServlet extends HttpServlet {
             try {
                 request.setAttribute("errorMessage", e.getMessage());
                 request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-            } catch (ServletException | IOException ex) {
+            } catch (Exception ex) {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
-                throw ex;
             }
         }
     }

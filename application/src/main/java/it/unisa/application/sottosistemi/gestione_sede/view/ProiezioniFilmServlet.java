@@ -53,7 +53,7 @@ public class ProiezioniFilmServlet extends HttpServlet {
                     page = Integer.parseInt(pageParam);
                     if (page < 1) page = 1;
                 } catch (NumberFormatException e) {
-                    page = 1;
+                    // page rimane 1
                 }
             }
 
@@ -75,9 +75,6 @@ public class ProiezioniFilmServlet extends HttpServlet {
             req.setAttribute("totalPages", totalPages);
 
             req.getRequestDispatcher("/WEB-INF/jsp/proiezioniFilm.jsp").forward(req, resp);
-        } catch (ServletException | IOException e) {
-            logger.log(Level.SEVERE, "Errore durante il recupero delle proiezioni", e);
-            throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il recupero delle proiezioni", e);
             try {
@@ -93,9 +90,14 @@ public class ProiezioniFilmServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             doGet(req, resp);
-        } catch (ServletException | IOException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante doPost", e);
-            throw e;
+            try {
+                req.setAttribute("errorMessage", "Errore durante l'elaborazione della richiesta: " + e.getMessage());
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
         }
     }
 }
