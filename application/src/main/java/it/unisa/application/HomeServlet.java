@@ -20,7 +20,10 @@ public class HomeServlet extends HttpServlet {
             req.getRequestDispatcher("/index.jsp").forward(req, resp);
         } catch (ServletException | IOException e) {
             logger.log(Level.SEVERE, "Errore durante il forward alla home page", e);
-            throw e;
-        }
-    }
+            req.setAttribute("errorMessage", "Errore durante il caricamento della home");
+            try {
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
 }

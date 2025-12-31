@@ -54,9 +54,14 @@ public class VisualizzaCatalogoServlet extends HttpServlet {
                 request.setAttribute("totalPages", totalPages);
                 request.getRequestDispatcher("/WEB-INF/jsp/catalogo.jsp").forward(request, response);
             }
-        } catch (ServletException | IOException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il caricamento del catalogo", e);
-            throw e;
+            request.setAttribute("errorMessage", "Errore durante il caricamento del catalogo");
+            try {
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
         }
     }
 }

@@ -30,9 +30,12 @@ public class AddFilmServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/jsp/aggiungiFilm.jsp").forward(request, response);
         } catch (ServletException | IOException e) {
             logger.log(Level.SEVERE, "Errore durante il forward alla pagina aggiungiFilm", e);
-            throw e;
-        }
-    }
+            request.setAttribute("errorMessage", "Errore durante il caricamento della pagina");
+            try {
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -65,6 +68,3 @@ public class AddFilmServlet extends HttpServlet {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
                 throw ex;
             }
-        }
-    }
-}

@@ -63,21 +63,16 @@ public class StoricoOrdiniServlet extends HttpServlet {
             try {
                 request.setAttribute("errorMessage", e.getMessage());
                 request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-            } catch (ServletException | IOException ex) {
+            } catch (Exception ex) {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
-                throw ex;
             }
-        } catch (ServletException | IOException e) {
-            logger.log(Level.SEVERE, "Errore durante il recupero dello storico ordini", e);
-            throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il recupero dello storico ordini", e);
             try {
                 request.setAttribute("errorMessage", "Si è verificato un errore durante il recupero dello storico ordini.");
                 request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-            } catch (ServletException | IOException ex) {
+            } catch (Exception ex) {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
-                throw ex;
             }
         }
     }

@@ -28,9 +28,14 @@ public class RegistrazioneServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             req.getRequestDispatcher("/WEB-INF/jsp/registrazioneView.jsp").forward(req, resp);
-        } catch (ServletException | IOException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il forward alla pagina di registrazione", e);
-            throw e;
+            req.setAttribute("errorMessage", "Errore durante il caricamento della pagina");
+            try {
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
         }
     }
 
@@ -46,7 +51,11 @@ public class RegistrazioneServlet extends HttpServlet {
             if (!InputSanitizer.isSafe(email) || !InputSanitizer.isSafe(password) ||
                 !InputSanitizer.isSafe(nome) || !InputSanitizer.isSafe(cognome)) {
                 req.setAttribute("errorMessage", "Input non valido rilevato");
-                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                try {
+                    req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Errore durante il forward", e);
+                }
                 return;
             }
 
@@ -60,11 +69,20 @@ public class RegistrazioneServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/Home");
             }else{
                 req.setAttribute("errorMessage", "Formato non corretto o errore inserimento dati");
-                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                try {
+                    req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Errore durante il forward", e);
+                }
             }
-        } catch (ServletException | IOException e) {
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante la registrazione", e);
-            throw e;
+            req.setAttribute("errorMessage", "Errore durante la registrazione");
+            try {
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
         }
     }
 }

@@ -39,21 +39,33 @@ public class AggiungiOrdineServlet extends HttpServlet {
             if (proiezioneId == null || postiParam == null || nomeCarta == null || numeroCarta == null
                     || scadenzaCarta == null || cvv == null) {
                 request.setAttribute("errorMessage", "Errore nel checkout. Dati mancanti.");
-                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                try {
+                    request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Errore durante il forward", e);
+                }
                 return;
             }
             HttpSession session = request.getSession();
             Cliente cliente = (Cliente) session.getAttribute("cliente");
             if (cliente == null) {
                 request.setAttribute("errorMessage", "Errore generico");
-                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                try {
+                    request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Errore durante il forward", e);
+                }
                 return;
             }
 
             Proiezione proiezione = proiezioneDAO.retrieveById(Integer.parseInt(proiezioneId));
             if (proiezione == null) {
                 request.setAttribute("errorMessage", "Errore: Proiezione non trovata.");
-                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                try {
+                    request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Errore durante il forward", e);
+                }
                 return;
             }
             List<PostoProiezione> postiList = new ArrayList<>();
@@ -77,9 +89,6 @@ public class AggiungiOrdineServlet extends HttpServlet {
             logger.log(Level.SEVERE, "Errore durante la creazione dell'ordine", e);
             try {
                 request.setAttribute("errorMessage", "Errore durante la creazione dell'ordine: " + e.getMessage());
-                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-            } catch (ServletException | IOException ex) {
-                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
                 throw ex;
             }
         }

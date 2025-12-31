@@ -25,7 +25,11 @@ public class CatalogoSedeServlet extends HttpServlet {
             String sede = req.getParameter("sede");
             if (sede == null || sede.isBlank()) {
                 req.setAttribute("errorMessage", "Errore caricamento catalogo: sede non specificata");
-                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                try {
+                    req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Errore durante il forward", e);
+                }
                 return;
             }
             Sede sedeObject;
@@ -46,7 +50,11 @@ public class CatalogoSedeServlet extends HttpServlet {
                     break;
                 default:
                     req.setAttribute("errorMessage", "Errore caricamento catalogo");
-                    req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                    try {
+                        req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                    } catch (Exception e) {
+                        logger.log(Level.SEVERE, "Errore durante il forward", e);
+                    }
                     return;
             }
             if (catalogo != null) {
@@ -81,7 +89,10 @@ public class CatalogoSedeServlet extends HttpServlet {
             }
         } catch (ServletException | IOException e) {
             logger.log(Level.SEVERE, "Errore durante il caricamento del catalogo sede", e);
-            throw e;
-        }
-    }
+            req.setAttribute("errorMessage", "Errore durante il caricamento del catalogo");
+            try {
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
 }

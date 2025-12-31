@@ -20,7 +20,10 @@ public class AboutServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/jsp/aboutUs.jsp").forward(req, resp);
         } catch (ServletException | IOException e) {
             logger.log(Level.SEVERE, "Errore durante il forward alla pagina About", e);
-            throw e;
-        }
-    }
+            req.setAttribute("errorMessage", "Errore durante il caricamento della pagina");
+            try {
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
 }

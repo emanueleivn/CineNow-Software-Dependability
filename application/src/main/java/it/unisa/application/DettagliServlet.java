@@ -29,7 +29,11 @@ public class DettagliServlet extends HttpServlet {
             } catch (NumberFormatException e) {
                 logger.log(Level.WARNING, "Parametro filmId non valido: " + filmId, e);
                 req.setAttribute("errorMessage", "ID film non valido.");
-                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                try {
+                    req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                } catch (Exception ex) {
+                    logger.log(Level.SEVERE, "Errore durante il forward", ex);
+                }
                 return;
             }
 
@@ -44,7 +48,10 @@ public class DettagliServlet extends HttpServlet {
             }
         } catch (ServletException | IOException e) {
             logger.log(Level.SEVERE, "Errore durante il recupero dei dettagli del film", e);
-            throw e;
-        }
-    }
+            req.setAttribute("errorMessage", "Errore durante il recupero dei dettagli");
+            try {
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
 }

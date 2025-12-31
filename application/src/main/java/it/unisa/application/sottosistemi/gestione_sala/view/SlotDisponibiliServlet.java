@@ -39,8 +39,6 @@ public class SlotDisponibiliServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Errore nel caricamento degli slot.");
             } catch (IOException ex) {
                 logger.log(Level.SEVERE, "Errore durante l'invio dell'errore HTTP", ex);
-                throw ex;
-            }
         }
     }
 }

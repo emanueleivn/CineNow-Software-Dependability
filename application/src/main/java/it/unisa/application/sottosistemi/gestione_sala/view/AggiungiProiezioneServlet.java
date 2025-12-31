@@ -61,9 +61,6 @@ public class AggiungiProiezioneServlet extends HttpServlet {
             logger.log(Level.SEVERE, "Errore durante il caricamento della pagina", e);
             try {
                 request.setAttribute("errorMessage", "Errore durante il caricamento della pagina: " + e.getMessage());
-                request.getRequestDispatcher("/WEB-INF/jsp/errore.jsp").forward(request, response);
-            } catch (ServletException | IOException ex) {
-                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
                 throw ex;
             }
         }
@@ -110,9 +107,6 @@ public class AggiungiProiezioneServlet extends HttpServlet {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il salvataggio", e);
             try {
-                request.setAttribute("errorMessage", "Errore durante il salvataggio: " + e.getMessage());
-                request.getRequestDispatcher("/WEB-INF/jsp/errore.jsp").forward(request, response);
-            } catch (ServletException | IOException ex) {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
                 throw ex;
             }

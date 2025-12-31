@@ -37,7 +37,11 @@ public class ProiezioniFilmServlet extends HttpServlet {
 
             if (film == null || sede == null || programmazioneFilm == null || programmazioneFilm.isEmpty()) {
                 req.setAttribute("errorMessage", "Film o sede non trovati.");
-                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                try {
+                    req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Errore durante il forward", e);
+                }
                 return;
             }
 
@@ -78,9 +82,6 @@ public class ProiezioniFilmServlet extends HttpServlet {
             logger.log(Level.SEVERE, "Errore durante il recupero delle proiezioni", e);
             try {
                 req.setAttribute("errorMessage", "Errore durante il recupero delle proiezioni: " + e.getMessage());
-                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
-            } catch (ServletException | IOException ex) {
-                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
                 throw ex;
             }
         }
@@ -91,8 +92,5 @@ public class ProiezioniFilmServlet extends HttpServlet {
         try {
             doGet(req, resp);
         } catch (ServletException | IOException e) {
-            logger.log(Level.SEVERE, "Errore durante il doPost di ProiezioniFilm", e);
-            throw e;
-        }
     }
 }

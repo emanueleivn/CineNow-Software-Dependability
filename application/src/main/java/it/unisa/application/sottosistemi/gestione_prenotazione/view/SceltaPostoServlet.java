@@ -28,7 +28,11 @@ public class SceltaPostoServlet extends HttpServlet {
             Proiezione proiezione = proiezioneDAO.retrieveById(proiezioneId);
             if (proiezione == null) {
                 req.setAttribute("errorMessage", "Proiezione non trovata.");
-                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                try {
+                    req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Errore durante il forward", e);
+                }
                 return;
             }
             List<PostoProiezione> postiProiezione = prenotazioneService.ottieniPostiProiezione(proiezione);
@@ -43,9 +47,6 @@ public class SceltaPostoServlet extends HttpServlet {
                 req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
             } catch (ServletException | IOException ex) {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
-                throw ex;
-            }
-        } catch (ServletException | IOException e) {
             logger.log(Level.SEVERE, "Errore durante il recupero dei posti", e);
             throw e;
         } catch (Exception e) {
@@ -54,9 +55,6 @@ public class SceltaPostoServlet extends HttpServlet {
                 req.setAttribute("errorMessage", "Errore durante il recupero dei posti.");
                 req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
             } catch (ServletException | IOException ex) {
-                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
-                throw ex;
-            }
         }
     }
 }
