@@ -56,14 +56,16 @@ public class GestioneProgrammazioneServlet extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro sedeId non valido.");
             } catch (IOException ex) {
                 logger.log(Level.SEVERE, "Errore durante l'invio dell'errore HTTP", ex);
+            }
         } catch (ServletException | IOException e) {
             logger.log(Level.SEVERE, "Errore durante il recupero delle proiezioni.", e);
             throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il recupero delle proiezioni.", e);
-            } catch (IOException ex) {
+            try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore durante il recupero delle proiezioni.");
-                throw ex;
+            } catch (IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante l'invio dell'errore HTTP", ex);
             }
         }
     }

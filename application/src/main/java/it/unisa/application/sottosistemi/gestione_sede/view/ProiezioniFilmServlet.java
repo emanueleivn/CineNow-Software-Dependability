@@ -82,7 +82,9 @@ public class ProiezioniFilmServlet extends HttpServlet {
             logger.log(Level.SEVERE, "Errore durante il recupero delle proiezioni", e);
             try {
                 req.setAttribute("errorMessage", "Errore durante il recupero delle proiezioni: " + e.getMessage());
-                throw ex;
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
             }
         }
     }
@@ -92,5 +94,8 @@ public class ProiezioniFilmServlet extends HttpServlet {
         try {
             doGet(req, resp);
         } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Errore durante doPost", e);
+            throw e;
+        }
     }
 }

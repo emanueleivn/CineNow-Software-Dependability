@@ -82,14 +82,13 @@ public class AggiungiOrdineServlet extends HttpServlet {
 
             prenotazioneService.aggiungiOrdine(cliente, postiList, proiezione);
             response.sendRedirect(request.getContextPath() + "/storicoOrdini");
-        } catch (ServletException | IOException e) {
-            logger.log(Level.SEVERE, "Errore durante la creazione dell'ordine", e);
-            throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante la creazione dell'ordine", e);
             try {
                 request.setAttribute("errorMessage", "Errore durante la creazione dell'ordine: " + e.getMessage());
-                throw ex;
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
             }
         }
     }

@@ -33,6 +33,8 @@ public class LoginServlet extends HttpServlet {
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
             }
+        }
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -43,13 +45,13 @@ public class LoginServlet extends HttpServlet {
             // Validate input for safety before processing
             if (!InputSanitizer.isSafe(email) || !InputSanitizer.isSafe(password)) {
                 request.setAttribute("errorMessage", "Input non valido rilevato");
-                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-                return;
                 try {
                     request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
                 } catch (Exception e) {
                     logger.log(Level.SEVERE, "Errore durante il forward", e);
                 }
+                return;
+            }
 
             Utente utente = authService.login(email, password);
             if (utente != null) {
@@ -73,28 +75,29 @@ public class LoginServlet extends HttpServlet {
                         break;
                     default:
                         request.setAttribute("errorMessage", "Ruolo non riconosciuto");
-                        request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-                        break;
                         try {
                             request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
                         } catch (Exception e) {
                             logger.log(Level.SEVERE, "Errore durante il forward", e);
                         }
+                        break;
+                }
             } else {
                 request.setAttribute("errorMessage", "Formato non corretto o errore inserimento dati");
-                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-            }
                 try {
                     request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
                 } catch (Exception e) {
                     logger.log(Level.SEVERE, "Errore durante il forward", e);
                 }
+            }
+        } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il login", e);
-            throw e;
-        }
             request.setAttribute("errorMessage", "Errore durante il login");
             try {
                 request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
             }
+        }
+    }
+}

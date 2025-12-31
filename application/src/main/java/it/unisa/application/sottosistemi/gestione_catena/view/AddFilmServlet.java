@@ -36,6 +36,8 @@ public class AddFilmServlet extends HttpServlet {
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
             }
+        }
+    }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -68,3 +70,6 @@ public class AddFilmServlet extends HttpServlet {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
                 throw ex;
             }
+        }
+    }
+}

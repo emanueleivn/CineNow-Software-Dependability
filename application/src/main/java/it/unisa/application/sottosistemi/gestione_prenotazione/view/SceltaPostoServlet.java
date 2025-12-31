@@ -47,6 +47,8 @@ public class SceltaPostoServlet extends HttpServlet {
                 req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
             } catch (ServletException | IOException ex) {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
+        } catch (ServletException | IOException e) {
             logger.log(Level.SEVERE, "Errore durante il recupero dei posti", e);
             throw e;
         } catch (Exception e) {
@@ -55,6 +57,8 @@ public class SceltaPostoServlet extends HttpServlet {
                 req.setAttribute("errorMessage", "Errore durante il recupero dei posti.");
                 req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
             } catch (ServletException | IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+            }
         }
     }
 }

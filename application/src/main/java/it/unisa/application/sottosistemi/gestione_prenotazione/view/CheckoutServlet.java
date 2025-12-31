@@ -43,4 +43,6 @@ public class CheckoutServlet extends HttpServlet {
             } catch (Exception ex) {
                 logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
             }
+        }
+    }
 }
