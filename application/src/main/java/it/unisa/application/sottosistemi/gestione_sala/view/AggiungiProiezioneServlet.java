@@ -101,7 +101,7 @@ public class AggiungiProiezioneServlet extends HttpServlet {
                 response.sendRedirect("gestioneProgrammazione?sedeId=" + sedeId);
             } else {
                 request.setAttribute("errorMessage", "Errore durante l'aggiunta della proiezione.");
-                request.getRequestDispatcher("/WEB-INF/jsp/errore.jsp").forward(request, response);
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
             }
         } catch (ServletException | IOException e) {
             logger.log(Level.SEVERE, "Errore durante il salvataggio della proiezione", e);

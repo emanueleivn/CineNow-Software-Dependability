@@ -47,7 +47,7 @@ class AggiungiProiezioneServletIT extends BaseIT {
         errorDispatcher = mock(RequestDispatcher.class);
 
         when(request.getRequestDispatcher("/WEB-INF/jsp/aggiungiProiezione.jsp")).thenReturn(successDispatcher);
-        when(request.getRequestDispatcher("/WEB-INF/jsp/errore.jsp")).thenReturn(errorDispatcher);
+        when(request.getRequestDispatcher("/WEB-INF/jsp/error.jsp")).thenReturn(errorDispatcher);
 
         execute("INSERT INTO sede (id, nome, via, citta, cap) VALUES (1, 'Mercogliano', 'Via Roma 1', 'Avellino', '83100');");
         execute("INSERT INTO sede (id, nome, via, citta, cap) VALUES (2, 'Laquila', 'Via Firenze 2', 'L''Aquila', '67100');");
