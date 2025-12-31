@@ -13,9 +13,12 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/aggiungiProiezione")
 public class AggiungiProiezioneServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(AggiungiProiezioneServlet.class.getName());
     private final ProgrammazioneService programmazioneService = new ProgrammazioneService();
 
     @Override
@@ -51,9 +54,18 @@ public class AggiungiProiezioneServlet extends HttpServlet {
             request.setAttribute("films", films);
             request.setAttribute("sale", sale);
             request.getRequestDispatcher("/WEB-INF/jsp/aggiungiProiezione.jsp").forward(request, response);
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Errore durante il caricamento della pagina aggiungiProiezione", e);
+            throw e;
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Errore durante il caricamento della pagina: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/jsp/errore.jsp").forward(request, response);
+            logger.log(Level.SEVERE, "Errore durante il caricamento della pagina", e);
+            try {
+                request.setAttribute("errorMessage", "Errore durante il caricamento della pagina: " + e.getMessage());
+                request.getRequestDispatcher("/WEB-INF/jsp/errore.jsp").forward(request, response);
+            } catch (ServletException | IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+                throw ex;
+            }
         }
     }
 
@@ -92,9 +104,18 @@ public class AggiungiProiezioneServlet extends HttpServlet {
                 request.setAttribute("errorMessage", "Errore durante l'aggiunta della proiezione.");
                 request.getRequestDispatcher("/WEB-INF/jsp/errore.jsp").forward(request, response);
             }
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Errore durante il salvataggio della proiezione", e);
+            throw e;
         } catch (Exception e) {
-            request.setAttribute("errorMessage", "Errore durante il salvataggio: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/jsp/errore.jsp").forward(request, response);
+            logger.log(Level.SEVERE, "Errore durante il salvataggio", e);
+            try {
+                request.setAttribute("errorMessage", "Errore durante il salvataggio: " + e.getMessage());
+                request.getRequestDispatcher("/WEB-INF/jsp/errore.jsp").forward(request, response);
+            } catch (ServletException | IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+                throw ex;
+            }
         }
     }
 }

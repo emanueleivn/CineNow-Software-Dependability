@@ -9,21 +9,42 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/DettagliFilm")
 public class DettagliServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(DettagliServlet.class.getName());
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String filmId = req.getParameter("filmId");
-        String sedeId = req.getParameter("sedeId");
-        FilmDAO filmDAO = new FilmDAO();
-        Film film = filmDAO.retrieveById(Integer.parseInt(filmId));
-        if (film != null) {
-            req.setAttribute("film", film);
-            req.setAttribute("sedeId",sedeId);
-            req.getRequestDispatcher("/WEB-INF/jsp/dettagliFilm.jsp").forward(req, resp);
-        } else {
-            req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+        try {
+            String filmId = req.getParameter("filmId");
+            String sedeId = req.getParameter("sedeId");
+            FilmDAO filmDAO = new FilmDAO();
+
+            int parsedFilmId;
+            try {
+                parsedFilmId = Integer.parseInt(filmId);
+            } catch (NumberFormatException e) {
+                logger.log(Level.WARNING, "Parametro filmId non valido: " + filmId, e);
+                req.setAttribute("errorMessage", "ID film non valido.");
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+                return;
+            }
+
+            Film film = filmDAO.retrieveById(parsedFilmId);
+            if (film != null) {
+                req.setAttribute("film", film);
+                req.setAttribute("sedeId", sedeId);
+                req.getRequestDispatcher("/WEB-INF/jsp/dettagliFilm.jsp").forward(req, resp);
+            } else {
+                req.setAttribute("errorMessage", "Film non trovato.");
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            }
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Errore durante il recupero dei dettagli del film", e);
+            throw e;
         }
     }
 }

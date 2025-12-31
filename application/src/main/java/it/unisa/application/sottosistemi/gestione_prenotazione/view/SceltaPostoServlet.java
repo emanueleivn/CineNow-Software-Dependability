@@ -12,9 +12,12 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/SceltaPosto")
 public class SceltaPostoServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(SceltaPostoServlet.class.getName());
     private final PrenotazioneService prenotazioneService = new PrenotazioneService();
     private final ProiezioneDAO proiezioneDAO = new ProiezioneDAO();
 
@@ -34,12 +37,26 @@ public class SceltaPostoServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/jsp/piantinaView.jsp").forward(req, resp);
 
         } catch (NumberFormatException e) {
-            req.setAttribute("errorMessage", "Parametro non valido.");
-            req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            logger.log(Level.WARNING, "Parametro proiezioneId non valido", e);
+            try {
+                req.setAttribute("errorMessage", "Parametro non valido.");
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            } catch (ServletException | IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+                throw ex;
+            }
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Errore durante il recupero dei posti", e);
+            throw e;
         } catch (Exception e) {
-            e.printStackTrace();
-            req.setAttribute("errorMessage", "Errore durante il recupero dei posti.");
-            req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            logger.log(Level.SEVERE, "Errore durante il recupero dei posti", e);
+            try {
+                req.setAttribute("errorMessage", "Errore durante il recupero dei posti.");
+                req.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(req, resp);
+            } catch (ServletException | IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+                throw ex;
+            }
         }
     }
 }

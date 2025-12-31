@@ -8,9 +8,12 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(LoginServlet.class.getName());
     private AutenticazioneService authService;
 
     @Override
@@ -20,48 +23,59 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/jsp/loginView.jsp").forward(req, resp);
+        try {
+            req.getRequestDispatcher("/WEB-INF/jsp/loginView.jsp").forward(req, resp);
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Errore durante il forward alla pagina di login", e);
+            throw e;
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        try {
+            String email = request.getParameter("email");
+            String password = request.getParameter("password");
 
-        // Validate input for safety before processing
-        if (!InputSanitizer.isSafe(email) || !InputSanitizer.isSafe(password)) {
-            request.setAttribute("errorMessage", "Input non valido rilevato");
-            request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-            return;
-        }
-
-        Utente utente = authService.login(email, password);
-        if (utente != null) {
-            // Sanitize user data before storing in session to prevent trust boundary violation
-            Utente sanitizedUser = InputSanitizer.sanitizeUtente(utente);
-
-            HttpSession session = request.getSession(true);
-            String ruolo = sanitizedUser.getRuolo().toLowerCase();
-            switch (ruolo) {
-                case "cliente":
-                    session.setAttribute("cliente", sanitizedUser);
-                    response.sendRedirect(request.getContextPath() + "/Home");
-                    break;
-                case "gestore_sede":
-                    session.setAttribute("gestoreSede", sanitizedUser);
-                    response.sendRedirect(request.getContextPath() + "/areaGestoreSede.jsp");
-                    break;
-                case "gestore_catena":
-                    session.setAttribute("gestoreCatena", sanitizedUser);
-                    response.sendRedirect(request.getContextPath() + "/areaGestoreCatena.jsp");
-                    break;
-                default:
-                    request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-                    break;
+            // Validate input for safety before processing
+            if (!InputSanitizer.isSafe(email) || !InputSanitizer.isSafe(password)) {
+                request.setAttribute("errorMessage", "Input non valido rilevato");
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                return;
             }
-        } else {
-            request.setAttribute("errorMessage", "Formato non corretto o errore inserimento dati");
-            request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+
+            Utente utente = authService.login(email, password);
+            if (utente != null) {
+                // Sanitize user data before storing in session to prevent trust boundary violation
+                Utente sanitizedUser = InputSanitizer.sanitizeUtente(utente);
+
+                HttpSession session = request.getSession(true);
+                String ruolo = sanitizedUser.getRuolo().toLowerCase();
+                switch (ruolo) {
+                    case "cliente":
+                        session.setAttribute("cliente", sanitizedUser);
+                        response.sendRedirect(request.getContextPath() + "/Home");
+                        break;
+                    case "gestore_sede":
+                        session.setAttribute("gestoreSede", sanitizedUser);
+                        response.sendRedirect(request.getContextPath() + "/areaGestoreSede.jsp");
+                        break;
+                    case "gestore_catena":
+                        session.setAttribute("gestoreCatena", sanitizedUser);
+                        response.sendRedirect(request.getContextPath() + "/areaGestoreCatena.jsp");
+                        break;
+                    default:
+                        request.setAttribute("errorMessage", "Ruolo non riconosciuto");
+                        request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                        break;
+                }
+            } else {
+                request.setAttribute("errorMessage", "Formato non corretto o errore inserimento dati");
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            }
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Errore durante il login", e);
+            throw e;
         }
     }
 }

@@ -52,10 +52,23 @@ public class GestioneProgrammazioneServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/jsp/gestioneProgrammazione.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Parametro sedeId non valido.", e);
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro sedeId non valido.");
+            try {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro sedeId non valido.");
+            } catch (IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante l'invio dell'errore HTTP", ex);
+                throw ex;
+            }
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Errore durante il recupero delle proiezioni.", e);
+            throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Errore durante il recupero delle proiezioni.", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore durante il recupero delle proiezioni.");
+            try {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore durante il recupero delle proiezioni.");
+            } catch (IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante l'invio dell'errore HTTP", ex);
+                throw ex;
+            }
         }
     }
 }

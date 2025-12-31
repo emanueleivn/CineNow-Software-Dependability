@@ -17,35 +17,39 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/AggiungiOrdine")
 public class AggiungiOrdineServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(AggiungiOrdineServlet.class.getName());
     private final PrenotazioneService prenotazioneService = new PrenotazioneService();
     private final ProiezioneDAO proiezioneDAO = new ProiezioneDAO();
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String proiezioneId = request.getParameter("proiezioneId");
-        String postiParam = request.getParameter("posti");
-        String nomeCarta = request.getParameter("nomeCarta");
-        String numeroCarta = request.getParameter("numeroCarta");
-        String scadenzaCarta = request.getParameter("scadenzaCarta");
-        String cvv = request.getParameter("cvv");
-        if (proiezioneId == null || postiParam == null || nomeCarta == null || numeroCarta == null
-                || scadenzaCarta == null || cvv == null) {
-            request.setAttribute("errorMessage", "Errore nel checkout. Dati mancanti.");
-            request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-            return;
-        }
-        HttpSession session = request.getSession();
-        Cliente cliente = (Cliente) session.getAttribute("cliente");
-        if (cliente == null) {
-            request.setAttribute("errorMessage", "Errore generico");
-            request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
-            return;
-        }
         try {
+            String proiezioneId = request.getParameter("proiezioneId");
+            String postiParam = request.getParameter("posti");
+            String nomeCarta = request.getParameter("nomeCarta");
+            String numeroCarta = request.getParameter("numeroCarta");
+            String scadenzaCarta = request.getParameter("scadenzaCarta");
+            String cvv = request.getParameter("cvv");
+            if (proiezioneId == null || postiParam == null || nomeCarta == null || numeroCarta == null
+                    || scadenzaCarta == null || cvv == null) {
+                request.setAttribute("errorMessage", "Errore nel checkout. Dati mancanti.");
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                return;
+            }
+            HttpSession session = request.getSession();
+            Cliente cliente = (Cliente) session.getAttribute("cliente");
+            if (cliente == null) {
+                request.setAttribute("errorMessage", "Errore generico");
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+                return;
+            }
+
             Proiezione proiezione = proiezioneDAO.retrieveById(Integer.parseInt(proiezioneId));
             if (proiezione == null) {
                 request.setAttribute("errorMessage", "Errore: Proiezione non trovata.");
@@ -66,10 +70,18 @@ public class AggiungiOrdineServlet extends HttpServlet {
 
             prenotazioneService.aggiungiOrdine(cliente, postiList, proiezione);
             response.sendRedirect(request.getContextPath() + "/storicoOrdini");
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Errore durante la creazione dell'ordine", e);
+            throw e;
         } catch (Exception e) {
-            e.printStackTrace();
-            request.setAttribute("errorMessage", "Errore durante la creazione dell'ordine: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            logger.log(Level.SEVERE, "Errore durante la creazione dell'ordine", e);
+            try {
+                request.setAttribute("errorMessage", "Errore durante la creazione dell'ordine: " + e.getMessage());
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            } catch (ServletException | IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+                throw ex;
+            }
         }
     }
 }

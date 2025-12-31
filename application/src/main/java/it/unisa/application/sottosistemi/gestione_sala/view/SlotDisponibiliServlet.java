@@ -10,9 +10,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/slotDisponibili")
 public class SlotDisponibiliServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(SlotDisponibiliServlet.class.getName());
     private final SlotService slotService = new SlotService();
 
     @Override
@@ -31,7 +34,13 @@ public class SlotDisponibiliServlet extends HttpServlet {
             out.print(new Gson().toJson(slots));
             out.flush();
         } catch (Exception e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Errore nel caricamento degli slot.");
+            logger.log(Level.SEVERE, "Errore nel caricamento degli slot", e);
+            try {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Errore nel caricamento degli slot.");
+            } catch (IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante l'invio dell'errore HTTP", ex);
+                throw ex;
+            }
         }
     }
 }

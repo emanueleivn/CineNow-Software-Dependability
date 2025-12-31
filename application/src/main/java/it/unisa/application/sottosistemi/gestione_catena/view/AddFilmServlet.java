@@ -2,7 +2,6 @@ package it.unisa.application.sottosistemi.gestione_catena.view;
 
 import it.unisa.application.sottosistemi.gestione_catena.service.CatalogoService;
 
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -11,25 +10,28 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet("/addFilm")
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 2, // 2MB
         maxFileSize = 1024 * 1024 * 10, // 10MB
         maxRequestSize = 1024 * 1024 * 50) // 50MB
 public class AddFilmServlet extends HttpServlet {
+    private static final Logger logger = Logger.getLogger(AddFilmServlet.class.getName());
     private static final String UPLOAD_DIR = "images";
     private final CatalogoService catalogoService = new CatalogoService();
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.getRequestDispatcher("/WEB-INF/jsp/aggiungiFilm.jsp").forward(request, response);
+        try {
+            request.getRequestDispatcher("/WEB-INF/jsp/aggiungiFilm.jsp").forward(request, response);
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Errore durante il forward alla pagina aggiungiFilm", e);
+            throw e;
+        }
     }
 
     @Override
@@ -46,21 +48,23 @@ public class AddFilmServlet extends HttpServlet {
                 throw new IllegalArgumentException("La locandina è obbligatoria.");
             }
 
-
             byte[] locandinaBytes;
             try (InputStream fileContent = filePart.getInputStream()) {
                 locandinaBytes = fileContent.readAllBytes();
             }
 
-
             catalogoService.addFilmCatalogo(titolo, durata, descrizione, locandinaBytes, genere, classificazione);
 
             response.sendRedirect(request.getContextPath() + "/catalogo");
         } catch (Exception e) {
-            request.setAttribute("errorMessage", e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            logger.log(Level.SEVERE, "Errore durante l'aggiunta del film", e);
+            try {
+                request.setAttribute("errorMessage", e.getMessage());
+                request.getRequestDispatcher("/WEB-INF/jsp/error.jsp").forward(request, response);
+            } catch (ServletException | IOException ex) {
+                logger.log(Level.SEVERE, "Errore durante il forward alla pagina di errore", ex);
+                throw ex;
+            }
         }
     }
-
-
 }
