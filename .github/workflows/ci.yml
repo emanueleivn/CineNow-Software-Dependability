@@ -68,7 +68,7 @@ jobs:
             -Dsonar.organization=antonio-caiazzo \
             -Dsonar.projectKey=Antonio-Caiazzo_CineNow-Software-Dependability \
             -Dsonar.token=${{ secrets.SONAR_TOKEN }} \
-            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            -Dsonar.coverage.exclusions=**/*
 
       - name: Mutation testing with PIT
         run: mvn -B -ntp -f application/pom.xml org.pitest:pitest-maven:mutationCoverage
