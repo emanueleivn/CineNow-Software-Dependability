@@ -26,13 +26,13 @@ public class ProgrammazioneService {
         this.proiezioneDAO = new ProiezioneDAO();
     }
 
-    // Costruttore protetto per permettere l'iniezione dei DAO nei test
-    protected ProgrammazioneService(FilmDAO filmDAO, SalaDAO salaDAO, SlotDAO slotDAO, ProiezioneDAO proiezioneDAO) {
-        this.filmDAO = filmDAO;
-        this.salaDAO = salaDAO;
-        this.slotDAO = slotDAO;
-        this.proiezioneDAO = proiezioneDAO;
-    }
+//    // Costruttore protetto per permettere l'iniezione dei DAO nei test
+//    protected ProgrammazioneService(FilmDAO filmDAO, SalaDAO salaDAO, SlotDAO slotDAO, ProiezioneDAO proiezioneDAO) {
+//       this.filmDAO = filmDAO;
+//        this.salaDAO = salaDAO;
+//        this.slotDAO = slotDAO;
+//        this.proiezioneDAO = proiezioneDAO;
+//   }
 
     /**
      * Aggiunge una nuova proiezione in sala per la data indicata.
